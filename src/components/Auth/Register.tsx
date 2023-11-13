@@ -11,6 +11,7 @@ const Register: FC = () => {
 	const navigate = useNavigate();
 	const { sendRequest: sendRegisterRequest } = useHttp();
 	const [registerErrorMessage, setRegisterErrorMessage] = useState("");
+	const [registerSuccessMessage, setRegisterSuccessMessage] = useState("");
 
 	const firstNameRef = useRef<InputRef>(null);
 	const lastNameRef = useRef<InputRef>(null);
@@ -29,10 +30,11 @@ const Register: FC = () => {
 			if (registerResponseData.success === undefined) {
 				console.log("There was response error");
 				setRegisterErrorMessage(registerResponseData.message);
+				setRegisterSuccessMessage("");
 			} else {
 				setRegisterErrorMessage("");
-
-				navigate(client_routes.ROUTE_HOME, { replace: true });
+				setRegisterSuccessMessage(registerResponseData.message);
+				navigate(client_routes.ROUTE_AUTH_REGISTER, { replace: true }); //
 			}
 		};
 
@@ -63,6 +65,11 @@ const Register: FC = () => {
 				{registerErrorMessage !== "" && (
 					<p className={styles["error-text"]}>
 						{registerErrorMessage}
+					</p>
+				)}
+				{registerSuccessMessage !== "" && (
+					<p className={styles["success-text"]}>
+						{registerSuccessMessage}
 					</p>
 				)}
 				<Form.Item
