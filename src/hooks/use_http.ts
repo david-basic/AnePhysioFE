@@ -5,6 +5,9 @@ import { RootState } from "../store";
 const useHttp = () => {
     const [isLoading, setIsLoading] = useState(false);
     const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+    const tokenType = useSelector((state: RootState) => state.auth.tokenType);
+	const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+	const fullToken = `${tokenType} ${accessToken}`;
 
     const sendRequest = useCallback(
         async (
@@ -18,7 +21,11 @@ const useHttp = () => {
                     requestConfig.url,
                     {
                         method: requestConfig.method ? requestConfig.method : "GET",
-                        headers: requestConfig.headers ? requestConfig.headers : {},
+                        headers: requestConfig.headers 
+                            ? requestConfig.headers 
+                            : {
+                                Authorization: fullToken,
+                            },
                         body: requestConfig.body ? JSON.stringify(requestConfig.body) : null,
                     }
                 );

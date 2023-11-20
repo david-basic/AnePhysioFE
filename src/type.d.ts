@@ -13,4 +13,8 @@ type RequestConfig = {
 type AuthInitState = {
 	isLoggedIn: boolean;
 	username: string;
+	accessToken: string;
+	refreshToken: string;
+	tokenType: string;
+	tokenValid: boolean;
 };
