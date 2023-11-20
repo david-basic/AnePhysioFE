@@ -56,8 +56,26 @@ const Login: FC = () => {
 				dispatch(authActions.setUsername(username));
 				dispatch(authActions.setIsLoggedIn(true));
 
+				dispatch(
+					authActions.setAccessToken(loginData.data.accessToken)
+				);
+				dispatch(
+					authActions.setRefreshToken(loginData.data.refreshToken)
+				);
+				dispatch(authActions.setTokenType(loginData.data.tokenType));
+				// dispatch(authActions.setIsTokenValid(true));
+
+				dispatch(authActions.setUsername(username));
+				dispatch(authActions.setIsLoggedIn(true));
+
 				localforage.setItem<string>("username", username);
 				localforage.setItem<boolean>("isLoggedIn", true);
+				localforage.setItem<string>(
+					"accessToken",
+					loginData.data.accessToken
+				);
+				localforage.setItem<string>("tokenType", loginData.data.tokenType);
+				localforage.setItem<string>("refreshToken", loginData.data.refreshToken);
 
 				sessionStorage.setItem("canFetchUserData", "true");
 
