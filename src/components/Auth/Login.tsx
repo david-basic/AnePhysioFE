@@ -63,7 +63,6 @@ const Login: FC = () => {
 					authActions.setRefreshToken(loginData.data.refreshToken)
 				);
 				dispatch(authActions.setTokenType(loginData.data.tokenType));
-				// dispatch(authActions.setIsTokenValid(true));
 
 				dispatch(authActions.setUsername(username));
 				dispatch(authActions.setIsLoggedIn(true));
