@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { type FC } from "react";
 import { PoweroffOutlined } from "@ant-design/icons";
 import client_routes, { sideBarKey } from "../../config/client_routes";
 import { NavLink } from "react-router-dom";

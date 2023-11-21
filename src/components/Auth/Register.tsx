@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from "react";
+import { type FC, useRef, useState } from "react";
 import styles from "./Register.module.css";
 import { LockOutlined, IdcardOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, InputRef } from "antd";

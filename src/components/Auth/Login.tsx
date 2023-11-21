@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { type FC, useEffect, useState } from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import styles from "./Login.module.css";
 import { useDispatch, useSelector } from "react-redux";

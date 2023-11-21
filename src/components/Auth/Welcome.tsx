@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { type FC, useEffect } from "react";
 import styles from "./Register.module.css";
 import { Button } from "antd";
 import { useNavigate } from "react-router-dom";

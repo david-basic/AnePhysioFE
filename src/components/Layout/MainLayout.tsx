@@ -1,5 +1,5 @@
 import { Layout } from "antd";
-import { FC, type PropsWithChildren } from "react";
+import { type FC, type PropsWithChildren } from "react";
 import HeaderBar from "./HeaderBar";
 import { Content } from "antd/es/layout/layout";
 import { Sidebar } from "./Sidebar";

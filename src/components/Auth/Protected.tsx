@@ -1,4 +1,4 @@
-import { FC, type PropsWithChildren } from "react";
+import { type FC, type PropsWithChildren } from "react";
 import { Navigate } from "react-router-dom";
 import client_routes from "../../config/client_routes";
 

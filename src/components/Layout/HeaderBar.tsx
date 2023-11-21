@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { type FC } from "react";
 import { HomeOutlined, UserOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";

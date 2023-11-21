@@ -10,7 +10,7 @@ import Protected from "./components/Auth/Protected";
 import HomePage from "./pages/HomePage";
 import MainLayout from "./components/Layout/MainLayout";
 import LogoutPage from "./pages/Auth/LogoutPage";
-import { FC } from "react";
+import { type FC } from "react";
 
 const App: FC = () => {
 	const isLoggedIn: boolean = useSelector(
