@@ -6,7 +6,6 @@ const authInitState: AuthInitState = {
 	accessToken: "",
 	refreshToken: "",
 	tokenType: "Bearer",
-	tokenValid: false,
 };
 
 const authSlice = createSlice({
@@ -27,9 +26,6 @@ const authSlice = createSlice({
 		},
 		setTokenType: (state, action: PayloadAction<string>) => {
 			state.tokenType = action.payload;
-		},
-		setIsTokenValid: (state, action: PayloadAction<boolean>) => {
-			state.tokenValid = action.payload;
 		},
 		resetAllStateToDefaults: (state) => {
 			state = authInitState;

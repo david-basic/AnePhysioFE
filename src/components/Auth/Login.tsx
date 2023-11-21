@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import styles from "./Login.module.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,7 +27,7 @@ const Login: FC = () => {
 		}
 	}, [isLoggedIn, navigate]);
 
-	const onSubmit = (values: any) => {
+	const onSubmit = (values: LoginRequestData) => {
 		const userData = {
 			username: values.username,
 			password: values.password,
@@ -45,10 +45,13 @@ const Login: FC = () => {
 			manageLoginResponseData.bind(null, userData.username)
 		);
 
-		function manageLoginResponseData(username: string, loginData: any) {
-			if (loginData.status !== 200) {
+		function manageLoginResponseData(
+			username: string,
+			loginResponse: ApiLoginResponse
+		) {
+			if (loginResponse.status !== 200) {
 				setLoginValid(false);
-				setLoginErrorMessage(loginData.message);
+				setLoginErrorMessage(loginResponse.message);
 
 				dispatch(authActions.setIsLoggedIn(false));
 				localforage.setItem<boolean>("isLoggedIn", false);
@@ -57,12 +60,12 @@ const Login: FC = () => {
 				dispatch(authActions.setIsLoggedIn(true));
 
 				dispatch(
-					authActions.setAccessToken(loginData.data.accessToken)
+					authActions.setAccessToken(loginResponse.data.accessToken)
 				);
 				dispatch(
-					authActions.setRefreshToken(loginData.data.refreshToken)
+					authActions.setRefreshToken(loginResponse.data.refreshToken)
 				);
-				dispatch(authActions.setTokenType(loginData.data.tokenType));
+				dispatch(authActions.setTokenType(loginResponse.data.tokenType));
 
 				dispatch(authActions.setUsername(username));
 				dispatch(authActions.setIsLoggedIn(true));
@@ -71,12 +74,16 @@ const Login: FC = () => {
 				localforage.setItem<boolean>("isLoggedIn", true);
 				localforage.setItem<string>(
 					"accessToken",
-					loginData.data.accessToken
+					loginResponse.data.accessToken
 				);
-				localforage.setItem<string>("tokenType", loginData.data.tokenType);
-				localforage.setItem<string>("refreshToken", loginData.data.refreshToken);
-
-				sessionStorage.setItem("canFetchUserData", "true");
+				localforage.setItem<string>(
+					"tokenType",
+					loginResponse.data.tokenType
+				);
+				localforage.setItem<string>(
+					"refreshToken",
+					loginResponse.data.refreshToken
+				);
 
 				navigate(client_routes.ROUTE_HOME, { replace: true });
 			}
