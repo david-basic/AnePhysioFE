@@ -1,4 +1,4 @@
-import React from "react";
+import { FC } from "react";
 import { HomeOutlined, UserOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
@@ -7,7 +7,7 @@ import { Row } from "antd";
 import { Link } from "react-router-dom";
 import client_routes from "../../config/client_routes";
 
-export const HeaderBar: React.FC = () => {
+export const HeaderBar: FC = () => {
 	const username = useSelector((state: RootState) => state.auth.username);
 
 	return (

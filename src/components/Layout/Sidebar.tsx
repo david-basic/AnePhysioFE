@@ -1,11 +1,11 @@
-import React from "react";
+import { FC } from "react";
 import { PoweroffOutlined } from "@ant-design/icons";
 import client_routes, { sideBarKey } from "../../config/client_routes";
 import { NavLink } from "react-router-dom";
 import Sider from "antd/es/layout/Sider";
 import { Menu } from "antd";
 
-export const Sidebar: React.FC = () => {
+export const Sidebar: FC = () => {
 	const sideBarItems = [
 		{
 			key: sideBarKey.LogOut,

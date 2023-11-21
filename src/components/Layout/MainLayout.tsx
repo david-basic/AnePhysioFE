@@ -1,12 +1,12 @@
 import { Layout } from "antd";
-import React, { type PropsWithChildren } from "react";
+import { FC, type PropsWithChildren } from "react";
 import HeaderBar from "./HeaderBar";
 import { Content } from "antd/es/layout/layout";
 import { Sidebar } from "./Sidebar";
 
 type MainLayoutProps = PropsWithChildren;
 
-const MainLayout: React.FC<MainLayoutProps> = ({ children }: MainLayoutProps) => {
+const MainLayout: FC<MainLayoutProps> = ({ children }: MainLayoutProps) => {
 	return (
 		<Layout>
 			<HeaderBar />
