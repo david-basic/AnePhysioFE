@@ -27,7 +27,7 @@ const LogoutPage: FC = () => {
 	};
 
 	return (
-		<ul>
+		<ul className={`${styles.list}`}>
 			<li>
 				<h1>Are you sure you want to logout?</h1>
 			</li>

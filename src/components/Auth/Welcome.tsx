@@ -1,5 +1,5 @@
 import { type FC, useEffect } from "react";
-import styles from "./Register.module.css";
+import styles from "./Welcome.module.css";
 import { Button } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -27,7 +27,7 @@ const Welcome: FC = () => {
 
 	return (
 		<div className={`${styles.content} ${styles["centered-element"]}`}>
-			<ul style={{listStyleType: "none"}}>
+			<ul className={`${styles.list}`}>
 				<li>
 					<h1>AnePhysio</h1>
 				</li>
