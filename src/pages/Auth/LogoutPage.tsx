@@ -27,10 +27,7 @@ const LogoutPage: FC = () => {
 	};
 
 	return (
-		<ul>
-			<li>
-				<h1>Are you sure you want to logout?</h1>
-			</li>
+		<ul className={styles["centered-element"]}>
 			<li>
 				<Button
 					type='text'
