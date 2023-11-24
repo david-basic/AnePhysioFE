@@ -66,3 +66,32 @@ interface LoginResponseData {
 	refreshToken: string;
 	tokenType: string;
 };
+/**
+ * Interface used to define data object needed for register request on the API
+ * @param firstname First name user input on the register form
+ * @param lastname Last name user input on the register form
+ * @param username Username user input on the register form
+ * @param password Password user input on the register form
+ * 
+ */
+interface RegisterRequestData {
+	firstname: string;
+	lastname: string;
+	username: string;
+	password: string;
+};
+/**
+ * Interface used to define response object acquired as a response to the register request on the API
+ * @param timestamp Timestamp denoting time of user register
+ * @param status Http status of the request in number form
+ * @param success Boolean denoting success (true) or failure (false) of the register request
+ * @param message Appropriate message with a text client can display to the user
+ * 
+ */
+interface ApiRegisterResponse {
+	timestamp: Date;
+	status: number;
+	success: boolean;
+	message: string;
+	data?: any;
+};

@@ -33,6 +33,6 @@ h1 {
 	border-color: black;
 }
 
-.list {
-    list-style-type: none;
+ul {
+	list-style-type: none;
 }

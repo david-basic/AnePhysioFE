@@ -18,7 +18,7 @@ const Register: FC = () => {
 	const usernameRef = useRef<InputRef>(null);
 	const passwordRef = useRef<InputRef>(null);
 
-	const onFinish = (values: any) => {
+	const onFinish = (values: RegisterRequestData) => {
 		const registerUserInputData = {
 			firstName: values.firstname,
 			lastName: values.lastname,
@@ -26,7 +26,7 @@ const Register: FC = () => {
 			password: values.password,
 		};
 
-		const manageRegisterResponseData = (registerResponseData: any) => {
+		const manageRegisterResponseData = (registerResponseData: ApiRegisterResponse) => {
 			if (registerResponseData.success === undefined) {
 				console.log("There was response error");
 				setRegisterErrorMessage(registerResponseData.message);
@@ -34,7 +34,7 @@ const Register: FC = () => {
 			} else {
 				setRegisterErrorMessage("");
 				setRegisterSuccessMessage(registerResponseData.message);
-				navigate(client_routes.ROUTE_AUTH_REGISTER, { replace: true }); //
+				navigate(client_routes.ROUTE_AUTH_REGISTER, { replace: true });
 			}
 		};
 

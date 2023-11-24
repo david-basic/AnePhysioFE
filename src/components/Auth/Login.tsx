@@ -57,32 +57,33 @@ const Login: FC = () => {
 				localforage.setItem<boolean>("isLoggedIn", false);
 			} else {
 				dispatch(authActions.setUsername(username));
+				localforage.setItem<string>("username", username);
+
 				dispatch(authActions.setIsLoggedIn(true));
+				localforage.setItem<boolean>("isLoggedIn", true);
 
 				dispatch(
 					authActions.setAccessToken(loginResponse.data.accessToken)
 				);
-				dispatch(
-					authActions.setRefreshToken(loginResponse.data.refreshToken)
-				);
-				dispatch(authActions.setTokenType(loginResponse.data.tokenType));
-
-				dispatch(authActions.setUsername(username));
-				dispatch(authActions.setIsLoggedIn(true));
-
-				localforage.setItem<string>("username", username);
-				localforage.setItem<boolean>("isLoggedIn", true);
 				localforage.setItem<string>(
 					"accessToken",
 					loginResponse.data.accessToken
 				);
-				localforage.setItem<string>(
-					"tokenType",
-					loginResponse.data.tokenType
+
+				dispatch(
+					authActions.setRefreshToken(loginResponse.data.refreshToken)
 				);
 				localforage.setItem<string>(
 					"refreshToken",
 					loginResponse.data.refreshToken
+				);
+
+				dispatch(
+					authActions.setTokenType(loginResponse.data.tokenType)
+				);
+				localforage.setItem<string>(
+					"tokenType",
+					loginResponse.data.tokenType
 				);
 
 				navigate(client_routes.ROUTE_HOME, { replace: true });

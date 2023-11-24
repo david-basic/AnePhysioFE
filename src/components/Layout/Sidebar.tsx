@@ -18,11 +18,10 @@ export const Sidebar: FC = () => {
 
 	return (
 		<>
-			<Sider collapsible width={200} style={{ overflowY: "scroll" }}>
+			<Sider collapsible defaultCollapsed width={200} style={{ overflowY: "hidden" }}>
 				<Menu
 					theme='dark'
 					mode='inline'
-					style={{ height: "100%" }}
 					items={sideBarItems}
 				/>
 			</Sider>
