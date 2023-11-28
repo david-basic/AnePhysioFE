@@ -2,15 +2,12 @@ import { type FC, useEffect } from "react";
 import styles from "./Welcome.module.css";
 import { Button } from "antd";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import client_routes from "../../config/client_routes";
-import { RootState } from "../../store/store";
+import { useAppSelector } from "../../hooks/use_app_selector";
 
 const Welcome: FC = () => {
 	const navigate = useNavigate();
-	const isLoggedIn: boolean = useSelector(
-		(state: RootState) => state.auth.isLoggedIn
-	);
+	const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
 
 	useEffect(() => {
 		if (isLoggedIn) {
@@ -32,9 +29,7 @@ const Welcome: FC = () => {
 					<h1>AnePhysio</h1>
 				</li>
 				<li className={styles["lighter-text"]}>
-					<p>
-						Thank you for choosing our application
-					</p>
+					<p>Thank you for choosing our application</p>
 				</li>
 				<li>
 					<Button
@@ -58,7 +53,8 @@ const Welcome: FC = () => {
 				</li>
 				<li className={styles["lighter-text"]}>
 					<p>
-						By accessing the application you accept Terms and Conditions
+						By accessing the application you accept Terms and
+						Conditions
 						<br /> and Privacy policy!
 					</p>
 				</li>
