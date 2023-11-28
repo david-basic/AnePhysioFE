@@ -3,7 +3,7 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import styles from "./Login.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
-import { RootState } from "../../store";
+import { RootState } from "../../store/store";
 import useHttp from "../../hooks/use_http";
 import client_routes from "../../config/client_routes";
 import api_routes from "../../config/api_routes";

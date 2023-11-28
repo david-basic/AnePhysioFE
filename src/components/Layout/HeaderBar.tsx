@@ -1,7 +1,7 @@
 import { type FC } from "react";
 import { HomeOutlined, UserOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { RootState } from "../../store/store";
 import { Header } from "antd/es/layout/layout";
 import { Row } from "antd";
 import { Link } from "react-router-dom";

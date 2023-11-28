@@ -4,7 +4,7 @@ import { Button } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import client_routes from "../../config/client_routes";
-import { RootState } from "../../store";
+import { RootState } from "../../store/store";
 
 const Welcome: FC = () => {
 	const navigate = useNavigate();
