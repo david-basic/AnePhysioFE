@@ -1,25 +1,23 @@
 import { type FC, useEffect, useState } from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import styles from "./Login.module.css";
-import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
-import { RootState } from "../../store";
 import useHttp from "../../hooks/use_http";
 import client_routes from "../../config/client_routes";
 import api_routes from "../../config/api_routes";
 import { authActions } from "../../store/auth-slice";
 import localforage from "localforage";
 import { Button, Form, Input } from "antd";
+import { useAppDispatch } from "../../hooks/use_app_dispatch";
+import { useAppSelector } from "../../hooks/use_app_selector";
 
 const Login: FC = () => {
 	const [loginValid, setLoginValid] = useState(true);
 	const [loginErrorMessage, setLoginErrorMessage] = useState("");
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 	const { sendRequest: sendLoginRequest } = useHttp();
-	const isLoggedIn: boolean = useSelector(
-		(state: RootState) => state.auth.isLoggedIn
-	);
+	const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
 
 	useEffect(() => {
 		if (isLoggedIn) {

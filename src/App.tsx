@@ -1,6 +1,6 @@
 import "./App.css";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "./store";
+import { useSelector } from "react-redux";
+import { RootState } from "./store/store";
 import client_routes from "./config/client_routes";
 import WelcomePage from "./pages/Auth/WelcomePage";
 import { useRoutes } from "react-router-dom";
@@ -13,9 +13,10 @@ import LogoutPage from "./pages/Auth/LogoutPage";
 import { useEffect, type FC } from "react";
 import localforage from "localforage";
 import { authActions } from "./store/auth-slice";
+import { useAppDispatch } from "./hooks/use_app_dispatch";
 
 const App: FC = () => {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
 		async function getStoredStates() {
