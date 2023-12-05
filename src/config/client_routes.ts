@@ -11,6 +11,7 @@ const client_routes = {
 };
 
 export const sideBarKey = {
+    Home: "sidebar-home",
     LogOut: "sidebar-logout",
 };
 
