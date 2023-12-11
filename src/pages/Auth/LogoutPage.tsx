@@ -1,14 +1,14 @@
 import { FC } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { authActions } from "../../store/auth-slice";
 import client_routes from "../../config/client_routes";
 import styles from "./LogoutPage.module.css";
 import { Button } from "antd";
 import localforage from "localforage";
+import { useAppDispatch } from "../../hooks/use_app_dispatch";
 
 const LogoutPage: FC = () => {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 
 	const logoutHandler = () => {
@@ -27,10 +27,7 @@ const LogoutPage: FC = () => {
 	};
 
 	return (
-		<ul>
-			<li>
-				<h1>Are you sure you want to logout?</h1>
-			</li>
+		<ul className={styles["centered-element"]}>
 			<li>
 				<Button
 					type='text'

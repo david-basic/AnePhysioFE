@@ -1,6 +1,7 @@
+import { type FC } from "react";
 import Welcome from "../../components/Auth/Welcome";
 
-const WelcomePage = () => {
+const WelcomePage: FC = () => {
 	return <Welcome />;
 };
 

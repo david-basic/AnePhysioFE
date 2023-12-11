@@ -1,25 +1,23 @@
-import { FC, useEffect, useState } from "react";
+import { type FC, useEffect, useState } from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import styles from "./Login.module.css";
-import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
-import { RootState } from "../../store";
 import useHttp from "../../hooks/use_http";
 import client_routes from "../../config/client_routes";
 import api_routes from "../../config/api_routes";
 import { authActions } from "../../store/auth-slice";
 import localforage from "localforage";
 import { Button, Form, Input } from "antd";
+import { useAppDispatch } from "../../hooks/use_app_dispatch";
+import { useAppSelector } from "../../hooks/use_app_selector";
 
 const Login: FC = () => {
 	const [loginValid, setLoginValid] = useState(true);
 	const [loginErrorMessage, setLoginErrorMessage] = useState("");
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 	const { sendRequest: sendLoginRequest } = useHttp();
-	const isLoggedIn: boolean = useSelector(
-		(state: RootState) => state.auth.isLoggedIn
-	);
+	const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
 
 	useEffect(() => {
 		if (isLoggedIn) {
@@ -57,32 +55,33 @@ const Login: FC = () => {
 				localforage.setItem<boolean>("isLoggedIn", false);
 			} else {
 				dispatch(authActions.setUsername(username));
+				localforage.setItem<string>("username", username);
+
 				dispatch(authActions.setIsLoggedIn(true));
+				localforage.setItem<boolean>("isLoggedIn", true);
 
 				dispatch(
 					authActions.setAccessToken(loginResponse.data.accessToken)
 				);
-				dispatch(
-					authActions.setRefreshToken(loginResponse.data.refreshToken)
-				);
-				dispatch(authActions.setTokenType(loginResponse.data.tokenType));
-
-				dispatch(authActions.setUsername(username));
-				dispatch(authActions.setIsLoggedIn(true));
-
-				localforage.setItem<string>("username", username);
-				localforage.setItem<boolean>("isLoggedIn", true);
 				localforage.setItem<string>(
 					"accessToken",
 					loginResponse.data.accessToken
 				);
-				localforage.setItem<string>(
-					"tokenType",
-					loginResponse.data.tokenType
+
+				dispatch(
+					authActions.setRefreshToken(loginResponse.data.refreshToken)
 				);
 				localforage.setItem<string>(
 					"refreshToken",
 					loginResponse.data.refreshToken
+				);
+
+				dispatch(
+					authActions.setTokenType(loginResponse.data.tokenType)
+				);
+				localforage.setItem<string>(
+					"tokenType",
+					loginResponse.data.tokenType
 				);
 
 				navigate(client_routes.ROUTE_HOME, { replace: true });

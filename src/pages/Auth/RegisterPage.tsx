@@ -1,6 +1,7 @@
+import { type FC } from "react";
 import Register from "../../components/Auth/Register";
 
-const RegisterPage = () => {
+const RegisterPage: FC = () => {
 	return <Register />;
 };
 

@@ -1,13 +1,12 @@
-import { FC } from "react";
+import { type FC, type PropsWithChildren } from "react";
 import { Navigate } from "react-router-dom";
 import client_routes from "../../config/client_routes";
 
-type Props = {
+type ProtectedProps = PropsWithChildren<{
 	isLoggedIn: boolean;
-	children?: React.ReactNode;
-};
+}>
 
-const Protected: FC<Props> = (props) => {
+const Protected: FC<ProtectedProps> = (props: ProtectedProps) => {
 	if (!props.isLoggedIn) {
 		return <Navigate to={client_routes.ROUTE_AUTH} replace={true} />;
 	}

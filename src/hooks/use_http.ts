@@ -1,12 +1,11 @@
 import { useCallback, useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../store";
+import { useAppSelector } from "./use_app_selector";
 
 const useHttp = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
-    const tokenType = useSelector((state: RootState) => state.auth.tokenType);
-	const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+    const isLoggedIn = useAppSelector((state) =>  state.auth.isLoggedIn );
+    const tokenType = useAppSelector((state) => state.auth.tokenType);
+	const accessToken = useAppSelector((state) => state.auth.accessToken);
 	const fullToken = `${tokenType} ${accessToken}`;
 
     const sendRequest = useCallback(
