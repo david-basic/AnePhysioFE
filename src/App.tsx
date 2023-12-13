@@ -14,6 +14,11 @@ import { useEffect, type FC } from "react";
 import localforage from "localforage";
 import { authActions } from "./store/auth-slice";
 import { useAppDispatch } from "./hooks/use_app_dispatch";
+import { useAppSelector } from "./hooks/use_app_selector";
+import JilRijekaHomePage from "./pages/departments/JilRijekaHomePage";
+import CrcHomePage from "./pages/departments/CrcHomePage";
+import JilSusakHomePage from "./pages/departments/JilSusakHomePage";
+import KardioJilHomePage from "./pages/departments/KardioJilHomePage";
 
 const App: FC = () => {
 	const dispatch = useAppDispatch();
@@ -88,9 +93,7 @@ const App: FC = () => {
 		getStoredStates();
 	}, [dispatch]);
 
-	const isLoggedIn: boolean = useSelector(
-		(state: RootState) => state.auth.isLoggedIn
-	);
+	const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
 
 	const authWelcomeRoute = {
 		path: client_routes.ROUTE_AUTH,
@@ -122,6 +125,42 @@ const App: FC = () => {
 			/>
 		),
 	};
+	const jilRijekaHomeRoute = {
+		path: client_routes.ROUTE_DEPT_JIL_RIJEKA,
+		element: (
+			<Protected
+				isLoggedIn={isLoggedIn}
+				children={<MainLayout children={<JilRijekaHomePage />} />}
+			/>
+		),
+	};
+	const crcHomeRoute = {
+		path: client_routes.ROUTE_DEPT_CRC,
+		element: (
+			<Protected
+				isLoggedIn={isLoggedIn}
+				children={<MainLayout children={<CrcHomePage />} />}
+			/>
+		),
+	};
+	const jilSusakHomeRoute = {
+		path: client_routes.ROUTE_DEPT_JIL_SUSAK,
+		element: (
+			<Protected
+				isLoggedIn={isLoggedIn}
+				children={<MainLayout children={<JilSusakHomePage />} />}
+			/>
+		),
+	};
+	const kardioJilHomeRoute = {
+		path: client_routes.ROUTE_DEPT_KARDIO_JIL,
+		element: (
+			<Protected
+				isLoggedIn={isLoggedIn}
+				children={<MainLayout children={<KardioJilHomePage />} />}
+			/>
+		),
+	};
 
 	const routing = useRoutes([
 		authWelcomeRoute,
@@ -129,6 +168,10 @@ const App: FC = () => {
 		authLogoutRoute,
 		authRegisterRoute,
 		homeRoute,
+		jilRijekaHomeRoute,
+		crcHomeRoute,
+		jilSusakHomeRoute,
+		kardioJilHomeRoute,
 	]);
 
 	return <>{routing}</>;
