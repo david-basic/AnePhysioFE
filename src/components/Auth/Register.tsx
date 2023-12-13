@@ -6,6 +6,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import useHttp from "../../hooks/use_http";
 import client_routes from "../../config/client_routes";
 import api_routes from "../../config/api_routes";
+import { ApiRegisterResponse, RegisterRequestData } from "../../type";
 
 const Register: FC = () => {
 	const navigate = useNavigate();

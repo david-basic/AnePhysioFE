@@ -1,3 +1,5 @@
+import { DepartmentVM } from "./models/DepartmentVM";
+
 /**
  * Type used for configuring the request towards a API
  * @param url Url towards which the request is going to be made
@@ -95,3 +97,18 @@ interface ApiRegisterResponse {
 	message: string;
 	data?: any;
 };
+/**
+ * Interfaces used to define response object acquired as a response to the get all departments request on the API
+ * @param timestamp Timestamp denoting time of response
+ * @param status Http status of the request in number form
+ * @param success Boolean denoting success (true) or failure (false) of the api request
+ * @param message Appropriate message in string format
+ * @param data Department data
+ */
+interface ApiGetAllDepartmentsResponse {
+	timestamp: Date;
+	status: number;
+	success: boolean;
+	message: string;
+	data: DepartmentVM[];
+}

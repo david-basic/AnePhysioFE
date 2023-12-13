@@ -10,6 +10,7 @@ import localforage from "localforage";
 import { Button, Form, Input } from "antd";
 import { useAppDispatch } from "../../hooks/use_app_dispatch";
 import { useAppSelector } from "../../hooks/use_app_selector";
+import { ApiLoginResponse, LoginRequestData } from "../../type";
 
 const Login: FC = () => {
 	const [loginValid, setLoginValid] = useState(true);

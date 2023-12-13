@@ -1,10 +1,11 @@
 import { type PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { AuthInitState } from "../type";
 
 const authInitState: AuthInitState = {
 	isLoggedIn: false,
-	username: "",
-	accessToken: "",
-	refreshToken: "",
+	username: " ",
+	accessToken: " ",
+	refreshToken: " ",
 	tokenType: "Bearer",
 };
 

@@ -1,6 +1,4 @@
 import "./App.css";
-import { useSelector } from "react-redux";
-import { RootState } from "./store/store";
 import client_routes from "./config/client_routes";
 import WelcomePage from "./pages/Auth/WelcomePage";
 import { useRoutes } from "react-router-dom";
