@@ -29,7 +29,11 @@ const authSlice = createSlice({
 			state.tokenType = action.payload;
 		},
 		resetAllStateToDefaults: (state) => {
-			state = authInitState;
+			state.isLoggedIn = authInitState.isLoggedIn;
+			state.username = authInitState.username;
+			state.accessToken = authInitState.accessToken;
+			state.refreshToken = authInitState.refreshToken;
+			state.tokenType = authInitState.tokenType;
 		},
 	},
 });

@@ -85,6 +85,8 @@ const Login: FC = () => {
 					loginResponse.data.tokenType
 				);
 
+				sessionStorage.setItem("canFetchInitialData", "true");
+
 				navigate(client_routes.ROUTE_HOME, { replace: true });
 			}
 		}
