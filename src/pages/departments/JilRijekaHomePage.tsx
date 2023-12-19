@@ -1,6 +1,5 @@
 import { type FC } from "react";
 import Department from "../../components/Departments/Department";
-// import { ApiGetAllDepartmentsResponse } from "../../type";
 
 const JilRijekaHomePage: FC = () => {
 	return (

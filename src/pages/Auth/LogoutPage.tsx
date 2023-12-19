@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { type FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { authActions } from "../../store/auth-slice";
 import client_routes from "../../config/client_routes";

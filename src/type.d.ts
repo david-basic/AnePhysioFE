@@ -10,7 +10,7 @@ import { DepartmentVM } from "./models/DepartmentVM";
  */
 type RequestConfig = {
 	url: RequestInfo | URL;
-	method?: string | undefined;
+	method?: "GET" | "POST" | "DELETE" | "PUT" | undefined;
 	body?: any;
 	headers?: HeadersInit | undefined;
 };
@@ -108,7 +108,9 @@ interface ApiRegisterResponse {
 interface ApiGetAllDepartmentsResponse {
 	timestamp: Date;
 	status: number;
-	success: boolean;
 	message: string;
-	data: DepartmentVM[];
+	success?: boolean;
+	error?: string;
+	data?: DepartmentVM[];
+	path?: string;
 }
