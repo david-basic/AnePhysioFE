@@ -1,20 +1,20 @@
 import { type FC } from "react";
 import Department from "../../components/Departments/Department";
+import { useAppSelector } from "../../hooks/use_app_selector";
 
 const JilRijekaHomePage: FC = () => {
+	const departmentData = useAppSelector(
+		(state) => state.deptLocalities.jilRIjeka
+	);
+
 	return (
 		<Department
-			id='1'
-			name='1'
-			locality={{ id: "1.1", displayName: "1.1", name: "1.1" }}
-			shorthand='JIL RIJEKA'
-			key={"jilRijeka"}
-			boxes={[
-				{ id: "1", name: "1", beds: [] },
-				{ id: "2", name: "2", beds: [] },
-				{ id: "3", name: "3", beds: [] },
-				{ id: "4", name: "4", beds: [] },
-			]}
+			id={departmentData.id}
+			name={departmentData.name}
+			locality={departmentData.locality}
+			shorthand={departmentData.shorthand}
+			key={departmentData.shorthand}
+			boxes={departmentData.boxes}
 		/>
 	);
 };

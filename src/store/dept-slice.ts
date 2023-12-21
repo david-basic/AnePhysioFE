@@ -22,6 +22,9 @@ const deptSlice = createSlice({
 
 			state.push(dept);
 		},
+		resetDepartmentList: (state) => {
+			state.length = 0;
+		},
 	},
 });
 

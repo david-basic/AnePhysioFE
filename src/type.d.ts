@@ -114,3 +114,16 @@ interface ApiGetAllDepartmentsResponse {
 	data?: DepartmentVM[];
 	path?: string;
 }
+/**
+ * Type used to define the initial state of the DepartmentLocalities state slice
+ * @param jilRIjeka Defining Jil Rijeka locality state
+ * @param jilSusak Defining Jil Sušak locality state
+ * @param crc Defining CRC locality state
+ * @param kardioJil Defining Kardio JIL locality state
+ */
+type DepartmentLocalitiesInitState = {
+	jilRIjeka: DepartmentVM;
+	jilSusak: DepartmentVM;
+	crc: DepartmentVM;
+	kardioJil: DepartmentVM;
+}

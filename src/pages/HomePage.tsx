@@ -5,6 +5,8 @@ import { useAppDispatch } from "../hooks/use_app_dispatch";
 import { HttpStatusCode } from "axios";
 import { deptActions } from "../store/dept-slice";
 import { ApiGetAllDepartmentsResponse } from "../type";
+import { deptLocalitiesActions } from "../store/dept-localities-slice";
+import constants from "../config/constants";
 
 const HomePage: FC = () => {
 	const { sendRequest: fetchDepartmentsRequest } = useFetchApi();
@@ -19,17 +21,26 @@ const HomePage: FC = () => {
 						{
 							url: api_routes.ROUTE_DEPT_GET_ALL,
 						},
-						(departmentResponseData: ApiGetAllDepartmentsResponse) => {
-
-							console.log(departmentResponseData);
-
-							if (departmentResponseData.status !== HttpStatusCode.Ok) {
-								console.error("There was a error fetching departments");
-								console.log(departmentResponseData); //TODO remove before production
+						(
+							departmentResponseData: ApiGetAllDepartmentsResponse
+						) => {
+							if (
+								departmentResponseData.status !==
+								HttpStatusCode.Ok
+							) {
+								console.error(
+									"There was a error fetching departments"
+								);
 							} else {
-								if(departmentResponseData.data!.length !== 0) { //TODO check this out, might change it and handle the case when there are no departments (however unlikely)
-									departmentResponseData.data!.map(dept => dispatch(deptActions.addToDepartmentList(dept)));
-								}
+								departmentResponseData.data!.map((dept) => dispatch(deptActions.addToDepartmentList(dept)));
+								departmentResponseData.data!.map((dept) => {
+									dept.shorthand === constants.JIL_RIJEKA && dispatch(deptLocalitiesActions.setJilRijeka(dept));
+									dept.shorthand === constants.JIL_SUSAK && dispatch(deptLocalitiesActions.setJilSusak(dept));
+									dept.shorthand === constants.CRC && dispatch(deptLocalitiesActions.setCrc(dept));
+									dept.shorthand === constants.KARDIO_JIL && dispatch(deptLocalitiesActions.setKardioJil(dept));
+
+									return "done";
+								});
 							}
 						}
 					);
