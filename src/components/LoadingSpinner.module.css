@@ -1,0 +1,24 @@
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.spinner-image {
+  width: 100px;
+  height: 100px;
+  background-image: url('../assets/loading_spinner.png');
+  background-size: cover;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -13,7 +13,8 @@ const MainLayout: FC<MainLayoutProps> = ({ children }: MainLayoutProps) => {
 				<Layout>
 					<Sidebar />
 					<Layout className={`${styles["parent-container"]}`}>
-						<Content className={`content_padding ${styles["centered-component"]}`}>
+						<Content
+							className={`content_padding ${styles["centered-component"]}`}>
 							{children}
 						</Content>
 					</Layout>

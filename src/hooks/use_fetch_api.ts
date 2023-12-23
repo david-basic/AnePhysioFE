@@ -2,9 +2,18 @@ import { useCallback, useState } from "react";
 import { useAppSelector } from "./use_app_selector";
 import { RequestConfig } from "../type";
 
-const useHttp = () => {
+type UseFetchApiReturnType = {
+	isLoading: boolean;
+	sendRequest: (
+		requestConfig: RequestConfig,
+		manageResponseData: (arg: any) => void
+	) => Promise<{
+		cleanupFunction: () => void;
+	}>;
+};
+
+const useFetchApi = (): UseFetchApiReturnType => {
 	const [isLoading, setIsLoading] = useState(false);
-	const isLoggedIn = useAppSelector((state) => state.authReducer.isLoggedIn);
 	const tokenType = useAppSelector((state) => state.authReducer.tokenType);
 	const accessToken = useAppSelector((state) => state.authReducer.accessToken);
 	const fullToken = `${tokenType} ${accessToken}`;
@@ -16,7 +25,10 @@ const useHttp = () => {
 		) => {
 			setIsLoading(true);
 
-			if (!isLoggedIn) {
+			let abortController = new AbortController();
+			const { signal } = abortController;
+
+			try {
 				const response = await fetch(requestConfig.url, {
 					method: requestConfig.method ? requestConfig.method : "GET",
 					headers: requestConfig.headers
@@ -27,6 +39,7 @@ const useHttp = () => {
 					body: requestConfig.body
 						? JSON.stringify(requestConfig.body)
 						: null,
+					signal,
 				});
 
 				const responseData = await response.json();
@@ -34,16 +47,21 @@ const useHttp = () => {
 				manageResponseData(responseData);
 
 				setIsLoading(false);
+			} catch (error) {
+				console.error("Error fetching data:", error);
+				setIsLoading(false);
 			}
+
+			return {
+				cleanupFunction: () => {
+					abortController.abort("Cleanup function called.");
+				},
+			};
 		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[]
+		[fullToken]
 	);
 
-	return {
-		isLoading,
-		sendRequest,
-	};
+	return { isLoading, sendRequest };
 };
 
-export default useHttp;
+export default useFetchApi;

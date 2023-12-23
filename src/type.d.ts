@@ -1,3 +1,5 @@
+import { DepartmentVM } from "./models/DepartmentVM";
+
 /**
  * Type used for configuring the request towards a API
  * @param url Url towards which the request is going to be made
@@ -8,7 +10,7 @@
  */
 type RequestConfig = {
 	url: RequestInfo | URL;
-	method?: string | undefined;
+	method?: "GET" | "POST" | "DELETE" | "PUT" | undefined;
 	body?: any;
 	headers?: HeadersInit | undefined;
 };
@@ -95,3 +97,33 @@ interface ApiRegisterResponse {
 	message: string;
 	data?: any;
 };
+/**
+ * Interfaces used to define response object acquired as a response to the get all departments request on the API
+ * @param timestamp Timestamp denoting time of response
+ * @param status Http status of the request in number form
+ * @param success Boolean denoting success (true) or failure (false) of the api request
+ * @param message Appropriate message in string format
+ * @param data Department data
+ */
+interface ApiGetAllDepartmentsResponse {
+	timestamp: Date;
+	status: number;
+	message: string;
+	success?: boolean;
+	error?: string;
+	data?: DepartmentVM[];
+	path?: string;
+}
+/**
+ * Type used to define the initial state of the DepartmentLocalities state slice
+ * @param jilRIjeka Defining Jil Rijeka locality state
+ * @param jilSusak Defining Jil Sušak locality state
+ * @param crc Defining CRC locality state
+ * @param kardioJil Defining Kardio JIL locality state
+ */
+type DepartmentLocalitiesInitState = {
+	jilRIjeka: DepartmentVM;
+	jilSusak: DepartmentVM;
+	crc: DepartmentVM;
+	kardioJil: DepartmentVM;
+}

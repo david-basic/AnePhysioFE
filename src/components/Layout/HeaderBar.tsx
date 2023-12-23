@@ -6,8 +6,13 @@ import { Link } from "react-router-dom";
 import client_routes from "../../config/client_routes";
 import { useAppSelector } from "../../hooks/use_app_selector";
 
+/**
+ * A header bar component with a Home button and a username of the currently logged in user displayed
+ * Do not delete. Used as a reminder on how to best show the username of a user.
+ * @deprecated
+ */
 export const HeaderBar: FC = () => {
-	const username = useAppSelector((state) => state.auth.username);
+	const username = useAppSelector((state) => state.authReducer.username);
 
 	return (
 		<Header>

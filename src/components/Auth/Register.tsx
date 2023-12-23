@@ -3,13 +3,15 @@ import styles from "./Register.module.css";
 import { LockOutlined, IdcardOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, InputRef } from "antd";
 import { NavLink, useNavigate } from "react-router-dom";
-import useHttp from "../../hooks/use_http";
 import client_routes from "../../config/client_routes";
 import api_routes from "../../config/api_routes";
+import { ApiRegisterResponse, RegisterRequestData } from "../../type";
+import useFetchApi from "../../hooks/use_fetch_api";
+import { HttpStatusCode } from "axios";
 
 const Register: FC = () => {
 	const navigate = useNavigate();
-	const { sendRequest: sendRegisterRequest } = useHttp();
+	const { sendRequest: sendRegisterRequest, isLoading } = useFetchApi();
 	const [registerErrorMessage, setRegisterErrorMessage] = useState("");
 	const [registerSuccessMessage, setRegisterSuccessMessage] = useState("");
 
@@ -19,6 +21,10 @@ const Register: FC = () => {
 	const passwordRef = useRef<InputRef>(null);
 
 	const onFinish = (values: RegisterRequestData) => {
+		if (isLoading) {
+			return;
+		}
+
 		const registerUserInputData = {
 			firstName: values.firstname,
 			lastName: values.lastname,
@@ -26,9 +32,11 @@ const Register: FC = () => {
 			password: values.password,
 		};
 
-		const manageRegisterResponseData = (registerResponseData: ApiRegisterResponse) => {
-			if (registerResponseData.success === undefined) {
-				console.log("There was response error");
+		const manageRegisterResponseData = (
+			registerResponseData: ApiRegisterResponse
+		) => {
+			if (registerResponseData.status !== HttpStatusCode.Created) {
+				console.error("There was response error");
 				setRegisterErrorMessage(registerResponseData.message);
 				setRegisterSuccessMessage("");
 			} else {

@@ -7,7 +7,7 @@ import { useAppSelector } from "../../hooks/use_app_selector";
 
 const Welcome: FC = () => {
 	const navigate = useNavigate();
-	const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+	const isLoggedIn = useAppSelector((state) => state.authReducer.isLoggedIn);
 
 	useEffect(() => {
 		if (isLoggedIn) {

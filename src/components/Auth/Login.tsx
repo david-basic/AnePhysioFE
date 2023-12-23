@@ -2,7 +2,6 @@ import { type FC, useEffect, useState } from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import styles from "./Login.module.css";
 import { NavLink, useNavigate } from "react-router-dom";
-import useHttp from "../../hooks/use_http";
 import client_routes from "../../config/client_routes";
 import api_routes from "../../config/api_routes";
 import { authActions } from "../../store/auth-slice";
@@ -10,14 +9,17 @@ import localforage from "localforage";
 import { Button, Form, Input } from "antd";
 import { useAppDispatch } from "../../hooks/use_app_dispatch";
 import { useAppSelector } from "../../hooks/use_app_selector";
+import { ApiLoginResponse, LoginRequestData } from "../../type";
+import useFetchApi from "../../hooks/use_fetch_api";
+import { HttpStatusCode } from "axios";
 
 const Login: FC = () => {
 	const [loginValid, setLoginValid] = useState(true);
 	const [loginErrorMessage, setLoginErrorMessage] = useState("");
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
-	const { sendRequest: sendLoginRequest } = useHttp();
-	const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+	const isLoggedIn = useAppSelector((state) => state.authReducer.isLoggedIn);
+	const { sendRequest: sendLoginRequest, isLoading } = useFetchApi();
 
 	useEffect(() => {
 		if (isLoggedIn) {
@@ -25,7 +27,11 @@ const Login: FC = () => {
 		}
 	}, [isLoggedIn, navigate]);
 
-	const onSubmit = (values: LoginRequestData) => {
+	const onSubmit = async (values: LoginRequestData) => {
+		if (isLoading) {
+			return;
+		}
+
 		const userData = {
 			username: values.username,
 			password: values.password,
@@ -47,7 +53,7 @@ const Login: FC = () => {
 			username: string,
 			loginResponse: ApiLoginResponse
 		) {
-			if (loginResponse.status !== 200) {
+			if (loginResponse.status !== HttpStatusCode.Ok) {
 				setLoginValid(false);
 				setLoginErrorMessage(loginResponse.message);
 
@@ -83,6 +89,8 @@ const Login: FC = () => {
 					"tokenType",
 					loginResponse.data.tokenType
 				);
+
+				sessionStorage.setItem("canFetchInitialData", "true");
 
 				navigate(client_routes.ROUTE_HOME, { replace: true });
 			}

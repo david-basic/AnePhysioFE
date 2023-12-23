@@ -1,0 +1,10 @@
+.patient-list {
+    list-style: none;
+}
+
+.card {
+    width: 300px;
+    margin-top: 16px;
+    padding: 16px;
+    height: fit-content;
+}
