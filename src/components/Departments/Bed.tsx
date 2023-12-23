@@ -7,6 +7,7 @@ import { XSquare } from "react-bootstrap-icons";
 import useFetchApi from "../../hooks/use_fetch_api";
 import { ApiResponse } from "../../type";
 import { PatientVM } from "../../models/PatientVM";
+import api_routes from "../../config/api_routes";
 
 type BedProps = {
 	bedNum: number;
@@ -24,12 +25,11 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 
 		sendPatientDetailsRequest(
 			{
-				url: "",
-				method: "POST",
+				url: api_routes.ROUTE_PATIENT_GET + `/${patient!.id}`,
 				headers: { "Content-Type": "application/json" },
-				body: "",
 			},
 			(patientDetailsResponseData: ApiResponse<PatientVM>) => {
+				console.log("Patient details response:")
 				console.log(patientDetailsResponseData);
 			}
 		);
