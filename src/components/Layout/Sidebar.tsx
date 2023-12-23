@@ -1,13 +1,37 @@
-import { type FC } from "react";
+import { useState, type FC } from "react";
 import { PoweroffOutlined, HomeOutlined } from "@ant-design/icons";
 import client_routes, { sideBarKey } from "../../config/client_routes";
-import { NavLink } from "react-router-dom";
-import Sider from "antd/es/layout/Sider";
-import { Menu } from "antd";
+import { NavLink, useNavigate } from "react-router-dom";
 import { Heart, Hospital, Virus } from "react-bootstrap-icons";
+import { ItemType, MenuItemType } from "antd/es/menu/hooks/useItems";
+import Sider from "antd/es/layout/Sider";
+import { Menu, Modal } from "antd";
+import localforage from "localforage";
+import { authActions } from "../../store/auth-slice";
+import { useAppDispatch } from "../../hooks/use_app_dispatch";
+import { deptLocalitiesActions } from "../../store/dept-localities-slice";
 
 export const Sidebar: FC = () => {
-	const sideBarItems = [
+	const [showModal, setShowModal] = useState(false);
+	const dispatch = useAppDispatch();
+	const navigate = useNavigate();
+
+	const handleLogoutClick = () => {
+		localforage.clear();
+		sessionStorage.clear();
+		localStorage.clear();
+
+		dispatch(authActions.resetAllStateToDefaults());
+		dispatch(deptLocalitiesActions.resetDepartmentLocaltiesToInitValues());
+
+		navigate(client_routes.ROUTE_AUTH, { replace: true });
+	};
+
+	const handleShowModal = () => {
+		setShowModal(true);
+	};
+
+	const sideBarItems: ItemType<MenuItemType>[] = [
 		{
 			key: sideBarKey.Home,
 			icon: <HomeOutlined />,
@@ -17,7 +41,9 @@ export const Sidebar: FC = () => {
 			key: sideBarKey.JilRijeka,
 			icon: <Hospital />,
 			label: (
-				<NavLink to={client_routes.ROUTE_DEPT_JIL_RIJEKA}>JIL Rijeka</NavLink>
+				<NavLink to={client_routes.ROUTE_DEPT_JIL_RIJEKA}>
+					JIL Rijeka
+				</NavLink>
 			),
 		},
 		{
@@ -29,30 +55,43 @@ export const Sidebar: FC = () => {
 			key: sideBarKey.JilSusak,
 			icon: <Hospital />,
 			label: (
-				<NavLink to={client_routes.ROUTE_DEPT_JIL_SUSAK}>JIL Sušak</NavLink>
+				<NavLink to={client_routes.ROUTE_DEPT_JIL_SUSAK}>
+					JIL Sušak
+				</NavLink>
 			),
 		},
 		{
 			key: sideBarKey.KardioJil,
 			icon: <Heart />,
 			label: (
-				<NavLink to={client_routes.ROUTE_DEPT_KARDIO_JIL}>Kardio JIL</NavLink>
+				<NavLink to={client_routes.ROUTE_DEPT_KARDIO_JIL}>
+					Kardio JIL
+				</NavLink>
 			),
 		},
 		{
 			key: sideBarKey.LogOut,
 			icon: <PoweroffOutlined />,
-			label: (
-				<NavLink to={client_routes.ROUTE_AUTH_LOGOUT}>Log out</NavLink>
-			),
+			onClick: handleShowModal,
+			label: <p>Log out</p>,
 		},
 	];
 
 	return (
 		<>
-			<Sider
-				width={"auto"}>
+			<Sider width={"auto"}>
 				<Menu theme='dark' mode='inline' items={sideBarItems} />
+				<Modal
+					title='Log out confirmation'
+					centered
+					open={showModal}
+					onOk={handleLogoutClick}
+					okText='Log out'
+					okType='danger'
+					okButtonProps={{ type: "primary" }}
+					onCancel={() => setShowModal(false)}>
+					<h2>Do you want to log out?</h2>
+				</Modal>
 			</Sider>
 		</>
 	);
