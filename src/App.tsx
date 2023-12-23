@@ -7,7 +7,6 @@ import RegisterPage from "./pages/Auth/RegisterPage";
 import Protected from "./components/Auth/Protected";
 import HomePage from "./pages/HomePage";
 import MainLayout from "./components/Layout/MainLayout";
-import LogoutPage from "./pages/Auth/LogoutPage";
 import { type FC } from "react";
 import { useAppSelector } from "./hooks/use_app_selector";
 import JilRijekaHomePage from "./pages/departments/JilRijekaHomePage";
@@ -31,15 +30,15 @@ const App: FC = () => {
 		path: client_routes.ROUTE_AUTH_REGISTER,
 		element: <RegisterPage />,
 	};
-	const authLogoutRoute = {
-		path: client_routes.ROUTE_AUTH_LOGOUT,
-		element: (
-			<Protected
-				isLoggedIn={isLoggedIn}
-				children={<MainLayout children={<LogoutPage />} />}
-			/>
-		),
-	};
+	// const authLogoutRoute = {
+	// 	path: client_routes.ROUTE_AUTH_LOGOUT,
+	// 	element: (
+	// 		<Protected
+	// 			isLoggedIn={isLoggedIn}
+	// 			children={<MainLayout children={<LogoutPage />} />}
+	// 		/>
+	// 	),
+	// };
 	const homeRoute = {
 		path: client_routes.ROUTE_HOME,
 		element: (
@@ -89,7 +88,7 @@ const App: FC = () => {
 	const routing = useRoutes([
 		authWelcomeRoute,
 		authLoginRoute,
-		authLogoutRoute,
+		// authLogoutRoute,
 		authRegisterRoute,
 		homeRoute,
 		jilRijekaHomeRoute,
