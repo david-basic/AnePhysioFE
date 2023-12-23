@@ -4,9 +4,9 @@ import { RequestConfig } from "../type";
 
 const useHttp = () => {
 	const [isLoading, setIsLoading] = useState(false);
-	const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
-	const tokenType = useAppSelector((state) => state.auth.tokenType);
-	const accessToken = useAppSelector((state) => state.auth.accessToken);
+	const isLoggedIn = useAppSelector((state) => state.authReducer.isLoggedIn);
+	const tokenType = useAppSelector((state) => state.authReducer.tokenType);
+	const accessToken = useAppSelector((state) => state.authReducer.accessToken);
 	const fullToken = `${tokenType} ${accessToken}`;
 
 	const sendRequest = useCallback(

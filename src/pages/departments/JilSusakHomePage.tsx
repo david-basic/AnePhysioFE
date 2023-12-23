@@ -4,7 +4,7 @@ import { useAppSelector } from "../../hooks/use_app_selector";
 
 const JilSusakHomePage: FC = () => {
 	const departmentData = useAppSelector(
-		(state) => state.deptLocalities.jilSusak
+		(state) => state.deptLocalitiesReducer.jilSusak
 	);
 
 	return (

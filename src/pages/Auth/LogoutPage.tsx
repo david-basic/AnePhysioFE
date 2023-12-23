@@ -6,7 +6,6 @@ import styles from "./LogoutPage.module.css";
 import { Button } from "antd";
 import localforage from "localforage";
 import { useAppDispatch } from "../../hooks/use_app_dispatch";
-import { deptActions } from "../../store/dept-slice";
 import { deptLocalitiesActions } from "../../store/dept-localities-slice";
 
 const LogoutPage: FC = () => {
@@ -19,7 +18,6 @@ const LogoutPage: FC = () => {
 		localStorage.clear();
 		
 		dispatch(authActions.resetAllStateToDefaults());
-		dispatch(deptActions.resetDepartmentList());
 		dispatch(deptLocalitiesActions.resetDepartmentLocaltiesToInitValues());
 
 		navigate(client_routes.ROUTE_AUTH, { replace: true });

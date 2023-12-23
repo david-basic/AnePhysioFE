@@ -12,7 +12,7 @@ import { useAppSelector } from "../../hooks/use_app_selector";
  * @deprecated
  */
 export const HeaderBar: FC = () => {
-	const username = useAppSelector((state) => state.auth.username);
+	const username = useAppSelector((state) => state.authReducer.username);
 
 	return (
 		<Header>

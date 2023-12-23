@@ -3,10 +3,10 @@ import api_routes from "../config/api_routes";
 import useFetchApi from "../hooks/use_fetch_api";
 import { useAppDispatch } from "../hooks/use_app_dispatch";
 import { HttpStatusCode } from "axios";
-import { deptActions } from "../store/dept-slice";
 import { ApiGetAllDepartmentsResponse } from "../type";
 import { deptLocalitiesActions } from "../store/dept-localities-slice";
 import constants from "../config/constants";
+import localforage from "localforage";
 
 const HomePage: FC = () => {
 	const { sendRequest: fetchDepartmentsRequest } = useFetchApi();
@@ -32,12 +32,13 @@ const HomePage: FC = () => {
 									"There was a error fetching departments"
 								);
 							} else {
-								departmentResponseData.data!.map((dept) => dispatch(deptActions.addToDepartmentList(dept)));
 								departmentResponseData.data!.map((dept) => {
 									dept.shorthand === constants.JIL_RIJEKA && dispatch(deptLocalitiesActions.setJilRijeka(dept));
 									dept.shorthand === constants.JIL_SUSAK && dispatch(deptLocalitiesActions.setJilSusak(dept));
 									dept.shorthand === constants.CRC && dispatch(deptLocalitiesActions.setCrc(dept));
 									dept.shorthand === constants.KARDIO_JIL && dispatch(deptLocalitiesActions.setKardioJil(dept));
+
+									dept.shorthand === constants.KARDIO_JIL && localforage.setItem(dept.shorthand, dept);
 
 									return "done";
 								});

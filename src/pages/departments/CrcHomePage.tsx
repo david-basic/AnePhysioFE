@@ -4,7 +4,7 @@ import { useAppSelector } from "../../hooks/use_app_selector";
 
 const CrcHomePage: FC = () => {
 	const departmentData = useAppSelector(
-		(state) => state.deptLocalities.crc
+		(state) => state.deptLocalitiesReducer.crc
 	);
 
 	return (

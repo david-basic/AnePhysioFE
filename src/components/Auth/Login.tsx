@@ -18,7 +18,7 @@ const Login: FC = () => {
 	const [loginErrorMessage, setLoginErrorMessage] = useState("");
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
-	const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+	const isLoggedIn = useAppSelector((state) => state.authReducer.isLoggedIn);
 	const { sendRequest: sendLoginRequest, isLoading } = useFetchApi();
 
 	useEffect(() => {

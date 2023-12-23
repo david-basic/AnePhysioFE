@@ -4,7 +4,7 @@ import { useAppSelector } from "../../hooks/use_app_selector";
 
 const KardioJilHomePage: FC = () => {
 	const departmentData = useAppSelector(
-		(state) => state.deptLocalities.kardioJil
+		(state) => state.deptLocalitiesReducer.kardioJil
 	);
 
 	return (

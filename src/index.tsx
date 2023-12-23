@@ -2,9 +2,11 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import { Provider } from "react-redux";
-import store from "./store/store";
+import { persistor, store } from "./store/store";
 import { BrowserRouter } from "react-router-dom";
 import { StrictMode } from "react";
+import { PersistGate } from "redux-persist/integration/react";
+import LoadingSpinner from "./components/LoadingSpinner";
 
 const root = ReactDOM.createRoot(
 	document.getElementById("root") as HTMLElement
@@ -12,10 +14,12 @@ const root = ReactDOM.createRoot(
 
 root.render(
 	<Provider store={store}>
-		<BrowserRouter>
-			<StrictMode>
-				<App />
-			</StrictMode>
-		</BrowserRouter>
+		<PersistGate persistor={persistor} loading={<LoadingSpinner />}>
+			<BrowserRouter>
+				<StrictMode>
+					<App />
+				</StrictMode>
+			</BrowserRouter>
+		</PersistGate>
 	</Provider>
 );
