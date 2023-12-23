@@ -15,7 +15,9 @@ type UseFetchApiReturnType = {
 const useFetchApi = (): UseFetchApiReturnType => {
 	const [isLoading, setIsLoading] = useState(false);
 	const tokenType = useAppSelector((state) => state.authReducer.tokenType);
-	const accessToken = useAppSelector((state) => state.authReducer.accessToken);
+	const accessToken = useAppSelector(
+		(state) => state.authReducer.accessToken
+	);
 	const fullToken = `${tokenType} ${accessToken}`;
 
 	const sendRequest = useCallback(
@@ -32,7 +34,7 @@ const useFetchApi = (): UseFetchApiReturnType => {
 				const response = await fetch(requestConfig.url, {
 					method: requestConfig.method ? requestConfig.method : "GET",
 					headers: requestConfig.headers
-						? requestConfig.headers
+						? { Authorization: fullToken, ...requestConfig.headers }
 						: {
 								Authorization: fullToken,
 						  },

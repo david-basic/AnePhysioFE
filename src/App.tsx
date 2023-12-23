@@ -30,15 +30,6 @@ const App: FC = () => {
 		path: client_routes.ROUTE_AUTH_REGISTER,
 		element: <RegisterPage />,
 	};
-	// const authLogoutRoute = {
-	// 	path: client_routes.ROUTE_AUTH_LOGOUT,
-	// 	element: (
-	// 		<Protected
-	// 			isLoggedIn={isLoggedIn}
-	// 			children={<MainLayout children={<LogoutPage />} />}
-	// 		/>
-	// 	),
-	// };
 	const homeRoute = {
 		path: client_routes.ROUTE_HOME,
 		element: (
@@ -88,7 +79,6 @@ const App: FC = () => {
 	const routing = useRoutes([
 		authWelcomeRoute,
 		authLoginRoute,
-		// authLogoutRoute,
 		authRegisterRoute,
 		homeRoute,
 		jilRijekaHomeRoute,

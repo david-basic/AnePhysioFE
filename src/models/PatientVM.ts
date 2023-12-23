@@ -10,9 +10,10 @@ export interface PatientVM {
     birthDate: string;
     sex: string;
     leadingMkb: MkbVM;
-    allMkbs: MkbVM[];
+    patientMkbs: MkbVM[];
     operations?: OperationVM[];
     admissionDateTime: string;
     patientAddress: string;
     leadingDoctor: DoctorVM;
+    patientAge: number;
 }

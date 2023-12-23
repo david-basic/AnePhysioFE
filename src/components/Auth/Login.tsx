@@ -5,11 +5,10 @@ import { NavLink, useNavigate } from "react-router-dom";
 import client_routes from "../../config/client_routes";
 import api_routes from "../../config/api_routes";
 import { authActions } from "../../store/auth-slice";
-import localforage from "localforage";
 import { Button, Form, Input } from "antd";
 import { useAppDispatch } from "../../hooks/use_app_dispatch";
 import { useAppSelector } from "../../hooks/use_app_selector";
-import { ApiLoginResponse, LoginRequestData } from "../../type";
+import { ApiResponse, LoginRequestData, LoginResponseData } from "../../type";
 import useFetchApi from "../../hooks/use_fetch_api";
 import { HttpStatusCode } from "axios";
 
@@ -51,43 +50,26 @@ const Login: FC = () => {
 
 		function manageLoginResponseData(
 			username: string,
-			loginResponse: ApiLoginResponse
+			loginResponse: ApiResponse<LoginResponseData>
 		) {
 			if (loginResponse.status !== HttpStatusCode.Ok) {
 				setLoginValid(false);
 				setLoginErrorMessage(loginResponse.message);
 
 				dispatch(authActions.setIsLoggedIn(false));
-				localforage.setItem<boolean>("isLoggedIn", false);
 			} else {
 				dispatch(authActions.setUsername(username));
-				localforage.setItem<string>("username", username);
-
 				dispatch(authActions.setIsLoggedIn(true));
-				localforage.setItem<boolean>("isLoggedIn", true);
-
 				dispatch(
-					authActions.setAccessToken(loginResponse.data.accessToken)
+					authActions.setAccessToken(loginResponse.data!.accessToken)
 				);
-				localforage.setItem<string>(
-					"accessToken",
-					loginResponse.data.accessToken
-				);
-
 				dispatch(
-					authActions.setRefreshToken(loginResponse.data.refreshToken)
+					authActions.setRefreshToken(
+						loginResponse.data!.refreshToken
+					)
 				);
-				localforage.setItem<string>(
-					"refreshToken",
-					loginResponse.data.refreshToken
-				);
-
 				dispatch(
-					authActions.setTokenType(loginResponse.data.tokenType)
-				);
-				localforage.setItem<string>(
-					"tokenType",
-					loginResponse.data.tokenType
+					authActions.setTokenType(loginResponse.data!.tokenType)
 				);
 
 				sessionStorage.setItem("canFetchInitialData", "true");

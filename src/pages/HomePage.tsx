@@ -3,10 +3,10 @@ import api_routes from "../config/api_routes";
 import useFetchApi from "../hooks/use_fetch_api";
 import { useAppDispatch } from "../hooks/use_app_dispatch";
 import { HttpStatusCode } from "axios";
-import { ApiGetAllDepartmentsResponse } from "../type";
+import { ApiResponse } from "../type";
 import { deptLocalitiesActions } from "../store/dept-localities-slice";
 import constants from "../config/constants";
-import localforage from "localforage";
+import { DepartmentVM } from "../models/DepartmentVM";
 
 const HomePage: FC = () => {
 	const { sendRequest: fetchDepartmentsRequest } = useFetchApi();
@@ -22,7 +22,7 @@ const HomePage: FC = () => {
 							url: api_routes.ROUTE_DEPT_GET_ALL,
 						},
 						(
-							departmentResponseData: ApiGetAllDepartmentsResponse
+							departmentResponseData: ApiResponse<DepartmentVM[]>
 						) => {
 							if (
 								departmentResponseData.status !==
@@ -37,8 +37,6 @@ const HomePage: FC = () => {
 									dept.shorthand === constants.JIL_SUSAK && dispatch(deptLocalitiesActions.setJilSusak(dept));
 									dept.shorthand === constants.CRC && dispatch(deptLocalitiesActions.setCrc(dept));
 									dept.shorthand === constants.KARDIO_JIL && dispatch(deptLocalitiesActions.setKardioJil(dept));
-
-									dept.shorthand === constants.KARDIO_JIL && localforage.setItem(dept.shorthand, dept);
 
 									return "done";
 								});
