@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { useAppSelector } from "./use_app_selector";
 import { RequestConfig } from "../type";
+import useRefreshCurrentToken from "./refreshCurrentToken";
 
 type UseFetchApiReturnType = {
 	isLoading: boolean;
@@ -18,7 +19,10 @@ const useFetchApi = (): UseFetchApiReturnType => {
 	const accessToken = useAppSelector(
 		(state) => state.authReducer.accessToken
 	);
+	const { sendRefreshTokenRequest } = useRefreshCurrentToken();
 	const fullToken = `${tokenType} ${accessToken}`;
+
+	// sendRefreshTokenRequest(); //TODO maybe put this call inside useCallback ?
 
 	const sendRequest = useCallback(
 		async (
