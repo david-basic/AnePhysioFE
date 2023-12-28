@@ -7,3 +7,7 @@
     margin-bottom: 0%;
     font-weight: lighter;
 }
+
+.remove-list-style {
+    list-style: none;
+}

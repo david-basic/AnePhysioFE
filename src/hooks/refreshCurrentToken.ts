@@ -19,46 +19,64 @@ const useRefreshCurrentToken = () => {
 		(state) => state.authReducer.refreshToken
 	);
 
-	const sendRefreshTokenRequest = useCallback(async () => {
+	const sendRefreshTokenRequest = useCallback(() => {
 		if (!isNullOrEmpty(refreshToken)) {
-			const response = await fetch(api_routes.ROUTE_AUTH_REFRESH_TOKEN, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ refreshToken: refreshToken }),
-			});
+			try {
+				const checkToken = async () => {
+					const response = await fetch(
+						api_routes.ROUTE_AUTH_REFRESH_TOKEN,
+						{
+							method: "POST",
+							headers: {
+								"Content-Type": "application/json",
+							},
+							body: JSON.stringify({
+								refreshToken: refreshToken,
+							}),
+						}
+					);
 
-			const responseData: ApiResponse<LoginResponseData> =
-				await response.json();
+					const responseData: ApiResponse<LoginResponseData> =
+						await response.json();
 
-			if (responseData.status !== HttpStatusCode.Ok) {
-				localforage.clear();
-				sessionStorage.clear();
-				localStorage.clear();
+					if (responseData.status !== HttpStatusCode.Ok) {
+						localforage.clear();
+						sessionStorage.clear();
+						localStorage.clear();
 
-				dispatch(authActions.resetAllStateToDefaults());
-				dispatch(
-					deptLocalitiesActions.resetDepartmentLocaltiesToInitValues()
-				);
-				navigate(client_routes.ROUTE_AUTH, { replace: true });
-				message.warning(
-					"Your session expired! Please sign in again."
-				);
-			} else {
-				dispatch(
-					authActions.setTokenType(responseData.data!.tokenType)
-				);
-				dispatch(
-					authActions.setAccessToken(responseData.data!.accessToken)
-				);
-				dispatch(
-					authActions.setRefreshToken(responseData.data!.refreshToken)
-				);
+						dispatch(authActions.resetAllStateToDefaults());
+						dispatch(
+							deptLocalitiesActions.resetDepartmentLocaltiesToInitValues()
+						);
+						navigate(client_routes.ROUTE_AUTH, { replace: true });
+						message.warning(
+							"Your session expired! Please sign in again."
+						);
+					} else {
+						dispatch(
+							authActions.setTokenType(
+								responseData.data!.tokenType
+							)
+						);
+						dispatch(
+							authActions.setAccessToken(
+								responseData.data!.accessToken
+							)
+						);
+						dispatch(
+							authActions.setRefreshToken(
+								responseData.data!.refreshToken
+							)
+						);
+					}
+				};
+
+				checkToken();
+			} catch (error: any) {
+				console.error("Error occured during fetching... ", error);
 			}
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [dispatch, navigate, refreshToken]);
 
 	return { sendRefreshTokenRequest };
 };

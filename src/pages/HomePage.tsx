@@ -3,10 +3,10 @@ import api_routes from "../config/api_routes";
 import useFetchApi from "../hooks/use_fetch_api";
 import { useAppDispatch } from "../hooks/use_app_dispatch";
 import { HttpStatusCode } from "axios";
-import { ApiResponse } from "../type";
+import { type ApiResponse } from "../type";
 import { deptLocalitiesActions } from "../store/dept-localities-slice";
 import constants from "../config/constants";
-import { DepartmentVM } from "../models/DepartmentVM";
+import { type DepartmentVM } from "../models/DepartmentVM";
 
 const HomePage: FC = () => {
 	const { sendRequest: fetchDepartmentsRequest } = useFetchApi();
