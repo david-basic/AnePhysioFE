@@ -19,10 +19,9 @@ const useRefreshCurrentToken = () => {
 		(state) => state.authReducer.refreshToken
 	);
 
-	const sendRefreshTokenRequest = useCallback(() => {
-		if (!isNullOrEmpty(refreshToken)) {
+	const sendRefreshTokenRequest = useCallback(async () => {
+		if (!isNullOrEmpty(refreshToken) && sessionStorage.getItem("tokenRefreshFlag") === "true") {
 			try {
-				const checkToken = async () => {
 					const response = await fetch(
 						api_routes.ROUTE_AUTH_REFRESH_TOKEN,
 						{
@@ -39,6 +38,8 @@ const useRefreshCurrentToken = () => {
 					const responseData: ApiResponse<LoginResponseData> =
 						await response.json();
 
+					// console.log("NEEDS TO BE FIRST!"); //XXX remove
+
 					if (responseData.status !== HttpStatusCode.Ok) {
 						localforage.clear();
 						sessionStorage.clear();
@@ -48,6 +49,9 @@ const useRefreshCurrentToken = () => {
 						dispatch(
 							deptLocalitiesActions.resetDepartmentLocaltiesToInitValues()
 						);
+
+						dispatch(authActions.setTokenIsValid(false));
+
 						navigate(client_routes.ROUTE_AUTH, { replace: true });
 						message.warning(
 							"Your session expired! Please sign in again."
@@ -68,10 +72,10 @@ const useRefreshCurrentToken = () => {
 								responseData.data!.refreshToken
 							)
 						);
-					}
-				};
 
-				checkToken();
+						dispatch(authActions.setTokenIsValid(true));
+
+					}
 			} catch (error: any) {
 				console.error("Error occured during fetching... ", error);
 			}

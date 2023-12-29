@@ -17,6 +17,7 @@ import KardioJilHomePage from "./pages/departments/KardioJilHomePage";
 const App: FC = () => {
 
 	const isLoggedIn = useAppSelector((state) => state.authReducer.isLoggedIn);
+	sessionStorage.setItem("tokenRefreshFlag", "false");
 
 	const authWelcomeRoute = {
 		path: client_routes.ROUTE_AUTH,

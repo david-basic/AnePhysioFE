@@ -29,6 +29,7 @@ type AuthInitState = {
 	accessToken: string;
 	refreshToken: string;
 	tokenType: string;
+	tokenIsValid: boolean;
 };
 /**
  * Interface used to define data object needed for login request on the API

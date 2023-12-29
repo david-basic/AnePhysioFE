@@ -18,7 +18,6 @@ import api_routes from "../../config/api_routes";
 import { HttpStatusCode } from "axios";
 import LoadingSpinner from "../LoadingSpinner";
 import constants from "../../config/constants";
-// import useRefreshCurrentToken from "../../hooks/refreshCurrentToken";
 
 type BedProps = {
 	bedNum: number;
@@ -31,7 +30,6 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 		DescriptionsProps["items"]
 	>([]);
 	const { sendRequest: sendPatientDetailsRequest, isLoading } = useFetchApi();
-	// const { sendRefreshTokenRequest } = useRefreshCurrentToken();
 	const dataToTransfer = {
 		id: patient !== null ? patient!.id : null,
 	};
@@ -43,8 +41,6 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 
 	const handleRightClick = (event: any) => {
 		event.preventDefault();
-
-		// sendRefreshTokenRequest();
 
 		setShowModal(true);
 
