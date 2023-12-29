@@ -13,9 +13,9 @@ import JilRijekaHomePage from "./pages/departments/JilRijekaHomePage";
 import CrcHomePage from "./pages/departments/CrcHomePage";
 import JilSusakHomePage from "./pages/departments/JilSusakHomePage";
 import KardioJilHomePage from "./pages/departments/KardioJilHomePage";
+import PatientPage from "./pages/Patient/PatientPage";
 
 const App: FC = () => {
-
 	const isLoggedIn = useAppSelector((state) => state.authReducer.isLoggedIn);
 	sessionStorage.setItem("tokenRefreshFlag", "false");
 
@@ -76,6 +76,15 @@ const App: FC = () => {
 			/>
 		),
 	};
+	const patientPageRoute = {
+		path: client_routes.ROUTE_PATIENTS_DETAILS,
+		element: (
+			<Protected
+				isLoggedIn={isLoggedIn}
+				children={<MainLayout children={<PatientPage />} />}
+			/>
+		),
+	};
 
 	const routing = useRoutes([
 		authWelcomeRoute,
@@ -86,6 +95,7 @@ const App: FC = () => {
 		crcHomeRoute,
 		jilSusakHomeRoute,
 		kardioJilHomeRoute,
+		patientPageRoute,
 	]);
 
 	return <>{routing}</>;

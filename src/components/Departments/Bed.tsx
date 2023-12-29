@@ -18,6 +18,7 @@ import api_routes from "../../config/api_routes";
 import { HttpStatusCode } from "axios";
 import LoadingSpinner from "../LoadingSpinner";
 import constants from "../../config/constants";
+import client_routes, { clientRoutesParams } from "../../config/client_routes";
 
 type BedProps = {
 	bedNum: number;
@@ -30,9 +31,6 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 		DescriptionsProps["items"]
 	>([]);
 	const { sendRequest: sendPatientDetailsRequest, isLoading } = useFetchApi();
-	const dataToTransfer = {
-		id: patient !== null ? patient!.id : null,
-	};
 	const dateOptions: Intl.DateTimeFormatOptions = {
 		day: "2-digit",
 		month: "2-digit",
@@ -183,9 +181,8 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 				{patient !== null && (
 					<>
 						<Link
-							to={"#linkToAPage"}
+							to={client_routes.ROUTE_PATIENTS_DETAILS.replace(clientRoutesParams.patientId, patient!.id)}
 							className={styles["occupied-bed-text"]}
-							state={dataToTransfer}
 							onContextMenu={handleRightClick}>
 							{`Bed ${bedNum}: ${
 								patient!.firstName + " " + patient!.lastName

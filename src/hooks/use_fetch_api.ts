@@ -76,16 +76,17 @@ const useFetchApi = (): UseFetchApiReturnType => {
 				}
 
 				setIsLoading(false);
+
+				return {
+					cleanupFunction: () => {
+						abortController.abort("Cleanup function executed.");
+					},
+				};
 			} catch (error) {
 				console.error("Error fetching data:", error);
 				setIsLoading(false);
+				throw error;
 			}
-
-			return {
-				cleanupFunction: () => {
-					abortController.abort("Cleanup function called.");
-				},
-			};
 		},
 		[fullToken, isLoggedIn, tokenIsValid]
 	);
