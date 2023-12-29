@@ -29,6 +29,7 @@ type AuthInitState = {
 	accessToken: string;
 	refreshToken: string;
 	tokenType: string;
+	tokenIsValid: boolean;
 };
 /**
  * Interface used to define data object needed for login request on the API
@@ -39,22 +40,6 @@ type AuthInitState = {
 interface LoginRequestData {
 	username: string;
 	password: string;
-};
-/**
- * Interface used to define response object acquired as a response to the login request on the API
- * @param timestamp Timestamp denoting time of user login
- * @param status Http status of the request in number form
- * @param success Boolean denoting success (true) or failure (false) of the login request
- * @param message Appropriate message with a text client can display to the user
- * @param data Response data send by the API as a response to the login request
- * 
- */
-interface ApiLoginResponse {
-	timestamp: Date;
-	status: number;
-	success: boolean;
-	message: string;
-	data: LoginResponseData;
 };
 /**
  * Interface used to define data object with tokens needed for authentication of a user
@@ -88,7 +73,7 @@ interface RegisterRequestData {
  * @param status Http status of the request in number form
  * @param success Boolean denoting success (true) or failure (false) of the register request
  * @param message Appropriate message with a text client can display to the user
- * 
+ * @param data It is null always
  */
 interface ApiRegisterResponse {
 	timestamp: Date;
@@ -98,20 +83,22 @@ interface ApiRegisterResponse {
 	data?: any;
 };
 /**
- * Interfaces used to define response object acquired as a response to the get all departments request on the API
+ * Interfaces used to define a response object gained from a request on the API
  * @param timestamp Timestamp denoting time of response
  * @param status Http status of the request in number form
- * @param success Boolean denoting success (true) or failure (false) of the api request
  * @param message Appropriate message in string format
- * @param data Department data
+ * @param success Boolean denoting success if request was made successfully
+ * @param error String denoting the error if it happens
+ * @param data Data returned by the request, Type of which is defined at the moment of fetching
+ * @param path Response URI that failed to provide the requested data
  */
-interface ApiGetAllDepartmentsResponse {
+interface ApiResponse<T> {
 	timestamp: Date;
 	status: number;
 	message: string;
 	success?: boolean;
 	error?: string;
-	data?: DepartmentVM[];
+	data?: T;
 	path?: string;
 }
 /**

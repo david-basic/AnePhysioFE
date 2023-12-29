@@ -1,6 +1,8 @@
-import { DoctorVM } from "./DoctorVM";
-import { MkbVM } from "./MkbVM";
-import { OperationVM } from "./OperationVM";
+import { type DoctorVM } from "./DoctorVM";
+import { type MkbVM } from "./MkbVM";
+import { type OperationVM } from "./OperationVM";
+import { type PatientAddressVM } from "./PatientAddressVM";
+import { SexVM } from "./SexVM";
 
 export interface PatientVM {
     id: string;
@@ -8,11 +10,12 @@ export interface PatientVM {
     firstName: string;
     lastName: string;
     birthDate: string;
-    sex: string;
+    sex: SexVM;
     leadingMkb: MkbVM;
-    allMkbs: MkbVM[];
+    patientMkbs: MkbVM[];
     operations?: OperationVM[];
     admissionDateTime: string;
-    patientAddress: string;
+    patientAddress: PatientAddressVM;
     leadingDoctor: DoctorVM;
+    patientAge: number;
 }
