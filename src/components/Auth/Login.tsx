@@ -75,7 +75,6 @@ const Login: FC = () => {
 				dispatch(authActions.setTokenIsValid(true));
 
 				sessionStorage.setItem("canFetchInitialData", "true");
-				sessionStorage.setItem("tokenRefreshFlag", "true");
 
 				navigate(client_routes.ROUTE_HOME, { replace: true });
 			}

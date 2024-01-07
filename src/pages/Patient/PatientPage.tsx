@@ -24,11 +24,11 @@ const PatientPage: FC = () => {
 						"patient details... ",
 						patientDetailsResponseData
 
-                        //TODO store patient data to a state that will be active only while the user is on the carton, before exit you will ask
-                        // the user if they wish to exit before saving stored data, you will also keep a state called dataSaved which will be a boolean that will indicate saved state
-                        // the dataSaved state will change once POST is sent to the server to true and then user wont be asked before exit
-                        // instead of loadedOnce in session storage you will check for another state also called loadedOnce that will be persisted and only reset to false once 
-                        // user saves their work so that reloading of data does not remove the changes, you will also use refs for the form like you did on login form.
+						//TODO store patient data to a state that will be active only while the user is on the carton, before exit you will ask
+						// the user if they wish to exit before saving stored data, you will also keep a state called dataSaved which will be a boolean that will indicate saved state
+						// the dataSaved state will change once POST is sent to the server to true and then user wont be asked before exit
+						// instead of loadedOnce in session storage you will check for another state also called loadedOnce that will be persisted and only reset to false once
+						// user saves their work so that reloading of data does not remove the changes, you will also use refs for the form like you did on login form.
 					);
 				}
 			);
@@ -47,9 +47,7 @@ const PatientPage: FC = () => {
 		};
 	}, [fetchData]);
 
-	return (
-		<PhysioCard patientId={patientId} isLoading={isLoading} />
-	);
+	return <PhysioCard patientId={patientId} isLoading={isLoading} />;
 };
 
 export default PatientPage;

@@ -38,7 +38,7 @@ const useRefreshCurrentToken = () => {
 					const responseData: ApiResponse<LoginResponseData> =
 						await response.json();
 
-					// console.log("NEEDS TO BE FIRST!"); //XXX remove
+					console.log("NEEDS TO BE FIRST!"); //XXX remove
 
 					if (responseData.status !== HttpStatusCode.Ok) {
 						localforage.clear();

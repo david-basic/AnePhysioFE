@@ -17,7 +17,6 @@ import PatientPage from "./pages/Patient/PatientPage";
 
 const App: FC = () => {
 	const isLoggedIn = useAppSelector((state) => state.authReducer.isLoggedIn);
-	sessionStorage.setItem("tokenRefreshFlag", "false");
 
 	const authWelcomeRoute = {
 		path: client_routes.ROUTE_AUTH,

@@ -78,7 +78,7 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 								Date.parse(
 									fetchedPatientData!.admissionDateTime
 								)
-							).toLocaleString("hr-HR", { timeZone: "UTC" }),
+							).toLocaleString("hr-HR", { timeZone: "CET" }),
 						},
 						{
 							key: constants.PATIENT_ADDRESS,
@@ -100,7 +100,6 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 							label: constants.LEADING_MKB,
 							children: (
 								<p>
-									{fetchedPatientData?.leadingMkb.code}{" "}
 									{fetchedPatientData?.leadingMkb.displayName}
 								</p>
 							),
@@ -122,7 +121,7 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 															"remove-list-style"
 														]
 													}>
-													{mkb.code} {mkb.displayName}
+													{mkb.displayName}
 													<hr />
 												</li>
 											)
@@ -181,7 +180,10 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 				{patient !== null && (
 					<>
 						<Link
-							to={client_routes.ROUTE_PATIENTS_DETAILS.replace(clientRoutesParams.patientId, patient!.id)}
+							to={client_routes.ROUTE_PATIENTS_DETAILS.replace(
+								clientRoutesParams.patientId,
+								patient!.id
+							)}
 							className={styles["occupied-bed-text"]}
 							onContextMenu={handleRightClick}>
 							{`Bed ${bedNum}: ${
