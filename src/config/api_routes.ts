@@ -12,6 +12,9 @@ const api_routes = {
 	ROUTE_DEPT_GET_ALL: `${apiRoutesParams.API}/department-management/dept`,
 
 	ROUTE_PATIENT_GET: `${apiRoutesParams.API}/patient-management/patients`,
+
+	ROUTE_PHYSIO_FILE_GET: `${apiRoutesParams.API}/physiofile-management/physiofiles`, 
+	ROUTE_PHYSIO_FILE_GET_BY_PATIENT_ID: `${apiRoutesParams.API}/physiofile-management/physiofiles/patient`, 
 };
 
 export default api_routes;
