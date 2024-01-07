@@ -1,5 +1,5 @@
 import { type PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { type DepartmentVM } from "../models/DepartmentVM";
+import { type DepartmentVM } from "../models/department/DepartmentVM";
 import { type DepartmentLocalitiesInitState } from "../type";
 
 const deptInitState: DepartmentVM = {

@@ -6,7 +6,7 @@ import { HttpStatusCode } from "axios";
 import { type ApiResponse } from "../type";
 import { deptLocalitiesActions } from "../store/dept-localities-slice";
 import constants from "../config/constants";
-import { type DepartmentVM } from "../models/DepartmentVM";
+import { type DepartmentVM } from "../models/department/DepartmentVM";
 
 const HomePage: FC = () => {
 	const { sendRequest: fetchDepartmentsRequest } = useFetchApi();

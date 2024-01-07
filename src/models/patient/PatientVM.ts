@@ -1,4 +1,4 @@
-import { type DoctorVM } from "./DoctorVM";
+import { type DoctorVM } from "../department/DoctorVM";
 import { type MkbVM } from "./MkbVM";
 import { type OperationVM } from "./OperationVM";
 import { type PatientAddressVM } from "./PatientAddressVM";

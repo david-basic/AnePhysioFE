@@ -1,4 +1,4 @@
-import { DepartmentVM } from "./models/DepartmentVM";
+import { DepartmentVM } from "./models/department/DepartmentVM";
 
 /**
  * Type used for configuring the request towards a API

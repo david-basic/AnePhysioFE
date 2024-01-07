@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import Box from "./Box";
-import { DepartmentVM } from "../../models/DepartmentVM";
+import { DepartmentVM } from "../../models/department/DepartmentVM";
 import { Row } from "antd";
 import styles from "./Department.module.css";
 

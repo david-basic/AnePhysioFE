@@ -1,6 +1,6 @@
 import { Card } from "antd";
 import { type FC } from "react";
-import { type BoxVM } from "../../models/BoxVM";
+import { type BoxVM } from "../../models/department/BoxVM";
 import styles from "./Box.module.css";
 import { ListGroup } from "react-bootstrap";
 import { PlusLg, Trash } from "react-bootstrap-icons";

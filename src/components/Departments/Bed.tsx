@@ -1,5 +1,5 @@
 import { useState, type FC } from "react";
-import { type BedVM } from "../../models/BedVM";
+import { type BedVM } from "../../models/department/BedVM";
 import { Link } from "react-router-dom";
 import styles from "./Bed.module.css";
 import {
@@ -13,7 +13,7 @@ import {
 import { XSquare } from "react-bootstrap-icons";
 import useFetchApi from "../../hooks/use_fetch_api";
 import { type ApiResponse } from "../../type";
-import { type PatientVM } from "../../models/PatientVM";
+import { type PatientVM } from "../../models/patient/PatientVM";
 import api_routes from "../../config/api_routes";
 import { HttpStatusCode } from "axios";
 import LoadingSpinner from "../LoadingSpinner";

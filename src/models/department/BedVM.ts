@@ -1,4 +1,4 @@
-import { PatientVM } from "./PatientVM";
+import { PatientVM } from "../patient/PatientVM";
 
 export interface BedVM {
     id: string;
