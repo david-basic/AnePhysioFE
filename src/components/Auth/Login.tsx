@@ -45,7 +45,8 @@ const Login: FC = () => {
 				},
 				body: userData,
 			},
-			manageLoginResponseData.bind(null, userData.username)
+			manageLoginResponseData.bind(null, userData.username),
+			""
 		);
 
 		function manageLoginResponseData(

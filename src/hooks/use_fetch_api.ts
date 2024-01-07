@@ -6,7 +6,8 @@ type UseFetchApiReturnType = {
 	isLoading: boolean;
 	sendRequest: (
 		requestConfig: RequestConfig,
-		manageResponseData: (arg: any) => void
+		manageResponseData: (arg: any) => void,
+		accessToken: string
 	) => Promise<{
 		cleanupFunction: () => void;
 	}>;
@@ -19,15 +20,12 @@ const useFetchApi = (): UseFetchApiReturnType => {
 	);
 	const isLoggedIn = useAppSelector((state) => state.authReducer.isLoggedIn);
 	const tokenType = useAppSelector((state) => state.authReducer.tokenType);
-	const accessToken = useAppSelector(
-		(state) => state.authReducer.accessToken
-	);
-	const fullToken = `${tokenType} ${accessToken}`;
 
 	const sendRequest = useCallback(
 		async (
 			requestConfig: RequestConfig,
-			manageResponseData: (arg: any) => void
+			manageResponseData: (arg: any) => void,
+			accessToken: string,
 		) => {
 			setIsLoading(true);
 
@@ -36,17 +34,22 @@ const useFetchApi = (): UseFetchApiReturnType => {
 
 			try {
 				if (tokenIsValid || !isLoggedIn) {
+
+					// const rqCon = {Authorization: `${tokenType} ${accessToken}`, ...requestConfig.headers}; //XXX remove
+					// console.log("requestConfig...", requestConfig); //XXX remove
+					// console.log("rq Headers...", rqCon);//XXX remove
+
 					const response = await fetch(requestConfig.url, {
 						method: requestConfig.method
 							? requestConfig.method
 							: "GET",
 						headers: requestConfig.headers
 							? {
-									Authorization: fullToken,
+									Authorization: `${tokenType} ${accessToken}`,
 									...requestConfig.headers,
 							  }
 							: {
-									Authorization: fullToken,
+									Authorization: `${tokenType} ${accessToken}`,
 							  },
 						body: requestConfig.body
 							? JSON.stringify(requestConfig.body)
@@ -54,9 +57,11 @@ const useFetchApi = (): UseFetchApiReturnType => {
 						signal,
 					});
 
+					// console.log("response...", response); //XXX remove
 					const responseData = await response.json();
+					// console.log("responseData...", responseData); //XXX remove
 
-					console.log("NEEDS TO BE SECOND!!"); //XXX remove
+					// console.log("NEEDS TO BE SECOND!!"); //XXX remove
 
 					manageResponseData(responseData);
 				}
@@ -74,7 +79,7 @@ const useFetchApi = (): UseFetchApiReturnType => {
 				throw error;
 			}
 		},
-		[fullToken, isLoggedIn, tokenIsValid]
+		[isLoggedIn, tokenIsValid, tokenType]
 	);
 
 	return { isLoading, sendRequest };

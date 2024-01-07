@@ -55,7 +55,8 @@ const Register: FC = () => {
 				},
 				body: registerUserInputData,
 			},
-			manageRegisterResponseData.bind(null)
+			manageRegisterResponseData.bind(null),
+			""
 		);
 	};
 

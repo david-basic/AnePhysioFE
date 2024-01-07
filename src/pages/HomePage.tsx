@@ -1,16 +1,18 @@
 import { useEffect, type FC } from "react";
 import api_routes from "../config/api_routes";
-import useFetchApi from "../hooks/use_fetch_api";
 import { useAppDispatch } from "../hooks/use_app_dispatch";
 import { HttpStatusCode } from "axios";
 import { type ApiResponse } from "../type";
 import { deptLocalitiesActions } from "../store/dept-localities-slice";
 import constants from "../config/constants";
 import { type DepartmentVM } from "../models/department/DepartmentVM";
+import useFetchApi from "../hooks/use_fetch_api";
+import { useAppSelector } from "../hooks/use_app_selector";
 
 const HomePage: FC = () => {
 	const { sendRequest: fetchDepartmentsRequest } = useFetchApi();
 	const dispatch = useAppDispatch();
+	const accessToken = useAppSelector((state) => state.authReducer.accessToken);
 
 	useEffect(() => {
 		if (sessionStorage.getItem("canFetchInitialData") === "true") {
@@ -41,7 +43,8 @@ const HomePage: FC = () => {
 									return "done";
 								});
 							}
-						}
+						},
+						accessToken
 					);
 					return () => {
 						cleanupFunction();
@@ -53,7 +56,7 @@ const HomePage: FC = () => {
 
 			fetchData();
 		}
-	}, [dispatch, fetchDepartmentsRequest]);
+	}, [accessToken, dispatch, fetchDepartmentsRequest]);
 
 	return <>{/* title */}</>;
 };

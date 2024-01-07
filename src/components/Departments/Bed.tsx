@@ -11,7 +11,6 @@ import {
 	message,
 } from "antd";
 import { XSquare } from "react-bootstrap-icons";
-import useFetchApi from "../../hooks/use_fetch_api";
 import { type ApiResponse } from "../../type";
 import { type PatientVM } from "../../models/patient/PatientVM";
 import api_routes from "../../config/api_routes";
@@ -19,6 +18,7 @@ import { HttpStatusCode } from "axios";
 import LoadingSpinner from "../LoadingSpinner";
 import constants from "../../config/constants";
 import client_routes, { clientRoutesParams } from "../../config/client_routes";
+import useFetcApihWithTokenRefresh from "../../hooks/use_fetch_api_with_token_refresh";
 
 type BedProps = {
 	bedNum: number;
@@ -30,11 +30,13 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 	const [descriptionItems, setDescriptionItems] = useState<
 		DescriptionsProps["items"]
 	>([]);
-	const { sendRequest: sendPatientDetailsRequest, isLoading } = useFetchApi();
+	const { fetchWithTokenRefresh: sendPatientDetailsRequest, isLoading } =
+		useFetcApihWithTokenRefresh();
 	const dateOptions: Intl.DateTimeFormatOptions = {
 		day: "2-digit",
 		month: "2-digit",
 		year: "numeric",
+		timeZone: "CET",
 	};
 
 	const handleRightClick = (event: any) => {
