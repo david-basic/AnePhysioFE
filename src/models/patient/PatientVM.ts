@@ -1,8 +1,8 @@
 import { type DoctorVM } from "../department/DoctorVM";
 import { type OperationVM } from "./OperationVM";
 import { type PatientAddressVM } from "./PatientAddressVM";
-import { PatientMkbVM } from "./PatientMkbVM";
-import { SexVM } from "./SexVM";
+import { type PatientMkbVM } from "./PatientMkbVM";
+import { type SexVM } from "./SexVM";
 
 export interface PatientVM {
     id: string;

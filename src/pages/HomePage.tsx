@@ -10,7 +10,7 @@ import useFetchApi from "../hooks/use_fetch_api";
 import { useAppSelector } from "../hooks/use_app_selector";
 
 const HomePage: FC = () => {
-	const { sendRequest: fetchDepartmentsRequest } = useFetchApi();
+	const { sendRequest: fetchDepartmentsRequest } = useFetchApi(); //TODO promijeni u fetch with refresh token call 
 	const dispatch = useAppDispatch();
 	const accessToken = useAppSelector((state) => state.authReducer.accessToken);
 
