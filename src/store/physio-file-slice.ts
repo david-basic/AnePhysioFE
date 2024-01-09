@@ -137,6 +137,10 @@ const physioFileSlice = createSlice({
 				newCpax.id =(state.physioFile.physioTest.cpax.length + 1).toString();
 			}
 
+			if (state.physioFile.physioTest === null) {
+				state.physioFile.physioTest = {cpax: [], gcs: [], mmt: [], vas: []}
+			}
+
 			state.physioFile.physioTest.cpax.push(newCpax);
 		},
 		addAnotherGcsInstance: (state, action: PayloadAction<GcsVM>) => {
@@ -147,6 +151,10 @@ const physioFileSlice = createSlice({
 				isNullOrEmpty(randomNumberStr) ? newGcs.id = "1" : newGcs.id = randomNumberStr!;
 			} else {
 				newGcs.id =(state.physioFile.physioTest.gcs.length + 1).toString();
+			}
+
+			if (state.physioFile.physioTest === null) {
+				state.physioFile.physioTest = {cpax: [], gcs: [], mmt: [], vas: []}
 			}
 
 			state.physioFile.physioTest.gcs.push(newGcs);
@@ -160,6 +168,10 @@ const physioFileSlice = createSlice({
 			} else {
 				newPatientMmt.id =(state.physioFile.physioTest.mmt.length + 1).toString();
 			}
+			
+			if (state.physioFile.physioTest === null) {
+				state.physioFile.physioTest = {cpax: [], gcs: [], mmt: [], vas: []}
+			}
 
 			state.physioFile.physioTest.mmt.push(newPatientMmt);
 		},
@@ -171,6 +183,10 @@ const physioFileSlice = createSlice({
 				isNullOrEmpty(randomNumberStr) ? newVas.id = "1" : newVas.id = randomNumberStr!;
 			} else {
 				newVas.id =(state.physioFile.physioTest.vas.length + 1).toString();
+			}
+
+			if (state.physioFile.physioTest === null) {
+				state.physioFile.physioTest = {cpax: [], gcs: [], mmt: [], vas: []}
 			}
 
 			state.physioFile.physioTest.vas.push(newVas);

@@ -8,6 +8,8 @@ import { type ApiResponse } from "../../type";
 import { type PhysioFileVM } from "../../models/physiofile/PhysioFileVM";
 import { HttpStatusCode } from "axios";
 import { message } from "antd";
+import { useAppDispatch } from "../../hooks/use_app_dispatch";
+import { physioFileActions } from "../../store/physio-file-slice";
 
 const PatientPage: FC = () => {
 	const patientId = getIdFromUrl(useLocation());
@@ -21,6 +23,7 @@ const PatientPage: FC = () => {
 	const { fetchWithTokenRefresh, isLoading } = useFetcApihWithTokenRefresh();
 	sessionStorage.setItem("loadedOnce", "false");
 	const navigate = useNavigate();
+	const dispatch = useAppDispatch();
 	const [physioFileData, setPhysioFileData] = useState<PhysioFileVM>();
 
 	useEffect(() => {
@@ -44,8 +47,9 @@ const PatientPage: FC = () => {
 								physioFileResponse
 							);
 						} else {
-							console.log(physioFileResponse);
 							setPhysioFileData(physioFileResponse.data);
+							dispatch(physioFileActions.setPhysioFile(physioFileResponse.data!));
+							message.success("Fizioterapeutski karton dohvaćen!");
 						}
 					}
 				);
@@ -57,7 +61,7 @@ const PatientPage: FC = () => {
 		return () => {
 			sessionStorage.setItem("loadedOnce", "true");
 		};
-	}, [fetchWithTokenRefresh, navigate, patientId]);
+	}, [dispatch, fetchWithTokenRefresh, navigate, patientId]);
 
 	return <PhysioFile physioFile={physioFileData!} isLoading={isLoading} />;
 };
