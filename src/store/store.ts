@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from "./auth-slice";
 import deptLocalitiesReducer from "./dept-localities-slice";
+import physioFileReducer from "./physio-file-slice";
 import {
 	FLUSH,
 	PAUSE,
@@ -16,13 +17,14 @@ import sessionStorage from "redux-persist/es/storage/session";
 const rootReducer = combineReducers({
 	authReducer,
 	deptLocalitiesReducer,
+	physioFileReducer,
 });
 
 const persistConfig = {
 	key: "root",
 	version: 1,
 	storage: sessionStorage,
-	whitelist: ["authReducer", "deptLocalitiesReducer"],
+	whitelist: ["authReducer", "deptLocalitiesReducer", "physioFileReducer"],
 	blacklist: [""],
 };
 

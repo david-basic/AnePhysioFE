@@ -1,5 +1,5 @@
 import { type FC } from "react";
-import Welcome from "../../components/Auth/Welcome";
+import Welcome from "../../components/authentication/Welcome";
 
 const WelcomePage: FC = () => {
 	return <Welcome />;

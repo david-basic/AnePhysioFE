@@ -10,7 +10,6 @@ import {
 	Row,
 	message,
 } from "antd";
-import { XSquare } from "react-bootstrap-icons";
 import { type ApiResponse } from "../../type";
 import { type PatientVM } from "../../models/patient/PatientVM";
 import api_routes from "../../config/api_routes";
@@ -178,7 +177,7 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 
 	return (
 		<Row>
-			<Col span={22}>
+			<Col span={24}>
 				{patient !== null && (
 					<>
 						<Link
@@ -225,7 +224,6 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 						}>{`Bed ${bedNum}: empty bed`}</p>
 				)}
 			</Col>
-			<Col span={2}>{patient === null && <XSquare />}</Col>
 		</Row>
 	);
 };

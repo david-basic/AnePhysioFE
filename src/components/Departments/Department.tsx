@@ -1,8 +1,8 @@
 import { type FC } from "react";
-import Box from "./Box";
-import { DepartmentVM } from "../../models/department/DepartmentVM";
+import { type DepartmentVM } from "../../models/department/DepartmentVM";
 import { Row } from "antd";
 import styles from "./Department.module.css";
+import Box from "./Box";
 
 const Department: FC<DepartmentVM> = (props: DepartmentVM) => {
 	return (

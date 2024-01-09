@@ -1,4 +1,5 @@
 import { DepartmentVM } from "./models/department/DepartmentVM";
+import { PhysioFileVM } from "./models/physiofile/PhysioFileVM";
 
 /**
  * Type used for configuring the request towards a API
@@ -108,9 +109,17 @@ interface ApiResponse<T> {
  * @param crc Defining CRC locality state
  * @param kardioJil Defining Kardio JIL locality state
  */
-type DepartmentLocalitiesInitState = {
+type DepartmentLocalitiesInitStateType = {
 	jilRIjeka: DepartmentVM;
 	jilSusak: DepartmentVM;
 	crc: DepartmentVM;
 	kardioJil: DepartmentVM;
+}
+/**
+ * @param physioFile Defines a Physiotherapist file object
+ * @param dataSaved Indicates if the current physioFile state was saved to DB
+ */
+type PhysioFileInitStateType = {
+	physioFile: PhysioFileVM;
+	dataSaved: boolean;
 }
