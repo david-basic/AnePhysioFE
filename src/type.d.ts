@@ -123,3 +123,13 @@ type PhysioFileInitStateType = {
 	physioFile: PhysioFileVM;
 	dataSaved: boolean;
 }
+/**
+ * Type used for updating a PatientRass entity in the array
+ * @param idToUpdate Defines the id of the rass in the Array. Id is generated sequentially 
+ * for that array when the object is first created
+ * @param additionalDescription Defines the new updated description that needs saving for that object
+ */
+type PatientRassAdditionalNotesUpdateType = {
+	idToUpdate: string;
+	additionalDescription: string;
+}

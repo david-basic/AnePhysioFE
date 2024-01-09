@@ -4,15 +4,15 @@ import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../LoadingSpinner";
 import { type PhysioFileVM } from "../../models/physiofile/PhysioFileVM";
 
-type PhysioCardProps = {
+type PhysioFileProps = {
 	physioFile: PhysioFileVM;
 	isLoading: boolean;
 };
 
-const PhysioCard: FC<PhysioCardProps> = ({
+const PhysioFile: FC<PhysioFileProps> = ({
 	isLoading,
 	physioFile,
-}: PhysioCardProps) => {
+}: PhysioFileProps) => {
 	const navigate = useNavigate();
 
 	return (
@@ -21,7 +21,9 @@ const PhysioCard: FC<PhysioCardProps> = ({
 			{!isLoading && (
 				<>
 					<Row>
-						<Col></Col>
+						<Col>
+							
+						</Col>
 					</Row>
 				</>
 			)}
@@ -29,7 +31,7 @@ const PhysioCard: FC<PhysioCardProps> = ({
 	);
 };
 
-export default PhysioCard;
+export default PhysioFile;
 
 /* <Row>
 	<Col className={styles["back-button-position"]}>

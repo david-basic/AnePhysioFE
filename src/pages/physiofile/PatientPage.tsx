@@ -2,7 +2,7 @@ import { useEffect, type FC, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getIdFromUrl } from "../../util/UrlHelper";
 import api_routes from "../../config/api_routes";
-import PhysioCard from "../../components/physiofile/PhysioCard";
+import PhysioFile from "../../components/physiofile/PhysioFile";
 import useFetcApihWithTokenRefresh from "../../hooks/use_fetch_api_with_token_refresh";
 import { type ApiResponse } from "../../type";
 import { type PhysioFileVM } from "../../models/physiofile/PhysioFileVM";
@@ -59,7 +59,7 @@ const PatientPage: FC = () => {
 		};
 	}, [fetchWithTokenRefresh, navigate, patientId]);
 
-	return <PhysioCard physioFile={physioFileData!} isLoading={isLoading} />;
+	return <PhysioFile physioFile={physioFileData!} isLoading={isLoading} />;
 };
 
 export default PatientPage;

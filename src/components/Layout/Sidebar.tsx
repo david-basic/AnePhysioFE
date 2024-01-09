@@ -10,6 +10,7 @@ import localforage from "localforage";
 import { authActions } from "../../store/auth-slice";
 import { useAppDispatch } from "../../hooks/use_app_dispatch";
 import { deptLocalitiesActions } from "../../store/dept-localities-slice";
+import { physioFileActions } from "../../store/physio-file-slice";
 
 export const Sidebar: FC = () => {
 	const [showModal, setShowModal] = useState(false);
@@ -23,6 +24,7 @@ export const Sidebar: FC = () => {
 
 		dispatch(authActions.resetAllStateToDefaults());
 		dispatch(deptLocalitiesActions.resetDepartmentLocaltiesToInitValues());
+		dispatch(physioFileActions.resetPhysioFileToInitValues());
 
 		navigate(client_routes.ROUTE_AUTH, { replace: true });
 	};

@@ -11,6 +11,7 @@ import { deptLocalitiesActions } from "../store/dept-localities-slice";
 import client_routes from "../config/client_routes";
 import { message } from "antd";
 import isNullOrEmpty from "../util/isNullOrEmpty";
+import { physioFileActions } from "../store/physio-file-slice";
 
 const useRefreshCurrentToken = () => {
 	const navigate = useNavigate();
@@ -49,6 +50,7 @@ const useRefreshCurrentToken = () => {
 						dispatch(
 							deptLocalitiesActions.resetDepartmentLocaltiesToInitValues()
 						);
+						dispatch(physioFileActions.resetPhysioFileToInitValues());
 
 						dispatch(authActions.setTokenIsValid(false));
 
