@@ -7,7 +7,7 @@ import useFetcApihWithTokenRefresh from "../../hooks/use_fetch_api_with_token_re
 import { type ApiResponse } from "../../type";
 import { type PhysioFileVM } from "../../models/physiofile/PhysioFileVM";
 import { HttpStatusCode } from "axios";
-import { Layout, message } from "antd";
+import { Flex, Layout, message } from "antd";
 import { useAppDispatch } from "../../hooks/use_app_dispatch";
 import { physioFileActions } from "../../store/physio-file-slice";
 import TestsButton from "../../components/physiofile/TestsButton";
@@ -15,6 +15,12 @@ import Sider from "antd/es/layout/Sider";
 import { Content, Header } from "antd/es/layout/layout";
 import styles from "../../components/layout/PhysioFileLayout.module.css";
 import PatientDetails from "../../components/physiofile/PatientDetails";
+import {
+	CheckSquareFill,
+	PrinterFill,
+	XCircleFill,
+} from "react-bootstrap-icons";
+import { SaveFilled } from "@ant-design/icons";
 
 const PatientPage: FC = () => {
 	const patientId = getIdFromUrl(useLocation());
@@ -102,11 +108,48 @@ const PatientPage: FC = () => {
 						position: "fixed",
 					}}
 					className={styles.filesidebar}>
-					<TestsButton label='RASS' />
-					<TestsButton label='GCS' />
-					<TestsButton label='VAS' />
-					<TestsButton label='MMT' />
-					<TestsButton label='CPAx' />
+					<Flex
+						vertical={true}
+						align='center'
+						style={{
+							height: "inherit",
+						}}>
+						<div
+							style={{ height: "100%" }}
+							className={styles.testButtons}>
+							<TestsButton label='RASS' />
+							<TestsButton label='GCS' />
+							<TestsButton label='VAS' />
+							<TestsButton label='MMT' />
+							<TestsButton label='CPAx' />
+							<div
+								style={{ height: "auto" }}
+								className={styles.testButtons}>
+								<TestsButton
+									icon={<PrinterFill />}
+									label='Ispis'
+								/>
+								<TestsButton
+									icon={<CheckSquareFill />}
+									label='Zaključi'
+								/>
+								<div
+									style={{ height: "auto" }}
+									className={styles.testButtons}>
+									<TestsButton
+										className={styles.saveButton}
+										icon={<SaveFilled />}
+										label='Spremi'
+									/>
+									<TestsButton
+										className={styles.cancelButton}
+										icon={<XCircleFill />}
+										label='Odustani'
+									/>
+								</div>
+							</div>
+						</div>
+					</Flex>
 				</Sider>
 			</Layout>
 		</>

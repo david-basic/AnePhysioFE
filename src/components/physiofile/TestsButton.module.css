@@ -13,8 +13,17 @@
     font-weight: 700;
     line-height: 23px;
     outline: none;
+    font-family: "Nunito", sans-serif;
 }
 
 .testsbutton:hover {
     background-color: #034a90;
+}
+
+.icon {
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+    margin-left: 5px;
+    color: #ffffff;
 }

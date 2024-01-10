@@ -21,47 +21,8 @@ const PhysioFile: FC<PhysioFileProps> = ({
 					<p>TESTSTESTSETT</p>
 					<p>TESTSTESTSETT</p>
 					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
-					<p>TESTSTESTSETT</p>
+
+
 				</>
 			)}
 		</>

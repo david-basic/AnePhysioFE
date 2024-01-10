@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import { PatientVM } from "../../models/patient/PatientVM";
-import { GenderMale } from "react-bootstrap-icons";
+import { GenderFemale, GenderMale } from "react-bootstrap-icons";
 import styles from "./PatientDetails.module.css";
 import LoadingSpinner from "../LoadingSpinner";
 import { Flex } from "antd";
@@ -23,25 +23,40 @@ const PatientDetails: FC<PatientDetailsProps> = ({
 		<>
 			{patientData && (
 				<>
-					<Flex vertical={false} style={{ height: "inherit" }}>
-						<div style={{ width: "60%" }} className={styles.stacking}>
+					<Flex
+						vertical={false}
+						style={{
+							height: "inherit",
+							fontFamily: "Nunito, sans-serif",
+						}}>
+						<div
+							style={{ width: "60%" }}
+							className={styles.stacking}>
 							<span className={styles.mbstyle}>
 								MB {patientData.identificationNumber}
 							</span>
 							<span className={styles.iconAndText}>
-								<GenderMale className={styles.iconstyle} /> {" "}
+								{patientData.sex.displayName.charAt(0) === "M" 
+								? (
+									<GenderMale className={styles.iconstyle} />
+								) : (
+									<GenderFemale
+										className={styles.iconstyle}
+									/>
+								)}{" "}
 								<span className={styles.nameagestyle}>
 									{patientData.firstName}{" "}
 									{patientData.lastName},{" "}
 									{patientData.patientAge}
 								</span>
 							</span>
-                            <span className={styles.datestyle}>
-								{new Date(
-									Date.parse(patientData.birthDate)
-								).toLocaleDateString("hr-HR", dateOptions).split(' ').join('')}
+							<span className={styles.datestyle}>
+								{new Date(Date.parse(patientData.birthDate))
+									.toLocaleDateString("hr-HR", dateOptions)
+									.split(" ")
+									.join("")}
 							</span>
-                            <span className={styles.address}>
+							<span className={styles.address}>
 								{patientData.patientAddress.fullAddress}
 							</span>
 						</div>
