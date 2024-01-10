@@ -13,6 +13,7 @@ import { authActions } from "../../store/auth-slice";
 import { useAppDispatch } from "../../hooks/use_app_dispatch";
 import { deptLocalitiesActions } from "../../store/dept-localities-slice";
 import { physioFileActions } from "../../store/physio-file-slice";
+import styles from "./PhysioFileLayout.module.css";
 
 type PhysioFileLayoutProps = PropsWithChildren;
 
@@ -87,7 +88,7 @@ const PhysioFileLayout: FC<PhysioFileLayoutProps> = ({
 
 	return (
 		<Layout>
-			<Sider width={"auto"} style={{}}>
+			<Sider width={"auto"} className={}>
 				<Menu theme='dark' mode='inline' items={sideBarItems} />
 				<Modal
 					title='Log out confirmation'
