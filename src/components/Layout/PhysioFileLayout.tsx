@@ -9,9 +9,8 @@ import client_routes, { sideBarKey } from "../../config/client_routes";
 import { ItemType, MenuItemType } from "antd/es/menu/hooks/useItems";
 import { PoweroffOutlined, HomeOutlined } from "@ant-design/icons";
 import { Heart, Hospital, Virus } from "react-bootstrap-icons";
-import { Button, Layout, Menu, Modal } from "antd";
+import { Layout, Menu, Modal } from "antd";
 import Sider from "antd/es/layout/Sider";
-import { Content, Header } from "antd/es/layout/layout";
 import styles from "./PhysioFileLayout.module.css";
 
 type PhysioFileLayoutProps = PropsWithChildren;
@@ -86,52 +85,28 @@ const PhysioFileLayout: FC<PhysioFileLayoutProps> = ({
 	];
 
 	return (
-		<Layout>
-			<Sider width={"auto"} className={styles.mainsidebar}>
-				<Menu theme='dark' mode='inline' items={sideBarItems} />
-				<Modal
-					title='Log out confirmation'
-					centered
-					open={showModal}
-					onOk={handleLogoutClick}
-					okText='Log out'
-					okType='danger'
-					okButtonProps={{ type: "primary" }}
-					onCancel={() => setShowModal(false)}>
-					<h2>Do you want to log out?</h2>
-				</Modal>
-			</Sider>
+		<div className={styles.layoutcontainer}>
 			<Layout>
-				<Header
-					style={{
-						backgroundColor: "#5ac8fa",
-					}}></Header>
-				<Layout>
-					<Content
-						className={`content_padding`} // ${styles["centered-component"]} ${styles["parent-container"]}`}
-						style={{}}>
-						{children}
-					</Content>
-					<Sider
-						style={{
-							backgroundColor: "#1d82ea",
-						}}>
-						<Button color='white' style={{ margin: "4px" }}>
-							Right sider
-						</Button>
-						<Button color='white' style={{ margin: "4px" }}>
-							Right sider
-						</Button>
-						<Button color='white' style={{ margin: "4px" }}>
-							Right sider
-						</Button>
-						<Button color='white' style={{ margin: "4px" }}>
-							Right sider
-						</Button>
-					</Sider>
-				</Layout>
+				<Sider
+					width={"131.11px"}
+					className={styles.mainsidebar}
+					style={{ position: "fixed" }}>
+					<Menu theme='dark' mode='inline' items={sideBarItems} />
+					<Modal
+						title='Log out confirmation'
+						centered
+						open={showModal}
+						onOk={handleLogoutClick}
+						okText='Log out'
+						okType='danger'
+						okButtonProps={{ type: "primary" }}
+						onCancel={() => setShowModal(false)}>
+						<h2>Do you want to log out?</h2>
+					</Modal>
+				</Sider>
+				{children}
 			</Layout>
-		</Layout>
+		</div>
 	);
 };
 
