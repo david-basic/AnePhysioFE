@@ -1,0 +1,55 @@
+.mbstyle {
+  color: #045fbd;
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 10px;
+  padding: 1px 0;
+  line-height: 20px;
+}
+
+.titleText {
+  margin-top: 10px;
+  color: #d1f2ff;
+  font-size: 38px;
+  font-weight: 800;
+  line-height: 49px;
+  text-align: right;
+  font-family: 'Nunito', sans-serif;
+}
+
+.iconstyle {
+  width: 20px;
+  height: 20px;
+  color: #023f81;
+}
+
+.nameagestyle {
+  font-size: 20px;
+  font-weight: 700;
+  color: #023f81;
+}
+
+.stacking {
+  display: flex;
+  flex-direction: column;
+}
+
+.iconAndText {
+  margin-top: 5px;
+  padding: 1px 0;
+  line-height: 22px;
+}
+
+.datestyle {
+  margin-top: 5px;
+  font-size: 16px;
+  color: #045fbd;
+  line-height: 20px;
+}
+
+.address {
+  margin-top: 5px;
+  font-size: 16px;
+  color: #045fbd;
+  line-height: 20px;
+}

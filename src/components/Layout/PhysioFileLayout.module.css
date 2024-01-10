@@ -25,7 +25,7 @@
     width: calc(100% - var(--main-sidebar-width));
     height: var(--file-header-height);
     z-index: 100;
-    padding: 10px;
+    padding: 0px 10px;
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
 }
 
