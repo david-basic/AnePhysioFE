@@ -12,7 +12,7 @@ import { useAppDispatch } from "../../hooks/use_app_dispatch";
 import { deptLocalitiesActions } from "../../store/dept-localities-slice";
 import { physioFileActions } from "../../store/physio-file-slice";
 
-export const Sidebar: FC = () => {
+export const MainLayoutSidebar: FC = () => {
 	const [showModal, setShowModal] = useState(false);
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();

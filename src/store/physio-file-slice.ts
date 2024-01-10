@@ -106,9 +106,6 @@ const physioFileSlice = createSlice({
 			state.physioFile.assessment.patientRass.push(newPatientRass);
 		},
 		updateAdditionalNotesForPatientRassWithId: (state, action: PayloadAction<PatientRassAdditionalNotesUpdateType>) => {
-			//TODO dodaj ovako isto kao i za patient rass i za ostale entitete koji su u arrayevima a trebalo bi ih se moc update radit
-			// mozda ces isto njima morat generirat neki generic id pri dodavanju i mozda ces im morat isto na BE
-			//dodati generiranje id-a po nekom redu kao tu
 			state.physioFile.assessment.patientRass.forEach(pr => {
 				if (pr.id === action.payload.idToUpdate) {
 					pr.additionalDescription = action.payload.additionalDescription;

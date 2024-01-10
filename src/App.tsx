@@ -14,6 +14,7 @@ import CrcHomePage from "./pages/departments/CrcHomePage";
 import JilSusakHomePage from "./pages/departments/JilSusakHomePage";
 import KardioJilHomePage from "./pages/departments/KardioJilHomePage";
 import PatientPage from "./pages/physiofile/PatientPage";
+import PhysioFileLayout from "./components/layout/PhysioFIleLayout";
 
 const App: FC = () => {
 	const isLoggedIn = useAppSelector((state) => state.authReducer.isLoggedIn);
@@ -80,7 +81,7 @@ const App: FC = () => {
 		element: (
 			<Protected
 				isLoggedIn={isLoggedIn}
-				children={<MainLayout children={<PatientPage />} />}
+				children={<PhysioFileLayout children={<PatientPage />} />}
 			/>
 		),
 	};
