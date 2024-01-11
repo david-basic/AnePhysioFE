@@ -3,8 +3,11 @@ import LoadingSpinner from "../LoadingSpinner";
 import { type PhysioFileVM } from "../../models/physiofile/PhysioFileVM";
 import { Flex } from "antd";
 import styles from "./PhysioFile.module.css";
-import Segment from "./Segment";
-import SegmentTitle from "./SegmentTitle";
+import Segment from "./segments/Segment";
+import SegmentTitle from "./segments/SegmentTitle";
+import FunctionalDiagnoses from "./functionalDiagnosis/FunctionalDiagnoses";
+import Assessment from "./assessment/Assessment";
+import MkbsAndOperations from "./mkbsAndOperations/MkbsAndOperations";
 
 type PhysioFileProps = {
 	physioFile: PhysioFileVM | undefined;
@@ -29,11 +32,11 @@ const PhysioFile: FC<PhysioFileProps> = ({
 							fontFamily: "Nunito, sans-serif",
 						}}>
 						<div style={{ height: "100%" }}>
-							<Segment style={{ height: "auto" }}>
+							<Segment id='leadingDiagnosis'>
 								<SegmentTitle label='Vodeća dijagnoza:' />
-								<Segment isContent style={{ height: "auto" }}>
+								<Segment isContent className={styles.texts}>
 									{physioFile.patient.leadingMkb && (
-										<span className={styles.texts}>
+										<span>
 											{
 												physioFile.patient.leadingMkb
 													.displayName
@@ -41,10 +44,41 @@ const PhysioFile: FC<PhysioFileProps> = ({
 										</span>
 									)}
 									{!physioFile.patient.leadingMkb && (
-										<span className={styles.texts}>
+										<span>
 											Nema definirane vodeće dijagnoze
 										</span>
 									)}
+								</Segment>
+							</Segment>
+							<Segment id='functionalDiagnoses'>
+								<SegmentTitle label='Funkcionalna dijagnoza:' />
+								<Segment isContent className={styles.texts}>
+									<FunctionalDiagnoses
+										patientDiagnoses={
+											physioFile.patientFunctionalDiagnoses
+										}
+									/>
+								</Segment>
+							</Segment>
+							<Segment id='assessment'>
+								<SegmentTitle label='Početna procjena:' />
+								<Segment isContent>
+									<Assessment
+										patientAssessment={
+											physioFile.assessment
+										}
+									/>
+								</Segment>
+							</Segment>
+							<Segment id='otherMkbsAndOperations'>
+								<SegmentTitle label='Komorbiditeti i operativni postupci:' />
+								<Segment isContent>
+									<MkbsAndOperations
+										mkbs={physioFile.patient.patientMkbs}
+										operations={
+											physioFile.patient.operations
+										}
+									/>
 								</Segment>
 							</Segment>
 						</div>
@@ -56,33 +90,3 @@ const PhysioFile: FC<PhysioFileProps> = ({
 };
 
 export default PhysioFile;
-
-/*
-
-<div
-	style={{ height: "auto" }}
-	className={styles.segments}>
-	<span className={styles.titles}>
-		Vodeća dijagnoza:
-	</span>
-	<div
-		style={{ height: "auto" }}
-		className={styles.segmentContent}>
-		{physioFile.patient.leadingMkb && (
-			<span className={styles.texts}>
-				{
-					physioFile.patient.leadingMkb
-						.displayName
-				}
-			</span>
-		)}
-		{!physioFile.patient.leadingMkb && (
-			<span className={styles.texts}>
-				Nema definirane vodeće dijagnoze
-			</span>
-		)}
-	</div>
-</div>
-
-
-*/

@@ -1,5 +1,5 @@
 import { type HTMLAttributes, type FC } from "react";
-import styles from "./PhysioFile.module.css";
+import styles from "../PhysioFile.module.css";
 
 type SegmentTitleProps = {
 	label: string;
@@ -13,6 +13,7 @@ const SegmentTitle: FC<SegmentTitleProps> = ({
 
 	return (
 		<span
+			style={{ fontFamily: "Nunito, sans-serif" }}
 			className={
 				passedClassName
 					? `${passedClassName} ${styles.titles}`

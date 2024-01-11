@@ -1,0 +1,10 @@
+:root {
+    --text-color: #045fbd;
+    --background-color: #a6d6f0;
+}
+
+.textArea {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+}

@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from "./auth-slice";
 import deptLocalitiesReducer from "./dept-localities-slice";
 import physioFileReducer from "./physio-file-slice";
+import modalsShowReducer from "./modals-show-slice";
 import {
 	FLUSH,
 	PAUSE,
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
 	authReducer,
 	deptLocalitiesReducer,
 	physioFileReducer,
+	modalsShowReducer,
 });
 
 const persistConfig = {
@@ -25,7 +27,7 @@ const persistConfig = {
 	version: 1,
 	storage: sessionStorage,
 	whitelist: ["authReducer", "deptLocalitiesReducer", "physioFileReducer"],
-	blacklist: [""],
+	blacklist: ["modalsShowReducer"],
 };
 
 const persistedRootReducer = persistReducer(persistConfig, rootReducer);

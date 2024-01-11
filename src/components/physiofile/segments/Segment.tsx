@@ -1,5 +1,5 @@
 import { type PropsWithChildren, type FC, HTMLAttributes } from "react";
-import styles from "./PhysioFile.module.css";
+import styles from "../PhysioFile.module.css";
 
 type SegmentProps = {
 	isContent?: boolean;

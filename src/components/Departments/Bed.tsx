@@ -60,7 +60,8 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 							label: constants.DATE_OF_BIRTH,
 							children: new Date(
 								Date.parse(fetchedPatientData!.birthDate)
-							).toLocaleDateString("hr-HR", dateOptions),
+							).toLocaleDateString("hr-HR", dateOptions).split(" ")
+							.join(""),
 						},
 						{
 							key: constants.PATIENT_AGE,

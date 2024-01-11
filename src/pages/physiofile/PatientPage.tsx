@@ -1,4 +1,4 @@
-import { useEffect, type FC, useState } from "react";
+import { useEffect, type FC } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getIdFromUrl } from "../../util/UrlHelper";
 import api_routes from "../../config/api_routes";
@@ -10,17 +10,22 @@ import { HttpStatusCode } from "axios";
 import { Flex, Layout, message } from "antd";
 import { useAppDispatch } from "../../hooks/use_app_dispatch";
 import { physioFileActions } from "../../store/physio-file-slice";
-import TestsButton from "../../components/physiofile/TestsButton";
+import TestsButton from "../../components/physiofile/physioTests/TestsButton";
 import Sider from "antd/es/layout/Sider";
 import { Content, Header } from "antd/es/layout/layout";
 import styles from "../../components/layout/PhysioFileLayout.module.css";
-import PatientDetails from "../../components/physiofile/PatientDetails";
+import PatientDetails from "../../components/physiofile/patientDetails/PatientDetails";
 import {
 	CheckSquareFill,
 	PrinterFill,
 	XCircleFill,
 } from "react-bootstrap-icons";
 import { SaveFilled } from "@ant-design/icons";
+import { useAppSelector } from "../../hooks/use_app_selector";
+import { modalsShowActions } from "../../store/modals-show-slice";
+import ConfirmLeavePhysioFileModal from "../../components/modals/ConfirmLeavePhysioFileModal";
+import ConfirmSavePhysioFileModal from "../../components/modals/ConfirmSavePhysioFileModal";
+import RassModal from "../../components/physiofile/assessment/RassModal";
 
 const PatientPage: FC = () => {
 	const patientId = getIdFromUrl(useLocation());
@@ -35,7 +40,21 @@ const PatientPage: FC = () => {
 	sessionStorage.setItem("loadedOnce", "false");
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
-	const [physioFileData, setPhysioFileData] = useState<PhysioFileVM>();
+	const {
+		showCpaxMOdal,
+		showGcsModal,
+		showLeaveModal,
+		showMmtModal,
+		showRassModal,
+		showSaveModal,
+		showVasModal,
+	} = useAppSelector((state) => state.modalsShowReducer);
+	const physioFile = useAppSelector(
+		(state) => state.physioFileReducer.physioFile
+	);
+	const dataSaved = useAppSelector(
+		(state) => state.physioFileReducer.dataSaved
+	);
 
 	useEffect(() => {
 		if (sessionStorage.getItem("loadedOnce") !== "true") {
@@ -58,7 +77,6 @@ const PatientPage: FC = () => {
 								physioFileResponse
 							);
 						} else {
-							setPhysioFileData(physioFileResponse.data);
 							dispatch(
 								physioFileActions.setPhysioFile(
 									physioFileResponse.data!
@@ -88,7 +106,7 @@ const PatientPage: FC = () => {
 					position: "fixed",
 				}}
 				className={styles.fileheader}>
-				<PatientDetails patientData={physioFileData?.patient} />
+				<PatientDetails patientData={physioFile.patient} />
 			</Header>
 			<Layout>
 				<Layout>
@@ -96,7 +114,7 @@ const PatientPage: FC = () => {
 						className={styles.filecontent}
 						style={{ backgroundColor: "#d1f2ff" }}>
 						<PhysioFile
-							physioFile={physioFileData}
+							physioFile={physioFile}
 							isLoading={isLoading}
 						/>
 					</Content>
@@ -117,7 +135,20 @@ const PatientPage: FC = () => {
 						<div
 							style={{ height: "100%" }}
 							className={styles.testButtons}>
-							<TestsButton label='RASS' />
+							<TestsButton
+								onClick={() =>
+									dispatch(
+										modalsShowActions.setShowRassModal(true)
+									)
+								}
+								label='RASS'
+							/>
+							<RassModal
+								showModal={showRassModal}
+								patientRassTests={
+									physioFile.assessment.patientRass
+								}
+							/>
 							<TestsButton label='GCS' />
 							<TestsButton label='VAS' />
 							<TestsButton label='MMT' />
@@ -140,11 +171,34 @@ const PatientPage: FC = () => {
 										className={styles.saveButton}
 										icon={<SaveFilled />}
 										label='Spremi'
+										onClick={() =>
+											!dataSaved &&
+											dispatch(
+												modalsShowActions.setShowSaveModal(
+													true
+												)
+											)
+										}
+									/>
+									<ConfirmSavePhysioFileModal
+										showSaveModal={showSaveModal}
 									/>
 									<TestsButton
 										className={styles.cancelButton}
 										icon={<XCircleFill />}
 										label='Odustani'
+										onClick={() =>
+											!dataSaved
+												? dispatch(
+														modalsShowActions.setShowLeaveModal(
+															true
+														)
+												  )
+												: navigate(-1)
+										}
+									/>
+									<ConfirmLeavePhysioFileModal
+										showLeaveModal={showLeaveModal}
 									/>
 								</div>
 							</div>

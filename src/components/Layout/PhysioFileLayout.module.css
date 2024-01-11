@@ -4,6 +4,7 @@
     --file-sider-width: 335px;
     --content-padding-top: 50px;
     --content-padding-bottom: 20px;
+    --box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .layoutcontainer {
@@ -16,6 +17,7 @@
     top: 0;
     bottom: 0;
     overflow-y: auto;
+    box-shadow: var(--box-shadow)
 }
 
 .fileheader {
@@ -25,8 +27,8 @@
     width: calc(100% - var(--main-sidebar-width));
     height: var(--file-header-height);
     z-index: 100;
-    padding: 0px 10px;
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 0px 20px;
+    box-shadow: var(--box-shadow)
 }
 
 .filesidebar {
@@ -38,6 +40,7 @@
     overflow-y: auto;
     opacity: 0.84;
     align-items: center;
+    box-shadow: var(--box-shadow)
 }
 
 .filecontent {

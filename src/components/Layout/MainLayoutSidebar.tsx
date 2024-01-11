@@ -11,6 +11,7 @@ import { authActions } from "../../store/auth-slice";
 import { useAppDispatch } from "../../hooks/use_app_dispatch";
 import { deptLocalitiesActions } from "../../store/dept-localities-slice";
 import { physioFileActions } from "../../store/physio-file-slice";
+import { modalsShowActions } from "../../store/modals-show-slice";
 
 export const MainLayoutSidebar: FC = () => {
 	const [showModal, setShowModal] = useState(false);
@@ -25,6 +26,7 @@ export const MainLayoutSidebar: FC = () => {
 		dispatch(authActions.resetAllStateToDefaults());
 		dispatch(deptLocalitiesActions.resetDepartmentLocaltiesToInitValues());
 		dispatch(physioFileActions.resetPhysioFileToInitValues());
+		dispatch(modalsShowActions.resetAllStateToDefaults());
 
 		navigate(client_routes.ROUTE_AUTH, { replace: true });
 	};

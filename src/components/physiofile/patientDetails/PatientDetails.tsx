@@ -1,8 +1,8 @@
 import { type FC } from "react";
-import { PatientVM } from "../../models/patient/PatientVM";
+import { PatientVM } from "../../../models/patient/PatientVM";
 import { GenderFemale, GenderMale } from "react-bootstrap-icons";
 import styles from "./PatientDetails.module.css";
-import LoadingSpinner from "../LoadingSpinner";
+import LoadingSpinner from "../../LoadingSpinner";
 import { Flex } from "antd";
 
 type PatientDetailsProps = {
