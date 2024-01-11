@@ -18,11 +18,17 @@ const TestsButton: FC<TestsButtonProps> = ({
 	onClick,
 	...buttonProps
 }: TestsButtonProps) => {
+	const { className: passedClassName, ...otherButtonProps } = buttonProps;
+
 	return (
 		<button
-			className={styles.testsbutton}
+			className={
+				passedClassName
+					? `${passedClassName} ${styles.testsbutton}`
+					: styles.testsbutton
+			}
 			onClick={onClick}
-			{...buttonProps}>
+			{...otherButtonProps}>
 			{label} {icon && <span className={styles.icon}>{icon}</span>}
 		</button>
 	);

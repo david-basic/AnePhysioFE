@@ -1,0 +1,30 @@
+:root {
+    --text-color: #045fbd;
+    --text-font-size: 20px;
+    --segment-left-margin: 20px;
+    --segment-content-left-margin: calc(33px - var(--segment-left-margin));
+}
+
+.segments {
+    margin-top: 20px;
+    margin-left: var(--segment-left-margin);
+}
+
+.segmentContent {
+    margin-top: 4px;
+    margin-left: var(--segment-content-left-margin);
+}
+
+.titles {
+    color: var(--text-color);
+    font-weight: 700;
+    font-size: var(--text-font-size);
+    line-height: 26px;
+}
+
+.texts {
+    color: var(--text-color);
+    font-size: var(--text-font-size);
+    font-weight: 500;
+    line-height: 26px;
+}

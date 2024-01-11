@@ -96,7 +96,7 @@ const PatientPage: FC = () => {
 						className={styles.filecontent}
 						style={{ backgroundColor: "#d1f2ff" }}>
 						<PhysioFile
-							physioFile={physioFileData!}
+							physioFile={physioFileData}
 							isLoading={isLoading}
 						/>
 					</Content>
