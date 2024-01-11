@@ -8,9 +8,5 @@
     color: var(--text-color);
     min-width: 1000px;
     box-shadow: var(--box-shadow);
-
-}
-
-.ant-modal-component {
-    background-color: red;
+    font-family: "Nunito", sans-serif;
 }

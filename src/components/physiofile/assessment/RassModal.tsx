@@ -5,7 +5,7 @@ import { type PatientRassVM } from "../../../models/physiofile/assessment/Patien
 import { useAppDispatch } from "../../../hooks/use_app_dispatch";
 import { modalsShowActions } from "../../../store/modals-show-slice";
 import { ConfigProvider, Modal } from "antd"; 
-import "./test.css";
+import "./customStyle.css";
 
 type RassModalProps = {
 	showModal: boolean;
@@ -42,22 +42,15 @@ const RassModal: FC<RassModalProps> = ({
 		//         </Button>
 		// 	</Modal.Footer>
 		// </Modal>
-		<ConfigProvider
-			modal={
-				{
-					// className: localStyles.modal,
-				}
-			}>
 			<Modal
 				centered
-                className="modalBg"
+				className={localStyles.modal}
 				open={showModal}
 				onOk={handleModalOk}
 				okText='Spremi'
 				cancelText='Odustani'
 				closable={false}
 				maskClosable={false}
-				styles={{ body: { backgroundColor: "blue" } }}
 				okButtonProps={{ type: "primary" }}
 				wrapClassName={localStyles.modal}
 				onCancel={() =>
@@ -69,7 +62,6 @@ const RassModal: FC<RassModalProps> = ({
 					existance!
 				</h3>
 			</Modal>
-		</ConfigProvider>
 	);
 };
 
