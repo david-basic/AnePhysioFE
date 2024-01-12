@@ -165,7 +165,6 @@ const PhysioFileLayout: FC<PhysioFileLayoutProps> = ({
 					style={{ position: "fixed" }}>
 					<Menu theme='dark' mode='inline' items={sideBarItems} />
 					<Modal
-						title='Potvrda odjave'
 						centered
 						open={showModal}
 						onOk={handleLogoutClick}
@@ -174,6 +173,7 @@ const PhysioFileLayout: FC<PhysioFileLayoutProps> = ({
 						okType='danger'
 						okButtonProps={{ type: "primary" }}
 						onCancel={() => setShowModal(false)}>
+						<h1>Potvrda odjave</h1>
 						<h2>Želite li se odjaviti?</h2>
 					</Modal>
 					<ConfirmLeavePhysioFileModal

@@ -1,8 +1,9 @@
 import { type FC } from "react";
 import useFetcApihWithTokenRefresh from "../../hooks/use_fetch_api_with_token_refresh";
 import { Modal, message } from "antd";
-import { ApiResponse } from "../../type";
+import { type ApiResponse } from "../../type";
 import { HttpStatusCode } from "axios";
+import modalStyles from "./ModalStyles.module.css";
 
 type DeleteModalProps = {
 	url: string;
@@ -47,12 +48,13 @@ const DeleteModal: FC<DeleteModalProps> = ({
 
 	return (
 		<Modal
-			title='Brisanje'
 			open={isVisible}
 			onOk={() => {
 				sendDeleteRequest(url);
 			}}
+			className={modalStyles.modalsGeneral}
 			onCancel={handleCancel}>
+			<h2>Brisanje</h2>
 			<p>Molimo vas potvrdite brisanje!</p>
 		</Modal>
 	);

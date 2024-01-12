@@ -148,6 +148,7 @@ const PatientPage: FC = () => {
 								patientRassTests={
 									physioFile.assessment.patientRass
 								}
+								rassList={physioFile.fullRassList}
 							/>
 							<TestsButton label='GCS' />
 							<TestsButton label='VAS' />

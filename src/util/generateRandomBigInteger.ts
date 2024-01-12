@@ -6,8 +6,8 @@
  * Can also use current year as prefix
  */
 const generateRandomNumber = (
-	yearIsPrefix: boolean,
-	numberOfDigits: number
+	numberOfDigits: number,
+	yearIsPrefix?: boolean,
 ): string | null => {
 	if (!validateNumberOfDigits(numberOfDigits)) {
 		return null;

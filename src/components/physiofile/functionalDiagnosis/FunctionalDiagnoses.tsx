@@ -54,7 +54,7 @@ const FunctionalDiagnoses: FC<FunctionalDiagnosesProps> = ({
 			defaultValue={defaultSelectedValues}>
 			<Row>
 				{patientDiagnoses.map((fd) => (
-					<Col key={generateRandomNumber(true, 6)} span={10}>
+					<Col key={generateRandomNumber(6, true)} span={10}>
 						<Checkbox
 							className={parentStyles.texts}
 							style={{ fontWeight: 400 }}

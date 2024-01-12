@@ -97,10 +97,10 @@ const physioFileSlice = createSlice({
 			const newPatientRass = action.payload;
 
 			if (state.physioFile.assessment.patientRass.length === 0) {
-				const randomNumberStr = generateRandomNumber(false, 12);
+				const randomNumberStr = generateRandomNumber(12);
 				isNullOrEmpty(randomNumberStr) ? newPatientRass.id = "1" : newPatientRass.id = randomNumberStr!;
 			} else {
-				newPatientRass.id =(state.physioFile.assessment.patientRass.length + 1).toString();
+				newPatientRass.id = (state.physioFile.assessment.patientRass.length + 1).toString();
 			}
 
 			state.physioFile.assessment.patientRass.push(newPatientRass);
@@ -128,7 +128,7 @@ const physioFileSlice = createSlice({
 			const newCpax = action.payload;
 
 			if (state.physioFile.physioTest.cpax.length === 0) {
-				const randomNumberStr = generateRandomNumber(false, 12);
+				const randomNumberStr = generateRandomNumber(12);
 				isNullOrEmpty(randomNumberStr) ? newCpax.id = "1" : newCpax.id = randomNumberStr!;
 			} else {
 				newCpax.id =(state.physioFile.physioTest.cpax.length + 1).toString();
@@ -144,7 +144,7 @@ const physioFileSlice = createSlice({
 			const newGcs = action.payload;
 
 			if (state.physioFile.physioTest.gcs.length === 0) {
-				const randomNumberStr = generateRandomNumber(false, 12);
+				const randomNumberStr = generateRandomNumber(12);
 				isNullOrEmpty(randomNumberStr) ? newGcs.id = "1" : newGcs.id = randomNumberStr!;
 			} else {
 				newGcs.id =(state.physioFile.physioTest.gcs.length + 1).toString();
@@ -160,7 +160,7 @@ const physioFileSlice = createSlice({
 			const newPatientMmt = action.payload;
 
 			if (state.physioFile.physioTest.mmt.length === 0) {
-				const randomNumberStr = generateRandomNumber(false, 12);
+				const randomNumberStr = generateRandomNumber(12);
 				isNullOrEmpty(randomNumberStr) ? newPatientMmt.id = "1" : newPatientMmt.id = randomNumberStr!;
 			} else {
 				newPatientMmt.id =(state.physioFile.physioTest.mmt.length + 1).toString();
@@ -176,7 +176,7 @@ const physioFileSlice = createSlice({
 			const newVas = action.payload;
 
 			if (state.physioFile.physioTest.vas.length === 0) {
-				const randomNumberStr = generateRandomNumber(false, 12);
+				const randomNumberStr = generateRandomNumber(12);
 				isNullOrEmpty(randomNumberStr) ? newVas.id = "1" : newVas.id = randomNumberStr!;
 			} else {
 				newVas.id =(state.physioFile.physioTest.vas.length + 1).toString();

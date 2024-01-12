@@ -1,0 +1,85 @@
+:root {
+    --text-color: #045fbd;
+    --background-color: #a6d6f0;
+    --box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
+    --font-family: "Nunito", sans-serif;
+    --text-font-size: 20px;
+    --text-font-weight: 500;
+    --text-line-height: 26px;
+    --title-font-weight: 700;
+}
+
+.modalsGeneral {
+    font-family: var(--font-family);
+}
+
+.modalsButtons {
+    font-family: var(--font-family);
+}
+
+.rassModal {
+    min-width: 1000px;
+}
+
+.rassModalHeader {
+    height: fit-content;
+    width: 100%;
+    background-color: var(--text-color);
+    color: white;
+    box-shadow: var(--box-shadow);
+    border-radius: 8px;
+    font-weight: var(--title-font-weight);
+    font-size: var(--text-font-size);
+    font-family: var(--font-family);
+}
+
+.rassLinks {
+    color: var(--text-color);
+    font-size: var(--text-font-size);
+    line-height: var(--text-line-height);
+    font-family: var(--font-family);
+}
+
+.rassLinks:hover {
+    cursor: pointer;
+    font-weight: var(--title-font-weight);
+}
+
+.clickedRass {
+    color: var(--text-color);
+    font-size: var(--text-font-size);
+    line-height: var(--text-line-height);
+    font-weight: var(--title-font-weight);
+    font-family: var(--font-family);
+}
+
+.rassTextArea {
+    background-color: #d1f2ff;
+    color: var(--text-color);
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.icon {
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+    color: #ffffff;
+}
+
+.rassTable {
+    width: 450px;
+    max-height: 440px;
+    box-shadow: var(--box-shadow);
+    font-family: var(--font-family);
+}
+
+.rassExitButton {
+    font-weight: var(--title-font-weight);
+    font-size: 26px;
+    line-height: 26px;
+}
+
+.tableSegment {
+    display: flex;
+    justify-content: center;
+}

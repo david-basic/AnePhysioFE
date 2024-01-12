@@ -86,15 +86,16 @@ export const MainLayoutSidebar: FC = () => {
 			<Sider width={"auto"}>
 				<Menu theme='dark' mode='inline' items={sideBarItems} />
 				<Modal
-					title='Log out confirmation'
 					centered
 					open={showModal}
 					onOk={handleLogoutClick}
-					okText='Log out'
+					okText='Odjava'
 					okType='danger'
+					cancelText='Odustani'
 					okButtonProps={{ type: "primary" }}
 					onCancel={() => setShowModal(false)}>
-					<h2>Do you want to log out?</h2>
+					<h1>Potvrda odjave</h1>
+					<h2>Želite li se odjaviti?</h2>
 				</Modal>
 			</Sider>
 		</>

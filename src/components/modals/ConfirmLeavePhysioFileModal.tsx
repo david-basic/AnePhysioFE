@@ -4,6 +4,7 @@ import { useAppDispatch } from "../../hooks/use_app_dispatch";
 import { modalsShowActions } from "../../store/modals-show-slice";
 import { useNavigate } from "react-router-dom";
 import { physioFileActions } from "../../store/physio-file-slice";
+import modalStyles from "./ModalStyles.module.css";
 
 type ConfirmLeaveModalProps = {
 	showLeaveModal: boolean;
@@ -29,14 +30,18 @@ const ConfirmLeavePhysioFileModal: FC<ConfirmLeaveModalProps> = ({
 
 	return (
 		<Modal
-			title='Potvrda izlaska'
 			centered
 			open={showLeaveModal}
 			onOk={handleModalOk}
 			okText='Izlaz'
 			okType='danger'
+			className={modalStyles.modalsGeneral}
 			cancelText='Odustani'
-			okButtonProps={{ type: "primary" }}
+			okButtonProps={{
+				type: "primary",
+				className: `${modalStyles.modalsButtons}`,
+			}}
+			cancelButtonProps={{ className: `${modalStyles.modalsButtons}` }}
 			onCancel={() =>
 				dispatch(modalsShowActions.setShowLeaveModal(false))
 			}>

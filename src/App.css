@@ -1,3 +1,16 @@
+:root {
+	--text-color: #045fbd;
+	--background-color: #a6d6f0;
+	--box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* global modal style */
+:where(.css-dev-only-do-not-override-dkbvqv).ant-modal .ant-modal-content {
+	background-color: var(--background-color);
+	color: var(--text-color);
+	box-shadow: var(--box-shadow);
+}
+
 .content_padding {
 	padding: 0;
 	margin: 0;
