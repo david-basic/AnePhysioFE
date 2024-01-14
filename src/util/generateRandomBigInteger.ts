@@ -39,7 +39,7 @@ function validateNumberOfDigits(numberOfDigits: number) {
 		Math.floor(Math.log10(Number.MAX_SAFE_INTEGER)) + 1;
 
 	if (numberOfDigits > maxSafeDigits) {
-		console.log(
+		console.error(
 			`Error: Maximum number of digits allowed is ${maxSafeDigits}.`
 		);
 		return false;

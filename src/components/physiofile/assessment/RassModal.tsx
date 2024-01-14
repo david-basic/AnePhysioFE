@@ -1,4 +1,4 @@
-import { ChangeEvent, Fragment, useState, type FC } from "react";
+import { ChangeEvent, Fragment, useEffect, useState, type FC } from "react";
 import { type PatientRassVM } from "../../../models/physiofile/assessment/PatientRassVM";
 import { useAppDispatch } from "../../../hooks/use_app_dispatch";
 import { modalsShowActions } from "../../../store/modals-show-slice";
@@ -29,6 +29,7 @@ import TextArea from "antd/es/input/TextArea";
 import Table, { ColumnsType } from "antd/es/table";
 import { PencilFill, X } from "react-bootstrap-icons";
 import confirm from "antd/es/modal/confirm";
+import generateRandomNumber from "../../../util/generateRandomBigInteger";
 
 type RassModalProps = {
 	showModal: boolean;
@@ -90,6 +91,55 @@ const RassModal: FC<RassModalProps> = ({
 		timeZone: "CET",
 	};
 
+	// sessionStorage.setItem("loadedOnce", "false");
+
+	useEffect(() => {
+		//TODO this might input 2 or 3 of the same since when i save the patient Rass, the
+		//tests state will update and this will run again
+
+		if (sessionStorage.getItem("loadedOnce") !== "true") {
+			patientRassTests.forEach((pr) => {
+				const prDateTime = dayjs(pr.rassDateTime).format(
+					"YYYY-MM-DD HH:mm:ss"
+				);
+
+				const dateTimeToBeStoredToTable: RassDateType = {
+					date: prDateTime.split(" ")[0],
+					time: prDateTime.split(" ")[1],
+				};
+
+				const rass: RassChosenScoreAndIndex = {
+					chosenScore: pr.score,
+					chosenScoreIndex: rassList.findIndex(
+						(r) => r.score === pr.score
+					),
+				};
+
+				setDataSavedToTable((prevState) => {
+					const newState = [...prevState];
+					const foundRass = rassList.find(
+						(r) => r.score === rass.chosenScore
+					);
+					newState.push({
+						key: generateRandomNumber(9, true)!,
+						dateTime: dateTimeToBeStoredToTable,
+						scoreAndNoteAndIndex: {
+							additionalNotes: pr.additionalDescription,
+							scoreAndTerm: `${foundRass?.score}: ${foundRass?.term}`,
+							index: rass.chosenScoreIndex!,
+						},
+					});
+
+					return newState;
+				});
+			});
+		}
+
+		return () => {
+			sessionStorage.setItem("loadedOnce", "true");
+		};
+	}, [additionalNotes, chosenDate, patientRassTests, rassList]);
+
 	const columns: ColumnsType<RassTableType> = [
 		{
 			key: "rassIndex",
@@ -144,11 +194,13 @@ const RassModal: FC<RassModalProps> = ({
 				<Space size={"small"}>
 					<Button
 						type='primary'
+						disabled={tableIsBeingEdited}
 						onClick={(e) => handleEditChoice(e, record)}
 						icon={<PencilFill className={modalStyles.icon} />}
 					/>
 					<Button
 						type='primary'
+						disabled={tableIsBeingEdited}
 						danger
 						onClick={(e) => handleDeleteChoice(e, record)}
 						icon={<X className={modalStyles.icon} />}
@@ -194,8 +246,12 @@ const RassModal: FC<RassModalProps> = ({
 			addRecordToTable(chosenRassScoreAndIndex);
 
 			setTableIsBeingEdited(false);
+
+			//TODO update item in the global state
 		} else {
 			addRecordToTable(chosenRassScoreAndIndex);
+
+			//TODO add item to the global state
 		}
 
 		setChosenDate({ date: "", time: "" });
@@ -219,13 +275,11 @@ const RassModal: FC<RassModalProps> = ({
 	const addRecordToTable = (rass: RassChosenScoreAndIndex) => {
 		setDataSavedToTable((prevState) => {
 			const newState = [...prevState];
-			let length = newState.length;
-			length++;
 			const foundRass = rassList.find(
 				(r) => r.score === rass.chosenScore
 			);
 			newState.push({
-				key: `${length}`,
+				key: generateRandomNumber(9, true)!,
 				dateTime: chosenDate,
 				scoreAndNoteAndIndex: {
 					additionalNotes: additionalNotes,
@@ -238,7 +292,7 @@ const RassModal: FC<RassModalProps> = ({
 		});
 	};
 
-	const setNewClickedRass = (index: number, value: string) => {
+	const setNewClickedRass = (index: number, score: string) => {
 		setClickedIndex((prevClickedIndex) => {
 			let newClickedIndex = prevClickedIndex;
 
@@ -251,7 +305,7 @@ const RassModal: FC<RassModalProps> = ({
 			} else {
 				newClickedIndex = index;
 				setChosenRassScoreAndIndex({
-					chosenScore: value,
+					chosenScore: score,
 					chosenScoreIndex: index,
 				});
 			}
@@ -297,13 +351,11 @@ const RassModal: FC<RassModalProps> = ({
 		tableRecord: RassTableType
 	) => {
 		setTableIsBeingEdited(true);
-		let newKey = parseInt(tableRecord.key);
-		newKey++;
-		tableRecord.key = newKey.toString();
-		setTableRecordBeingEdited(tableRecord);
-
-		//TODO find a way to get the clicked index from the chosen rass score so that it highlights!!!
-		//TODO console log all the sets of states to check the correctness !
+		setTableRecordBeingEdited({
+			key: tableRecord.key,
+			dateTime: tableRecord.dateTime,
+			scoreAndNoteAndIndex: tableRecord.scoreAndNoteAndIndex,
+		});
 
 		setChosenDate({
 			date: tableRecord.dateTime.date,
@@ -347,6 +399,7 @@ const RassModal: FC<RassModalProps> = ({
 			footer={[
 				<Button
 					key='ok'
+					disabled={tableIsBeingEdited}
 					danger
 					type='primary'
 					className={`${modalStyles.modalsButtons} ${modalStyles.rassExitButton}`}

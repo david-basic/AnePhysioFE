@@ -23,6 +23,7 @@ const ConfirmSavePhysioFileModal: FC<ConfirmSaveModalProps> = ({
 
 		//TODO do a call to API to save the data to backend
 
+		sessionStorage.setItem("loadedOnce", "false");
 		dispatch(physioFileActions.setDataSaved(true));
 		message.success("Fizioterapeutski karton spremljen!");
 		dispatch(modalsShowActions.setShowSaveModal(false));

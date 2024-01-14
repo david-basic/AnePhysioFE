@@ -34,11 +34,6 @@ const useFetchApi = (): UseFetchApiReturnType => {
 
 			try {
 				if (tokenIsValid || !isLoggedIn) {
-
-					// const rqCon = {Authorization: `${tokenType} ${accessToken}`, ...requestConfig.headers}; //XXX remove
-					// console.log("requestConfig...", requestConfig); //XXX remove
-					// console.log("rq Headers...", rqCon);//XXX remove
-
 					const response = await fetch(requestConfig.url, {
 						method: requestConfig.method
 							? requestConfig.method
@@ -57,11 +52,7 @@ const useFetchApi = (): UseFetchApiReturnType => {
 						signal,
 					});
 
-					// console.log("response...", response); //XXX remove
 					const responseData = await response.json();
-					// console.log("responseData...", responseData); //XXX remove
-
-					// console.log("NEEDS TO BE SECOND!!"); //XXX remove
 
 					manageResponseData(responseData);
 				}

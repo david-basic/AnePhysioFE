@@ -39,7 +39,7 @@ const useRefreshCurrentToken = () => {
 					const responseData: ApiResponse<LoginResponseData> =
 						await response.json();
 
-					// console.log("NEEDS TO BE FIRST!"); //XXX remove
+					// console.log("NEEDS TO BE FIRST!"); //XXX remove before finishing
 
 					if (responseData.status !== HttpStatusCode.Ok) {
 						localforage.clear();
@@ -59,9 +59,6 @@ const useRefreshCurrentToken = () => {
 							"Your session expired! Please sign in again."
 						);
 					} else {
-
-						// console.log("new access token...", responseData.data!.accessToken); //XXX remove
-
 						dispatch(
 							authActions.setTokenType(
 								responseData.data!.tokenType
