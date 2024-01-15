@@ -105,6 +105,14 @@ const physioFileSlice = createSlice({
 
 			state.physioFile.assessment.patientRass.push(newPatientRass);
 		},
+		setPatientRass: (state, action: PayloadAction<PatientRassVM[]>) => {
+			state.physioFile.assessment.patientRass = action.payload;
+		},
+		updatePatientRassInstance: (state, action: PayloadAction<PatientRassVM>) => {
+			const rassToUpdate = action.payload;
+
+			
+		},
 		updateAdditionalNotesForPatientRassWithId: (state, action: PayloadAction<PatientRassAdditionalNotesUpdateType>) => {
 			state.physioFile.assessment.patientRass.forEach(pr => {
 				if (pr.id === action.payload.idToUpdate) {

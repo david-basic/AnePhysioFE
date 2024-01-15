@@ -1,4 +1,4 @@
-import { useEffect, type FC } from "react";
+import { useEffect, useRef, useState, type FC } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getIdFromUrl } from "../../util/UrlHelper";
 import api_routes from "../../config/api_routes";
@@ -37,7 +37,9 @@ const PatientPage: FC = () => {
 	// user saves their work so that reloading of data does not remove the changes, you will also use refs for the form like you did on login form.
 
 	const { fetchWithTokenRefresh, isLoading } = useFetcApihWithTokenRefresh();
-	sessionStorage.setItem("loadedOnce", "false");
+	// sessionStorage.setItem("physioPageLoadedOnce", "false");
+	const [apiCallMade, setApiCallMade] = useState(false);
+	const isMounted = useRef(true);
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const {
@@ -57,7 +59,9 @@ const PatientPage: FC = () => {
 	);
 
 	useEffect(() => {
-		if (sessionStorage.getItem("loadedOnce") !== "true") {
+		// if (sessionStorage.getItem("physioPageLoadedOnce") !== "true") {
+		// 	sessionStorage.setItem("physioPageLoadedOnce", "true");
+		const fetchData = async () => {
 			try {
 				fetchWithTokenRefresh(
 					{
@@ -86,17 +90,34 @@ const PatientPage: FC = () => {
 								"Fizioterapeutski karton dohvaćen!"
 							);
 						}
+
+						setApiCallMade(true);
+						sessionStorage.setItem("apiCallMade", "true");
 					}
 				);
 			} catch (error) {
 				console.error("Error loading Patient page:", error);
 			}
+		};
+		// }
+
+		const apiCallAlreadyMade =
+			sessionStorage.getItem("apiCallMade") === "true";
+		if (!apiCallMade && !apiCallAlreadyMade) {
+			fetchData();
 		}
 
 		return () => {
-			sessionStorage.setItem("loadedOnce", "true");
+			// sessionStorage.setItem("physioPageLoadedOnce", "true");
+
+			if (isMounted.current) {
+				setApiCallMade(false);
+				sessionStorage.removeItem("apiCallMade");
+				isMounted.current = false;
+			}
 		};
-	}, [dispatch, fetchWithTokenRefresh, navigate, patientId]);
+		// }, [dispatch, fetchWithTokenRefresh, navigate, patientId]);
+	}, [apiCallMade, dispatch, fetchWithTokenRefresh, navigate, patientId]);
 
 	return (
 		<>
@@ -148,6 +169,7 @@ const PatientPage: FC = () => {
 								patientRassTests={
 									physioFile.assessment.patientRass
 								}
+								assessment={physioFile.assessment}
 								rassList={physioFile.fullRassList}
 							/>
 							<TestsButton label='GCS' />

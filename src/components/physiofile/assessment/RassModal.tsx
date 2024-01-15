@@ -11,6 +11,7 @@ import {
 	Row,
 	Space,
 	Tooltip,
+	message,
 } from "antd";
 import modalStyles from "../../modals/ModalStyles.module.css";
 import fileStyles from "../PhysioFile.module.css";
@@ -30,10 +31,19 @@ import Table, { ColumnsType } from "antd/es/table";
 import { PencilFill, X } from "react-bootstrap-icons";
 import confirm from "antd/es/modal/confirm";
 import generateRandomNumber from "../../../util/generateRandomBigInteger";
+import useFetcApihWithTokenRefresh from "../../../hooks/use_fetch_api_with_token_refresh";
+import { ApiResponse } from "../../../type";
+import { PhysioFileVM } from "../../../models/physiofile/PhysioFileVM";
+import api_routes from "../../../config/api_routes";
+import { CreatePatientRassDTO } from "../../../dto/PhysioFile/Assessment/CreatePatientRassDTO";
+import { useAppSelector } from "../../../hooks/use_app_selector";
+import { HttpStatusCode } from "axios";
+import { AssessmentVM } from "../../../models/physiofile/assessment/AssessmentVM";
 
 type RassModalProps = {
 	showModal: boolean;
 	patientRassTests: PatientRassVM[];
+	assessment: AssessmentVM;
 	rassList: RassVM[];
 };
 
@@ -50,6 +60,7 @@ type ScoreAndNoteAndIndex = {
 
 type RassTableType = {
 	key: string;
+	id: string;
 	dateTime: RassDateType;
 	scoreAndNoteAndIndex: ScoreAndNoteAndIndex;
 };
@@ -62,9 +73,11 @@ type RassChosenScoreAndIndex = {
 const RassModal: FC<RassModalProps> = ({
 	showModal,
 	patientRassTests,
+	assessment,
 	rassList,
 }: RassModalProps) => {
 	const dispatch = useAppDispatch();
+	const { fetchWithTokenRefresh } = useFetcApihWithTokenRefresh();
 	const [clickedIndex, setClickedIndex] = useState<number>();
 	const [chosenDate, setChosenDate] = useState<RassDateType>({
 		date: "",
@@ -84,6 +97,9 @@ const RassModal: FC<RassModalProps> = ({
 	const [dataSavedToTable, setDataSavedToTable] = useState<RassTableType[]>(
 		[]
 	);
+	const physioFile = useAppSelector(
+		(state) => state.physioFileReducer.physioFile
+	);
 	const dateOptions: Intl.DateTimeFormatOptions = {
 		day: "2-digit",
 		month: "2-digit",
@@ -91,70 +107,84 @@ const RassModal: FC<RassModalProps> = ({
 		timeZone: "CET",
 	};
 
-	// sessionStorage.setItem("loadedOnce", "false");
+	// sessionStorage.setItem("rassModalLoaded", "false");
 
 	useEffect(() => {
 		//TODO this might input 2 or 3 of the same since when i save the patient Rass, the
 		//tests state will update and this will run again
 
-		if (sessionStorage.getItem("loadedOnce") !== "true") {
-			patientRassTests.forEach((pr) => {
-				const prDateTime = dayjs(pr.rassDateTime).format(
-					"YYYY-MM-DD HH:mm:ss"
+		// if (sessionStorage.getItem("rassModalLoaded") !== "true") {
+
+		patientRassTests.forEach((pr) => {
+			const prDateTime = dayjs(pr.rassDateTime).format(
+				"YYYY-MM-DD HH:mm:ss"
+			);
+
+			const dateTimeToBeStoredToTable: RassDateType = {
+				date: prDateTime.split(" ")[0],
+				time: prDateTime.split(" ")[1],
+			};
+
+			const rass: RassChosenScoreAndIndex = {
+				chosenScore: pr.score,
+				chosenScoreIndex: rassList.findIndex(
+					(r) => r.score === pr.score
+				),
+			};
+
+			setDataSavedToTable((prevState) => {
+				const newState = [...prevState];
+				const foundRass = rassList.find(
+					(r) => r.score === rass.chosenScore
 				);
-
-				const dateTimeToBeStoredToTable: RassDateType = {
-					date: prDateTime.split(" ")[0],
-					time: prDateTime.split(" ")[1],
-				};
-
-				const rass: RassChosenScoreAndIndex = {
-					chosenScore: pr.score,
-					chosenScoreIndex: rassList.findIndex(
-						(r) => r.score === pr.score
-					),
-				};
-
-				setDataSavedToTable((prevState) => {
-					const newState = [...prevState];
-					const foundRass = rassList.find(
-						(r) => r.score === rass.chosenScore
-					);
-					newState.push({
-						key: generateRandomNumber(9, true)!,
-						dateTime: dateTimeToBeStoredToTable,
-						scoreAndNoteAndIndex: {
-							additionalNotes: pr.additionalDescription,
-							scoreAndTerm: `${foundRass?.score}: ${foundRass?.term}`,
-							index: rass.chosenScoreIndex!,
-						},
-					});
-
-					return newState;
+				newState.push({
+					key: generateRandomNumber(9, true)!,
+					id: pr.id,
+					dateTime: dateTimeToBeStoredToTable,
+					scoreAndNoteAndIndex: {
+						additionalNotes: pr.additionalDescription,
+						scoreAndTerm: `${foundRass?.score}: ${foundRass?.term}`,
+						index: rass.chosenScoreIndex!,
+					},
 				});
+
+				return newState;
 			});
-		}
+		});
+		// }
 
 		return () => {
-			sessionStorage.setItem("loadedOnce", "true");
+			// sessionStorage.setItem("rassModalLoaded", "true");
+			setDataSavedToTable([]);
 		};
-	}, [additionalNotes, chosenDate, patientRassTests, rassList]);
+	}, [patientRassTests, rassList]);
 
 	const columns: ColumnsType<RassTableType> = [
 		{
 			key: "rassIndex",
-			title: "Id",
-			width: 40,
+			width: 3,
 			dataIndex: "index",
 			render: (_, { scoreAndNoteAndIndex }) => (
-				<span>{scoreAndNoteAndIndex.index}</span>
+				<div style={{ visibility: "hidden", width: 0, height: 0 }}>
+					{scoreAndNoteAndIndex.index}
+				</div>
+			),
+		},
+		{
+			key: "rassId",
+			width: 3,
+			dataIndex: "id",
+			render: (_, { id }) => (
+				<div style={{ visibility: "hidden", width: 0, height: 0 }}>
+					{id}
+				</div>
 			),
 		},
 		{
 			key: "date",
 			title: "Datum",
 			dataIndex: "dateTime",
-			width: 100,
+			width: 90,
 			sorter: (a, b) => {
 				const dateA = dayjs(`${a.dateTime.date} ${a.dateTime.time}`);
 				const dateB = dayjs(`${b.dateTime.date} ${b.dateTime.time}`);
@@ -177,6 +207,7 @@ const RassModal: FC<RassModalProps> = ({
 		{
 			key: "scoreAndTerm",
 			title: "Ocjena",
+			width: 150,
 			dataIndex: "scoreAndNoteAndIndex",
 			render: (_, { scoreAndNoteAndIndex }) => (
 				<Tooltip
@@ -189,7 +220,7 @@ const RassModal: FC<RassModalProps> = ({
 		{
 			key: "actions",
 			title: "Akcije",
-			width: 100,
+			width: 90,
 			render: (_, record) => (
 				<Space size={"small"}>
 					<Button
@@ -232,6 +263,39 @@ const RassModal: FC<RassModalProps> = ({
 		setNewClickedRass(index, event.currentTarget.ariaValueText!);
 	};
 
+	const sendAddPatientRassRequest = async (prDTO: CreatePatientRassDTO) => {
+		try {
+			fetchWithTokenRefresh(
+				{
+					url: api_routes.ROUTE_PHYSIO_FILE_ADD_NEW_PATIENT_RASS,
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: prDTO,
+				},
+				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
+					if (physioFileResponse.status !== HttpStatusCode.Ok) {
+						message.error("Nije moguće spremiti novi RASS!");
+						console.error(
+							"There was a error while saving new patient RASS: ",
+							physioFileResponse
+						);
+					} else {
+						dispatch(
+							physioFileActions.setPhysioFile(
+								physioFileResponse.data!
+							)
+						);
+						message.success("Novi RASS uspješno spremljen!");
+						console.log("physioFileResponse: ", physioFileResponse);
+					}
+				}
+			);
+		} catch (error) {
+			console.error("Error posting new Patient RASS:", error);
+			message.error("Neuspjelo spremanje novog RASS-a!");
+		}
+	};
+
 	const handleSaveChoice = () => {
 		if (
 			isNullOrEmpty(chosenDate.date) ||
@@ -246,12 +310,22 @@ const RassModal: FC<RassModalProps> = ({
 			addRecordToTable(chosenRassScoreAndIndex);
 
 			setTableIsBeingEdited(false);
-
-			//TODO update item in the global state
 		} else {
 			addRecordToTable(chosenRassScoreAndIndex);
 
-			//TODO add item to the global state
+			const foundRass = rassList.find(
+				(r) => r.score === chosenRassScoreAndIndex.chosenScore
+			);
+			const prDTO: CreatePatientRassDTO = {
+				assessmentId: assessment.id,
+				score: foundRass!.score,
+				term: foundRass!.term,
+				scoreDescription: foundRass!.scoreDescription,
+				rassDateTime: `${chosenDate.date}T${chosenDate.time}`,
+				additionalDescription: additionalNotes,
+			};
+
+			sendAddPatientRassRequest(prDTO);
 		}
 
 		setChosenDate({ date: "", time: "" });
@@ -270,6 +344,8 @@ const RassModal: FC<RassModalProps> = ({
 			(item) => item.key !== recordToDelete.key
 		);
 		setDataSavedToTable(newData);
+
+		//TODO make delete call to API here!
 	};
 
 	const addRecordToTable = (rass: RassChosenScoreAndIndex) => {
@@ -278,8 +354,10 @@ const RassModal: FC<RassModalProps> = ({
 			const foundRass = rassList.find(
 				(r) => r.score === rass.chosenScore
 			);
+			const randNum = generateRandomNumber(12)!;
 			newState.push({
-				key: generateRandomNumber(9, true)!,
+				key: randNum,
+				id: "",
 				dateTime: chosenDate,
 				scoreAndNoteAndIndex: {
 					additionalNotes: additionalNotes,
@@ -353,6 +431,7 @@ const RassModal: FC<RassModalProps> = ({
 		setTableIsBeingEdited(true);
 		setTableRecordBeingEdited({
 			key: tableRecord.key,
+			id: tableRecord.id,
 			dateTime: tableRecord.dateTime,
 			scoreAndNoteAndIndex: tableRecord.scoreAndNoteAndIndex,
 		});
@@ -387,6 +466,11 @@ const RassModal: FC<RassModalProps> = ({
 		dispatch(physioFileActions.setDataSaved(false));
 	};
 
+	const handleSavingDataBeforeExit = () => {
+		//TODO handle saving to global state here !!!
+		dispatch(physioFileActions.setPhysioFile(physioFile));
+	};
+
 	return (
 		<Modal
 			centered
@@ -404,6 +488,8 @@ const RassModal: FC<RassModalProps> = ({
 					type='primary'
 					className={`${modalStyles.modalsButtons} ${modalStyles.rassExitButton}`}
 					onClick={() => {
+						handleSavingDataBeforeExit();
+
 						setChosenDate({ date: "", time: "" });
 						setChosenRassScoreAndIndex({
 							chosenScore: "",
