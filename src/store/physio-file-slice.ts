@@ -93,32 +93,8 @@ const physioFileSlice = createSlice({
 		setAssessmentNotes: (state, action: PayloadAction<string>) => {
 			state.physioFile.assessment.notes = action.payload;
 		},
-		addAnotherPatientRassInstance: (state, action: PayloadAction<PatientRassVM>) => {
-			const newPatientRass = action.payload;
-
-			if (state.physioFile.assessment.patientRass.length === 0) {
-				const randomNumberStr = generateRandomNumber(12);
-				isNullOrEmpty(randomNumberStr) ? newPatientRass.id = "1" : newPatientRass.id = randomNumberStr!;
-			} else {
-				newPatientRass.id = (state.physioFile.assessment.patientRass.length + 1).toString();
-			}
-
-			state.physioFile.assessment.patientRass.push(newPatientRass);
-		},
 		setPatientRass: (state, action: PayloadAction<PatientRassVM[]>) => {
 			state.physioFile.assessment.patientRass = action.payload;
-		},
-		updatePatientRassInstance: (state, action: PayloadAction<PatientRassVM>) => {
-			const rassToUpdate = action.payload;
-
-			
-		},
-		updateAdditionalNotesForPatientRassWithId: (state, action: PayloadAction<PatientRassAdditionalNotesUpdateType>) => {
-			state.physioFile.assessment.patientRass.forEach(pr => {
-				if (pr.id === action.payload.idToUpdate) {
-					pr.additionalDescription = action.payload.additionalDescription;
-				}
-			});
 		},
 		setPatientGoals: (state, action: PayloadAction<PatientGoalVM[]>) => {
 			state.physioFile.patientGoals = action.payload;

@@ -547,7 +547,7 @@ const RassModal: FC<RassModalProps> = ({
 		setAdditionalNotes("");
 		setDatePickerValue(null);
 		setTableIsBeingEdited(false);
-	}
+	};
 
 	return (
 		<Modal
