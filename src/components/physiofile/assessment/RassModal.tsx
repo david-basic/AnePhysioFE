@@ -32,13 +32,14 @@ import { PencilFill, X } from "react-bootstrap-icons";
 import confirm from "antd/es/modal/confirm";
 import generateRandomNumber from "../../../util/generateRandomBigInteger";
 import useFetcApihWithTokenRefresh from "../../../hooks/use_fetch_api_with_token_refresh";
-import { ApiResponse } from "../../../type";
+import { type ApiResponse, type NoReturnData } from "../../../type";
 import { PhysioFileVM } from "../../../models/physiofile/PhysioFileVM";
 import api_routes from "../../../config/api_routes";
 import { CreatePatientRassDTO } from "../../../dto/PhysioFile/Assessment/CreatePatientRassDTO";
 import { useAppSelector } from "../../../hooks/use_app_selector";
 import { HttpStatusCode } from "axios";
-import { AssessmentVM } from "../../../models/physiofile/assessment/AssessmentVM";
+import { type AssessmentVM } from "../../../models/physiofile/assessment/AssessmentVM";
+import { type DeletePatientRassRequestDto } from "../../../dto/PhysioFile/Assessment/DeletePatientRassRequestDto";
 
 type RassModalProps = {
 	showModal: boolean;
@@ -286,7 +287,6 @@ const RassModal: FC<RassModalProps> = ({
 							)
 						);
 						message.success("Novi RASS uspješno spremljen!");
-						console.log("physioFileResponse: ", physioFileResponse);
 					}
 				}
 			);
@@ -344,8 +344,6 @@ const RassModal: FC<RassModalProps> = ({
 			(item) => item.key !== recordToDelete.key
 		);
 		setDataSavedToTable(newData);
-
-		//TODO make delete call to API here!
 	};
 
 	const addRecordToTable = (rass: RassChosenScoreAndIndex) => {
@@ -398,6 +396,42 @@ const RassModal: FC<RassModalProps> = ({
 		setAdditionalNotes(event.target.value);
 		dispatch(physioFileActions.setDataSaved(false));
 	};
+	
+	const sendDeletePatientRassRequest = async (
+		deleteDto: DeletePatientRassRequestDto,
+		recordToDelete: RassTableType
+	) => {
+		try {
+			fetchWithTokenRefresh(
+				{
+					url: api_routes.ROUTE_PHYSIO_FILE_DELETE_PATIENT_RASS,
+					method: "DELETE",
+					headers: { "Content-Type": "application/json" },
+					body: deleteDto,
+				},
+				(deleteFileResponse: ApiResponse<NoReturnData>) => {
+					if (deleteFileResponse.status !== HttpStatusCode.Ok) {
+						message.error("Nije moguće izbrisati RASS!");
+						console.error(
+							"There was a error while deleting patient RASS: ",
+							deleteFileResponse
+						);
+					} else {
+						const newData = dataSavedToTable.filter(
+							(item) => item.key !== recordToDelete.key
+						);
+						setDataSavedToTable(newData);
+						dispatch(physioFileActions.setDataSaved(false));
+
+						message.success("RASS uspješno izbrisan!");
+					}
+				}
+			);
+		} catch (error) {
+			console.error("Error posting new Patient RASS:", error);
+			message.error("Neuspjelo spremanje novog RASS-a!");
+		}
+	};
 
 	const handleDeleteChoice = (
 		event: React.MouseEvent<HTMLElement, MouseEvent>,
@@ -414,12 +448,11 @@ const RassModal: FC<RassModalProps> = ({
 			okButtonProps: { type: "primary" },
 			cancelButtonProps: { type: "default" },
 			cancelText: "Odustani",
-			onOk() {
-				const newData = dataSavedToTable.filter(
-					(item) => item.key !== tableRecord.key
-				);
-				setDataSavedToTable(newData);
-				dispatch(physioFileActions.setDataSaved(false));
+			onOk() {				
+				sendDeletePatientRassRequest({
+					patientRassId: tableRecord.id,
+					assessmentId: assessment.id,
+				}, tableRecord);
 			},
 		});
 	};

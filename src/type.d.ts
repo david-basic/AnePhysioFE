@@ -103,6 +103,13 @@ interface ApiResponse<T> {
 	path?: string;
 }
 /**
+ * Interface used when there is no return data from the API
+ * @param NoReturnData Will always be null in API response with no return data
+ */
+interface NoReturnData {
+	noData: string;
+}
+/**
  * Type used to define the initial state of the DepartmentLocalities state slice
  * @param jilRIjeka Defining Jil Rijeka locality state
  * @param jilSusak Defining Jil Sušak locality state

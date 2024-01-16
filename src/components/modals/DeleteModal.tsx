@@ -10,6 +10,7 @@ type DeleteModalProps = {
 	isVisible: boolean;
 	setVisible: (newState: boolean) => void;
 	setDeleted: (newState: boolean) => void;
+	body?: any;
 };
 
 const DeleteModal: FC<DeleteModalProps> = ({
@@ -17,6 +18,7 @@ const DeleteModal: FC<DeleteModalProps> = ({
 	isVisible,
 	setVisible,
 	setDeleted,
+	body
 }: DeleteModalProps) => {
 	const { fetchWithTokenRefresh: sendRequest } =
 		useFetcApihWithTokenRefresh();
@@ -30,7 +32,7 @@ const DeleteModal: FC<DeleteModalProps> = ({
 			{
 				url: url,
 				method: "DELETE",
-				body: null,
+				body: body ? body : null,
 			},
 			(deleteResponseData: ApiResponse<any>) => {
 				//TODO change from any to whatever the standardized response of deleting object you will have
