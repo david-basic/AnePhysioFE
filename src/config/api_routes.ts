@@ -13,10 +13,11 @@ const api_routes = {
 
 	ROUTE_PATIENT_GET: `${apiRoutesParams.API}/patient-management/patients`,
 
-	ROUTE_PHYSIO_FILE_GET: `${apiRoutesParams.API}/physiofile-management/physiofiles`, 
-	ROUTE_PHYSIO_FILE_GET_BY_PATIENT_ID: `${apiRoutesParams.API}/physiofile-management/physiofiles/patient`, 
+	ROUTE_PHYSIO_FILE_GET: `${apiRoutesParams.API}/physiofile-management/physiofiles`,
+	ROUTE_PHYSIO_FILE_GET_BY_PATIENT_ID: `${apiRoutesParams.API}/physiofile-management/physiofiles/patient`,
 	ROUTE_PHYSIO_FILE_ADD_NEW_PATIENT_RASS: `${apiRoutesParams.API}/physiofile-management/physiofiles/new-patient-rass`,
 	ROUTE_PHYSIO_FILE_DELETE_PATIENT_RASS: `${apiRoutesParams.API}/physiofile-management/physiofiles/delete-patient-rass`,
+	ROUTE_PHYSIO_FILE_UPDATE_PATIENT_RASS_BY_ID: `${apiRoutesParams.API}/physiofile-management/physiofiles/update-patient-rass`,
 };
 
 export default api_routes;

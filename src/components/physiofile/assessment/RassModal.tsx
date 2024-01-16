@@ -40,6 +40,7 @@ import { useAppSelector } from "../../../hooks/use_app_selector";
 import { HttpStatusCode } from "axios";
 import { type AssessmentVM } from "../../../models/physiofile/assessment/AssessmentVM";
 import { type DeletePatientRassRequestDto } from "../../../dto/PhysioFile/Assessment/DeletePatientRassRequestDto";
+import { type UpdatePatientRassRequestDto } from "../../../dto/PhysioFile/Assessment/UpdatePatientRassRequestDto";
 
 type RassModalProps = {
 	showModal: boolean;
@@ -101,6 +102,9 @@ const RassModal: FC<RassModalProps> = ({
 	const physioFile = useAppSelector(
 		(state) => state.physioFileReducer.physioFile
 	);
+	const dataSaved = useAppSelector(
+		(state) => state.physioFileReducer.dataSaved
+	);
 	const dateOptions: Intl.DateTimeFormatOptions = {
 		day: "2-digit",
 		month: "2-digit",
@@ -108,14 +112,7 @@ const RassModal: FC<RassModalProps> = ({
 		timeZone: "CET",
 	};
 
-	// sessionStorage.setItem("rassModalLoaded", "false");
-
 	useEffect(() => {
-		//TODO this might input 2 or 3 of the same since when i save the patient Rass, the
-		//tests state will update and this will run again
-
-		// if (sessionStorage.getItem("rassModalLoaded") !== "true") {
-
 		patientRassTests.forEach((pr) => {
 			const prDateTime = dayjs(pr.rassDateTime).format(
 				"YYYY-MM-DD HH:mm:ss"
@@ -152,10 +149,8 @@ const RassModal: FC<RassModalProps> = ({
 				return newState;
 			});
 		});
-		// }
 
 		return () => {
-			// sessionStorage.setItem("rassModalLoaded", "true");
 			setDataSavedToTable([]);
 		};
 	}, [patientRassTests, rassList]);
@@ -264,7 +259,52 @@ const RassModal: FC<RassModalProps> = ({
 		setNewClickedRass(index, event.currentTarget.ariaValueText!);
 	};
 
-	const sendAddPatientRassRequest = async (prDTO: CreatePatientRassDTO) => {
+	const sendUpdatePatientRassRequest = async (
+		patientRassId: string,
+		updateDto: UpdatePatientRassRequestDto
+	) => {
+		try {
+			fetchWithTokenRefresh(
+				{
+					url:
+						api_routes.ROUTE_PHYSIO_FILE_UPDATE_PATIENT_RASS_BY_ID +
+						`/${patientRassId}`,
+					method: "PUT",
+					headers: { "Content-Type": "application/json" },
+					body: updateDto,
+				},
+				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
+					if (physioFileResponse.status !== HttpStatusCode.Ok) {
+						message.error("Nije moguće izmjeniti RASS!");
+						console.error(
+							"There was a error while updating patient RASS: ",
+							physioFileResponse
+						);
+					} else {
+						deleteRecordFromTable(tableRecordBeingEdited!);
+
+						addRecordToTable(chosenRassScoreAndIndex, chosenDate);
+
+						dispatch(
+							physioFileActions.setPhysioFile(
+								physioFileResponse.data!
+							)
+						);
+						message.success("RASS uspješno izmijenjen!");
+						dispatch(physioFileActions.setDataSaved(false));
+					}
+				}
+			);
+		} catch (error) {
+			console.error("Error updating Patient RASS:", error);
+			message.error("Neuspjela izmjena RASS-a!");
+		}
+	};
+
+	const sendAddPatientRassRequest = async (
+		prDTO: CreatePatientRassDTO,
+		chosenRecord: RassChosenScoreAndIndex
+	) => {
 		try {
 			fetchWithTokenRefresh(
 				{
@@ -281,12 +321,15 @@ const RassModal: FC<RassModalProps> = ({
 							physioFileResponse
 						);
 					} else {
+						addRecordToTable(chosenRecord, chosenDate);
+
 						dispatch(
 							physioFileActions.setPhysioFile(
 								physioFileResponse.data!
 							)
 						);
 						message.success("Novi RASS uspješno spremljen!");
+						dispatch(physioFileActions.setDataSaved(false));
 					}
 				}
 			);
@@ -304,18 +347,22 @@ const RassModal: FC<RassModalProps> = ({
 			return;
 		}
 
+		const foundRass = rassList.find(
+			(r) => r.score === chosenRassScoreAndIndex.chosenScore
+		);
+
 		if (tableIsBeingEdited) {
-			deleteRecordFromTable(tableRecordBeingEdited!);
+			const updateDto: UpdatePatientRassRequestDto = {
+				assessmentId: assessment.id,
+				score: foundRass!.score,
+				term: foundRass!.term,
+				scoreDescription: foundRass!.scoreDescription,
+				rassDateTime: `${chosenDate.date}T${chosenDate.time}`,
+				additionalDescription: additionalNotes,
+			};
 
-			addRecordToTable(chosenRassScoreAndIndex);
-
-			setTableIsBeingEdited(false);
+			sendUpdatePatientRassRequest(tableRecordBeingEdited!.id, updateDto);
 		} else {
-			addRecordToTable(chosenRassScoreAndIndex);
-
-			const foundRass = rassList.find(
-				(r) => r.score === chosenRassScoreAndIndex.chosenScore
-			);
 			const prDTO: CreatePatientRassDTO = {
 				assessmentId: assessment.id,
 				score: foundRass!.score,
@@ -325,18 +372,10 @@ const RassModal: FC<RassModalProps> = ({
 				additionalDescription: additionalNotes,
 			};
 
-			sendAddPatientRassRequest(prDTO);
+			sendAddPatientRassRequest(prDTO, chosenRassScoreAndIndex);
 		}
 
-		setChosenDate({ date: "", time: "" });
-		setChosenRassScoreAndIndex({
-			chosenScore: "",
-			chosenScoreIndex: undefined,
-		});
-		setClickedIndex(undefined);
-		setAdditionalNotes("");
-		setDatePickerValue(null);
-		dispatch(physioFileActions.setDataSaved(false));
+		resetModalStates();
 	};
 
 	const deleteRecordFromTable = (recordToDelete: RassTableType) => {
@@ -346,7 +385,10 @@ const RassModal: FC<RassModalProps> = ({
 		setDataSavedToTable(newData);
 	};
 
-	const addRecordToTable = (rass: RassChosenScoreAndIndex) => {
+	const addRecordToTable = (
+		rass: RassChosenScoreAndIndex,
+		chosenDateTime: RassDateType
+	) => {
 		setDataSavedToTable((prevState) => {
 			const newState = [...prevState];
 			const foundRass = rassList.find(
@@ -356,7 +398,7 @@ const RassModal: FC<RassModalProps> = ({
 			newState.push({
 				key: randNum,
 				id: "",
-				dateTime: chosenDate,
+				dateTime: chosenDateTime,
 				scoreAndNoteAndIndex: {
 					additionalNotes: additionalNotes,
 					scoreAndTerm: `${foundRass?.score}: ${foundRass?.term}`,
@@ -394,9 +436,8 @@ const RassModal: FC<RassModalProps> = ({
 		event: ChangeEvent<HTMLTextAreaElement>
 	) => {
 		setAdditionalNotes(event.target.value);
-		dispatch(physioFileActions.setDataSaved(false));
 	};
-	
+
 	const sendDeletePatientRassRequest = async (
 		deleteDto: DeletePatientRassRequestDto,
 		recordToDelete: RassTableType
@@ -448,11 +489,14 @@ const RassModal: FC<RassModalProps> = ({
 			okButtonProps: { type: "primary" },
 			cancelButtonProps: { type: "default" },
 			cancelText: "Odustani",
-			onOk() {				
-				sendDeletePatientRassRequest({
-					patientRassId: tableRecord.id,
-					assessmentId: assessment.id,
-				}, tableRecord);
+			onOk() {
+				sendDeletePatientRassRequest(
+					{
+						patientRassId: tableRecord.id,
+						assessmentId: assessment.id,
+					},
+					tableRecord
+				);
 			},
 		});
 	};
@@ -483,10 +527,17 @@ const RassModal: FC<RassModalProps> = ({
 				tableRecord.scoreAndNoteAndIndex.scoreAndTerm.split(":")[0],
 			chosenScoreIndex: tableRecord.scoreAndNoteAndIndex.index,
 		});
-		dispatch(physioFileActions.setDataSaved(false));
 	};
 
 	const handleStopEditing = () => {
+		resetModalStates();
+	};
+
+	const handleSavingDataBeforeExit = () => {
+		dispatch(physioFileActions.setPhysioFile(physioFile));
+	};
+
+	const resetModalStates = () => {
 		setChosenDate({ date: "", time: "" });
 		setChosenRassScoreAndIndex({
 			chosenScore: "",
@@ -496,13 +547,7 @@ const RassModal: FC<RassModalProps> = ({
 		setAdditionalNotes("");
 		setDatePickerValue(null);
 		setTableIsBeingEdited(false);
-		dispatch(physioFileActions.setDataSaved(false));
-	};
-
-	const handleSavingDataBeforeExit = () => {
-		//TODO handle saving to global state here !!!
-		dispatch(physioFileActions.setPhysioFile(physioFile));
-	};
+	}
 
 	return (
 		<Modal
@@ -521,18 +566,8 @@ const RassModal: FC<RassModalProps> = ({
 					type='primary'
 					className={`${modalStyles.modalsButtons} ${modalStyles.rassExitButton}`}
 					onClick={() => {
-						handleSavingDataBeforeExit();
-
-						setChosenDate({ date: "", time: "" });
-						setChosenRassScoreAndIndex({
-							chosenScore: "",
-							chosenScoreIndex: undefined,
-						});
-						setClickedIndex(undefined);
-						setAdditionalNotes("");
-						setDatePickerValue(null);
-						setTableIsBeingEdited(false);
-						dispatch(physioFileActions.setDataSaved(false));
+						!dataSaved && handleSavingDataBeforeExit();
+						resetModalStates();
 						dispatch(modalsShowActions.setShowRassModal(false));
 					}}>
 					Izlaz
