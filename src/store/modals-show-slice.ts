@@ -7,7 +7,7 @@ type ModalsInitState = {
 	showGcsModal: boolean;
 	showVasModal: boolean;
 	showMmtModal: boolean;
-	showCpaxMOdal: boolean;
+	showCpaxModal: boolean;
 };
 
 const modalsShowInitState: ModalsInitState = {
@@ -17,7 +17,7 @@ const modalsShowInitState: ModalsInitState = {
 	showGcsModal: false,
 	showVasModal: false,
 	showMmtModal: false,
-	showCpaxMOdal: false,
+	showCpaxModal: false,
 };
 
 const modalsShowSlice = createSlice({
@@ -43,7 +43,7 @@ const modalsShowSlice = createSlice({
 			state.showMmtModal = action.payload;
 		},
 		setShowCpaxModal: (state, action: PayloadAction<boolean>) => {
-			state.showCpaxMOdal = action.payload;
+			state.showCpaxModal = action.payload;
 		},
         resetAllStateToDefaults: (state) => {
             state.showLeaveModal = modalsShowInitState.showLeaveModal;
@@ -52,7 +52,7 @@ const modalsShowSlice = createSlice({
             state.showGcsModal = modalsShowInitState.showGcsModal;
             state.showVasModal = modalsShowInitState.showVasModal;
             state.showMmtModal = modalsShowInitState.showMmtModal;
-            state.showCpaxMOdal = modalsShowInitState.showCpaxMOdal;
+            state.showCpaxModal = modalsShowInitState.showCpaxModal;
         }
 	},
 });

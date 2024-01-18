@@ -28,7 +28,7 @@ import { type RassVM } from "../../../models/physiofile/assessment/RassVM";
 import isNullOrEmpty from "../../../util/isNullOrEmpty";
 import TextArea from "antd/es/input/TextArea";
 import Table, { ColumnsType } from "antd/es/table";
-import { PencilFill, X } from "react-bootstrap-icons";
+import { InfoCircleFill, PencilFill, X } from "react-bootstrap-icons";
 import confirm from "antd/es/modal/confirm";
 import generateRandomNumber from "../../../util/generateRandomBigInteger";
 import useFetcApihWithTokenRefresh from "../../../hooks/use_fetch_api_with_token_refresh";
@@ -44,8 +44,8 @@ import { type UpdatePatientRassRequestDto } from "../../../dto/PhysioFile/Assess
 
 type RassModalProps = {
 	showModal: boolean;
-	patientRassTests: PatientRassVM[];
-	assessment: AssessmentVM;
+	patientRassTests: PatientRassVM[] | null;
+	assessment: AssessmentVM | null;
 	rassList: RassVM[];
 };
 
@@ -54,17 +54,17 @@ type RassDateType = {
 	time: string;
 };
 
-type ScoreAndNoteAndIndex = {
+type ScoreTermNoteAndIndex = {
 	scoreAndTerm: string;
 	additionalNotes: string;
 	index: number;
 };
 
-type RassTableType = {
+type TableColumnDefinitionType = {
 	key: string;
 	id: string;
 	dateTime: RassDateType;
-	scoreAndNoteAndIndex: ScoreAndNoteAndIndex;
+	scoreAndNoteAndIndex: ScoreTermNoteAndIndex;
 };
 
 type RassChosenScoreAndIndex = {
@@ -94,11 +94,11 @@ const RassModal: FC<RassModalProps> = ({
 		useState<boolean>(false);
 	const [additionalNotes, setAdditionalNotes] = useState<string>("");
 	const [tableRecordBeingEdited, setTableRecordBeingEdited] =
-		useState<RassTableType>();
+		useState<TableColumnDefinitionType>();
 	const [datePickerValue, setDatePickerValue] = useState<Dayjs | null>(null);
-	const [dataSavedToTable, setDataSavedToTable] = useState<RassTableType[]>(
-		[]
-	);
+	const [dataSavedToTable, setDataSavedToTable] = useState<
+		TableColumnDefinitionType[]
+	>([]);
 	const physioFile = useAppSelector(
 		(state) => state.physioFileReducer.physioFile
 	);
@@ -113,49 +113,82 @@ const RassModal: FC<RassModalProps> = ({
 	};
 
 	useEffect(() => {
-		patientRassTests.forEach((pr) => {
-			const prDateTime = dayjs(pr.rassDateTime).format(
-				"YYYY-MM-DD HH:mm:ss"
-			);
+		patientRassTests
+			? patientRassTests.forEach((pr) => {
+					const prDateTime = dayjs(pr.rassDateTime).format(
+						"YYYY-MM-DD HH:mm:ss"
+					);
 
-			const dateTimeToBeStoredToTable: RassDateType = {
-				date: prDateTime.split(" ")[0],
-				time: prDateTime.split(" ")[1],
-			};
+					const dateTimeToBeStoredToTable: RassDateType = {
+						date: prDateTime.split(" ")[0],
+						time: prDateTime.split(" ")[1],
+					};
 
-			const rass: RassChosenScoreAndIndex = {
-				chosenScore: pr.score,
-				chosenScoreIndex: rassList.findIndex(
-					(r) => r.score === pr.score
-				),
-			};
+					const rass: RassChosenScoreAndIndex = {
+						chosenScore: pr.score,
+						chosenScoreIndex: rassList.findIndex(
+							(r) => r.score === pr.score
+						),
+					};
 
-			setDataSavedToTable((prevState) => {
-				const newState = [...prevState];
-				const foundRass = rassList.find(
-					(r) => r.score === rass.chosenScore
-				);
-				newState.push({
-					key: generateRandomNumber(9, true)!,
-					id: pr.id,
-					dateTime: dateTimeToBeStoredToTable,
-					scoreAndNoteAndIndex: {
-						additionalNotes: pr.additionalDescription,
-						scoreAndTerm: `${foundRass?.score}: ${foundRass?.term}`,
-						index: rass.chosenScoreIndex!,
+					setDataSavedToTable((prevState) => {
+						const newState = [...prevState];
+						const foundRass = rassList.find(
+							(r) => r.score === rass.chosenScore
+						);
+						newState.push({
+							key: generateRandomNumber(9, true)!,
+							id: pr.id,
+							dateTime: dateTimeToBeStoredToTable,
+							scoreAndNoteAndIndex: {
+								additionalNotes: pr.additionalDescription,
+								scoreAndTerm: `${foundRass?.score}: ${foundRass?.term}`,
+								index: rass.chosenScoreIndex!,
+							},
+						});
+
+						return newState;
+					});
+			  })
+			: fetchWithTokenRefresh(
+					{
+						url:
+							api_routes.ROUTE_ASSESSMENT_CREATE_NEW_BY_PHYSIO_FILE_ID +
+							`/${physioFile.id}`,
+						headers: { "Content-Type": "application/json" },
 					},
-				});
-
-				return newState;
-			});
-		});
+					(physioFileResponse: ApiResponse<PhysioFileVM>) => {
+						if (physioFileResponse.status !== HttpStatusCode.Ok) {
+							message.error(
+								"Nije moguće kreirati novu procjenu!"
+							);
+							console.error(
+								"There was a error creating assessment: ",
+								physioFileResponse
+							);
+						} else {
+							dispatch(
+								physioFileActions.setPhysioFile(
+									physioFileResponse.data!
+								)
+							);
+							dispatch(physioFileActions.setDataSaved(false));
+						}
+					}
+			  );
 
 		return () => {
 			setDataSavedToTable([]);
 		};
-	}, [patientRassTests, rassList]);
+	}, [
+		dispatch,
+		fetchWithTokenRefresh,
+		patientRassTests,
+		physioFile.id,
+		rassList,
+	]);
 
-	const columns: ColumnsType<RassTableType> = [
+	const columns: ColumnsType<TableColumnDefinitionType> = [
 		{
 			key: "rassIndex",
 			width: 3,
@@ -243,6 +276,7 @@ const RassModal: FC<RassModalProps> = ({
 	) => {
 		if (isNullOrEmpty(dateString)) {
 			setChosenDate({ date: "", time: "" });
+			setDatePickerValue(null);
 			return;
 		}
 
@@ -267,7 +301,7 @@ const RassModal: FC<RassModalProps> = ({
 			fetchWithTokenRefresh(
 				{
 					url:
-						api_routes.ROUTE_PHYSIO_FILE_UPDATE_PATIENT_RASS_BY_ID +
+						api_routes.ROUTE_ASSESSMENT_UPDATE_PATIENT_RASS_BY_ID +
 						`/${patientRassId}`,
 					method: "PUT",
 					headers: { "Content-Type": "application/json" },
@@ -308,7 +342,7 @@ const RassModal: FC<RassModalProps> = ({
 		try {
 			fetchWithTokenRefresh(
 				{
-					url: api_routes.ROUTE_PHYSIO_FILE_ADD_NEW_PATIENT_RASS,
+					url: api_routes.ROUTE_ASSESSMENT_ADD_NEW_PATIENT_RASS,
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
 					body: prDTO,
@@ -353,7 +387,7 @@ const RassModal: FC<RassModalProps> = ({
 
 		if (tableIsBeingEdited) {
 			const updateDto: UpdatePatientRassRequestDto = {
-				assessmentId: assessment.id,
+				assessmentId: assessment!.id,
 				score: foundRass!.score,
 				term: foundRass!.term,
 				scoreDescription: foundRass!.scoreDescription,
@@ -364,7 +398,7 @@ const RassModal: FC<RassModalProps> = ({
 			sendUpdatePatientRassRequest(tableRecordBeingEdited!.id, updateDto);
 		} else {
 			const prDTO: CreatePatientRassDTO = {
-				assessmentId: assessment.id,
+				assessmentId: assessment!.id,
 				score: foundRass!.score,
 				term: foundRass!.term,
 				scoreDescription: foundRass!.scoreDescription,
@@ -378,7 +412,9 @@ const RassModal: FC<RassModalProps> = ({
 		resetModalStates();
 	};
 
-	const deleteRecordFromTable = (recordToDelete: RassTableType) => {
+	const deleteRecordFromTable = (
+		recordToDelete: TableColumnDefinitionType
+	) => {
 		const newData = dataSavedToTable.filter(
 			(item) => item.key !== recordToDelete.key
 		);
@@ -440,12 +476,12 @@ const RassModal: FC<RassModalProps> = ({
 
 	const sendDeletePatientRassRequest = async (
 		deleteDto: DeletePatientRassRequestDto,
-		recordToDelete: RassTableType
+		recordToDelete: TableColumnDefinitionType
 	) => {
 		try {
 			fetchWithTokenRefresh(
 				{
-					url: api_routes.ROUTE_PHYSIO_FILE_DELETE_PATIENT_RASS,
+					url: api_routes.ROUTE_ASSESSMENT_DELETE_PATIENT_RASS,
 					method: "DELETE",
 					headers: { "Content-Type": "application/json" },
 					body: deleteDto,
@@ -469,14 +505,14 @@ const RassModal: FC<RassModalProps> = ({
 				}
 			);
 		} catch (error) {
-			console.error("Error posting new Patient RASS:", error);
-			message.error("Neuspjelo spremanje novog RASS-a!");
+			console.error("Error deleting RASS:", error);
+			message.error("Neuspjelo brisanje RASS-a!");
 		}
 	};
 
 	const handleDeleteChoice = (
 		event: React.MouseEvent<HTMLElement, MouseEvent>,
-		tableRecord: RassTableType
+		tableRecord: TableColumnDefinitionType
 	) => {
 		confirm({
 			content: (
@@ -493,7 +529,7 @@ const RassModal: FC<RassModalProps> = ({
 				sendDeletePatientRassRequest(
 					{
 						patientRassId: tableRecord.id,
-						assessmentId: assessment.id,
+						assessmentId: assessment!.id,
 					},
 					tableRecord
 				);
@@ -503,7 +539,7 @@ const RassModal: FC<RassModalProps> = ({
 
 	const handleEditChoice = (
 		event: React.MouseEvent<HTMLElement, MouseEvent>,
-		tableRecord: RassTableType
+		tableRecord: TableColumnDefinitionType
 	) => {
 		setTableIsBeingEdited(true);
 		setTableRecordBeingEdited({
@@ -552,7 +588,7 @@ const RassModal: FC<RassModalProps> = ({
 	return (
 		<Modal
 			centered
-			className={modalStyles.rassModal}
+			className={modalStyles.modalsWidth}
 			open={showModal}
 			okText='Izlaz'
 			closable={false}
@@ -564,7 +600,7 @@ const RassModal: FC<RassModalProps> = ({
 					disabled={tableIsBeingEdited}
 					danger
 					type='primary'
-					className={`${modalStyles.modalsButtons} ${modalStyles.rassExitButton}`}
+					className={`${modalStyles.modalsButtons} ${modalStyles.modalsExitButton}`}
 					onClick={() => {
 						!dataSaved && handleSavingDataBeforeExit();
 						resetModalStates();
@@ -573,20 +609,25 @@ const RassModal: FC<RassModalProps> = ({
 					Izlaz
 				</Button>,
 			]}>
-			<Header className={modalStyles.rassModalHeader}>
+			<Header className={modalStyles.modalsHeader}>
 				<span>RASS - Richmond Agitation-Sedation Scale</span>
 			</Header>
 			<Segment>
-				{(!rassList || !patientRassTests) && <LoadingSpinner />}
-				{rassList && patientRassTests && (
+				{(!assessment || !rassList) && <LoadingSpinner />}
+				{assessment && rassList && (
 					<Row>
-						<Col span={7}>
+						<Col span={10}>
 							<Segment isContent>
 								<DatePicker
 									placeholder='Odaberi datum'
-									format={croLocale.dateFormat} //TODO remove if PatientRassVM date string formating starts making problems with other formattings
+									format={croLocale.dateFormat}
 									locale={croLocale}
 									value={datePickerValue}
+									className={`${
+										isNullOrEmpty(chosenDate.date)
+											? modalStyles.notFilledHighlight
+											: ""
+									}`}
 									onChange={onDatePickerChange}
 								/>
 								<hr style={{ width: "0px" }} />
@@ -631,9 +672,19 @@ const RassModal: FC<RassModalProps> = ({
 									onChange={handleAdditionalNotesChange}
 									placeholder='Dodatne zabilješke'
 									style={{ maxWidth: "inherit" }}
-									className={modalStyles.rassTextArea}
+									className={modalStyles.modalsTextArea}
 								/>
 								<hr style={{ width: "0px" }} />
+								<Tooltip
+									title='Datum i ocjena su obavezni parametri!'
+									color='#045fbd'
+									style={{
+										fontFamily: "Nunito, sans-serif",
+									}}>
+									<InfoCircleFill
+										className={modalStyles.infoIcon}
+									/>
+								</Tooltip>
 								<Button
 									type='primary'
 									shape='round'
@@ -661,7 +712,7 @@ const RassModal: FC<RassModalProps> = ({
 								)}
 							</Segment>
 						</Col>
-						<Col span={17}>
+						<Col span={14}>
 							<Segment
 								isContent
 								className={modalStyles.tableSegment}>
@@ -671,7 +722,7 @@ const RassModal: FC<RassModalProps> = ({
 									virtual
 									scroll={{ y: 400 }}
 									columns={columns}
-									className={modalStyles.rassTable}
+									className={modalStyles.modalsTable}
 									size='small'
 								/>
 							</Segment>

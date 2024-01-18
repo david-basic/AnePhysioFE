@@ -15,9 +15,16 @@ const api_routes = {
 
 	ROUTE_PHYSIO_FILE_GET: `${apiRoutesParams.API}/physiofile-management/physiofiles`,
 	ROUTE_PHYSIO_FILE_GET_BY_PATIENT_ID: `${apiRoutesParams.API}/physiofile-management/physiofiles/patient`,
-	ROUTE_PHYSIO_FILE_ADD_NEW_PATIENT_RASS: `${apiRoutesParams.API}/physiofile-management/physiofiles/new-patient-rass`,
-	ROUTE_PHYSIO_FILE_DELETE_PATIENT_RASS: `${apiRoutesParams.API}/physiofile-management/physiofiles/delete-patient-rass`,
-	ROUTE_PHYSIO_FILE_UPDATE_PATIENT_RASS_BY_ID: `${apiRoutesParams.API}/physiofile-management/physiofiles/update-patient-rass`,
+
+	ROUTE_ASSESSMENT_CREATE_NEW_BY_PHYSIO_FILE_ID: `${apiRoutesParams.API}/assessment-management/assessments/new-assessment`,
+	ROUTE_ASSESSMENT_ADD_NEW_PATIENT_RASS: `${apiRoutesParams.API}/assessment-management/assessments/new-patient-rass`,
+	ROUTE_ASSESSMENT_DELETE_PATIENT_RASS: `${apiRoutesParams.API}/assessment-management/assessments/delete-patient-rass`,
+	ROUTE_ASSESSMENT_UPDATE_PATIENT_RASS_BY_ID: `${apiRoutesParams.API}/assessment-management/assessments/update-patient-rass`,
+
+	ROUTE_PHYSIO_TEST_CREATE_NEW_BY_PHYSIO_FILE_ID: `${apiRoutesParams.API}/physiotest-management/physiotests/new-physiotest`,
+	ROUTE_PHYSIO_TEST_ADD_NEW_VAS: `${apiRoutesParams.API}/physiotest-management/physiotests/new-vas`,
+	ROUTE_PHYSIO_TEST_UPDATE_VAS_BY_ID: `${apiRoutesParams.API}/physiotest-management/physiotests/update-vas`,
+	ROUTE_PHYSIO_TEST_DELETE_VAS: `${apiRoutesParams.API}/physiotest-management/physiotests/delete-vas`,
 };
 
 export default api_routes;

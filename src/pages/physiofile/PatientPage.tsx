@@ -26,6 +26,7 @@ import { modalsShowActions } from "../../store/modals-show-slice";
 import ConfirmLeavePhysioFileModal from "../../components/modals/ConfirmLeavePhysioFileModal";
 import ConfirmSavePhysioFileModal from "../../components/modals/ConfirmSavePhysioFileModal";
 import RassModal from "../../components/physiofile/assessment/RassModal";
+import VasModal from "../../components/physiofile/physioTests/vas/VasModal";
 
 const PatientPage: FC = () => {
 	const patientId = getIdFromUrl(useLocation());
@@ -37,13 +38,12 @@ const PatientPage: FC = () => {
 	// user saves their work so that reloading of data does not remove the changes, you will also use refs for the form like you did on login form.
 
 	const { fetchWithTokenRefresh, isLoading } = useFetcApihWithTokenRefresh();
-	// sessionStorage.setItem("physioPageLoadedOnce", "false");
 	const [apiCallMade, setApiCallMade] = useState(false);
 	const isMounted = useRef(true);
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const {
-		showCpaxMOdal,
+		showCpaxModal,
 		showGcsModal,
 		showLeaveModal,
 		showMmtModal,
@@ -59,8 +59,6 @@ const PatientPage: FC = () => {
 	);
 
 	useEffect(() => {
-		// if (sessionStorage.getItem("physioPageLoadedOnce") !== "true") {
-		// 	sessionStorage.setItem("physioPageLoadedOnce", "true");
 		const fetchData = async () => {
 			try {
 				fetchWithTokenRefresh(
@@ -99,7 +97,6 @@ const PatientPage: FC = () => {
 				console.error("Error loading Patient page:", error);
 			}
 		};
-		// }
 
 		const apiCallAlreadyMade =
 			sessionStorage.getItem("apiCallMade") === "true";
@@ -108,15 +105,12 @@ const PatientPage: FC = () => {
 		}
 
 		return () => {
-			// sessionStorage.setItem("physioPageLoadedOnce", "true");
-
 			if (isMounted.current) {
 				setApiCallMade(false);
 				sessionStorage.removeItem("apiCallMade");
 				isMounted.current = false;
 			}
 		};
-		// }, [dispatch, fetchWithTokenRefresh, navigate, patientId]);
 	}, [apiCallMade, dispatch, fetchWithTokenRefresh, navigate, patientId]);
 
 	return (
@@ -157,23 +151,46 @@ const PatientPage: FC = () => {
 							style={{ height: "100%" }}
 							className={styles.testButtons}>
 							<TestsButton
+								label='RASS'
 								onClick={() =>
 									dispatch(
 										modalsShowActions.setShowRassModal(true)
 									)
 								}
-								label='RASS'
 							/>
 							<RassModal
 								showModal={showRassModal}
 								patientRassTests={
 									physioFile.assessment.patientRass
+										? physioFile.assessment.patientRass
+										: null
 								}
-								assessment={physioFile.assessment}
+								assessment={
+									physioFile.assessment
+										? physioFile.assessment
+										: null
+								}
 								rassList={physioFile.fullRassList}
 							/>
 							<TestsButton label='GCS' />
-							<TestsButton label='VAS' />
+							<TestsButton
+								label='VAS'
+								onClick={() =>
+									dispatch(
+										modalsShowActions.setShowVasModal(true)
+									)
+								}
+							/>
+							<VasModal
+								showModal={showVasModal}
+								physioFile={physioFile}
+								physioTest={physioFile.physioTest}
+								vasTests={
+									physioFile.physioTest
+										? physioFile.physioTest.vas
+										: null
+								}
+							/>
 							<TestsButton label='MMT' />
 							<TestsButton label='CPAx' />
 							<div
