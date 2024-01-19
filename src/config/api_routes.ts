@@ -25,6 +25,9 @@ const api_routes = {
 	ROUTE_PHYSIO_TEST_ADD_NEW_VAS: `${apiRoutesParams.API}/physiotest-management/physiotests/new-vas`,
 	ROUTE_PHYSIO_TEST_UPDATE_VAS_BY_ID: `${apiRoutesParams.API}/physiotest-management/physiotests/update-vas`,
 	ROUTE_PHYSIO_TEST_DELETE_VAS: `${apiRoutesParams.API}/physiotest-management/physiotests/delete-vas`,
+	ROUTE_PHYSIO_TEST_ADD_NEW_MMT: `${apiRoutesParams.API}/physiotest-management/physiotests/new-mmt`,
+	ROUTE_PHYSIO_TEST_UPDATE_MMT_BY_ID: `${apiRoutesParams.API}/physiotest-management/physiotests/update-mmt`,
+	ROUTE_PHYSIO_TEST_DELETE_MMT: `${apiRoutesParams.API}/physiotest-management/physiotests/delete-mmt`,
 };
 
 export default api_routes;

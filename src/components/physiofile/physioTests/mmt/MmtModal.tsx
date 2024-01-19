@@ -1,8 +1,18 @@
-import { ChangeEvent, useEffect, useState, type FC } from "react";
-
+import { ChangeEvent, Fragment, useEffect, useState, type FC } from "react";
 import "dayjs/locale/hr";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs, { type Dayjs } from "dayjs";
 import croLocale from "antd/es/date-picker/locale/hr_HR";
+import { type PhysioFileVM } from "../../../../models/physiofile/PhysioFileVM";
+import { type PhysioTestVM } from "../../../../models/physiofile/physioTests/PhysioTestVM";
+import { type PatientMmtVM } from "../../../../models/physiofile/physioTests/mmt/PatientMmt";
+import { type MmtVM } from "../../../../models/physiofile/physioTests/mmt/MmtVm";
+import { useAppDispatch } from "../../../../hooks/use_app_dispatch";
+import useFetcApihWithTokenRefresh from "../../../../hooks/use_fetch_api_with_token_refresh";
+import { useAppSelector } from "../../../../hooks/use_app_selector";
+import { SaveFilled } from "@ant-design/icons";
+import modalStyles from "../../../modals/ModalStyles.module.css";
+import fileStyles from "../../PhysioFile.module.css";
+import Table, { ColumnsType } from "antd/es/table";
 import {
 	Button,
 	Col,
@@ -10,84 +20,62 @@ import {
 	DatePickerProps,
 	Modal,
 	Row,
-	Slider,
-	SliderSingleProps,
 	Space,
 	Tooltip,
 	message,
 } from "antd";
-import { FrownOutlined, SmileOutlined, SaveFilled } from "@ant-design/icons";
-import modalStyles from "../../../modals/ModalStyles.module.css";
-import fileStyles from "../../PhysioFile.module.css";
-import { type PhysioFileVM } from "../../../../models/physiofile/PhysioFileVM";
-import { type PhysioTestVM } from "../../../../models/physiofile/physioTests/PhysioTestVM";
-import { type VasVM } from "../../../../models/physiofile/physioTests/VasVM";
-import { useAppDispatch } from "../../../../hooks/use_app_dispatch";
-import useFetcApihWithTokenRefresh from "../../../../hooks/use_fetch_api_with_token_refresh";
+import { InfoCircleFill, PencilFill, X } from "react-bootstrap-icons";
 import { modalsShowActions } from "../../../../store/modals-show-slice";
-import { useAppSelector } from "../../../../hooks/use_app_selector";
 import { Header } from "antd/es/layout/layout";
 import Segment from "../../segments/Segment";
 import LoadingSpinner from "../../../LoadingSpinner";
+import isNullOrEmpty from "../../../../util/isNullOrEmpty";
+import TextArea from "antd/es/input/TextArea";
+import { ListGroup } from "react-bootstrap";
+import generateRandomNumber from "../../../../util/generateRandomBigInteger";
 import api_routes from "../../../../config/api_routes";
 import { ApiResponse, NoReturnData } from "../../../../type";
 import { HttpStatusCode } from "axios";
 import { physioFileActions } from "../../../../store/physio-file-slice";
-import Table, { ColumnsType } from "antd/es/table";
-import { InfoCircleFill, PencilFill, X } from "react-bootstrap-icons";
-import isNullOrEmpty from "../../../../util/isNullOrEmpty";
-import generateRandomNumber from "../../../../util/generateRandomBigInteger";
-import "./VasIconStyles.css";
-import { CreateVasDto } from "../../../../dto/PhysioFile/PhysioTest/Vas/CreateVasDto";
-import TextArea from "antd/es/input/TextArea";
-import { UpdateVasDto } from "../../../../dto/PhysioFile/PhysioTest/Vas/UpdateVasDto";
 import confirm from "antd/es/modal/confirm";
-import { DeleteVasDto } from "../../../../dto/PhysioFile/PhysioTest/Vas/DeleteVasDto";
+import { type CreatePatientMmtRequestDto } from "../../../../dto/PhysioFile/PhysioTest/Mmt/CreatePatientMmtRequestDto";
+import { type UpdatePatientMmtRequestDto } from "../../../../dto/PhysioFile/PhysioTest/Mmt/UpdatePatientMmtRequestDto";
+import { type DeletePatientMmtRequestDto } from "../../../../dto/PhysioFile/PhysioTest/Mmt/DeletePatientMmtRequestDto";
+import cutStringToNchars from "../../../../util/cutStringToXchars";
 
-type VasModalProps = {
+type MmtModalProps = {
 	showModal: boolean;
 	physioFile: PhysioFileVM;
 	physioTest: PhysioTestVM | null;
-	vasTests: VasVM[] | null;
+	patientMmtTests: PatientMmtVM[] | null;
+	mmtList: MmtVM[];
 };
 
-type VasDateTimeType = {
+type MmtDateTimeType = {
 	date: string;
 	time: string;
 };
 
-type PainLevelAndNote = {
-	painLevel: number;
-	note: string;
+type GradeAndDescription = {
+	grade: number;
+	description: string;
 };
 
 type TableColumnDefinitionType = {
 	key: string;
 	id: string;
-	dateTime: VasDateTimeType;
-	painLevelAndNote: PainLevelAndNote;
+	dateTime: MmtDateTimeType;
+	gradeAndDescription: GradeAndDescription;
+	note: string;
 };
 
-const sliderMarks: SliderSingleProps["marks"] = {
-	0: "0",
-	1: "1",
-	2: "2",
-	3: "3",
-	4: "4",
-	5: "5",
-	6: "6",
-	7: "7",
-	8: "8",
-	9: "9",
-	10: "10",
-};
-
-const VasModal: FC<VasModalProps> = ({
+const MmtModal: FC<MmtModalProps> = ({
+	showModal,
 	physioFile,
 	physioTest,
-	showModal,
-	vasTests,
-}: VasModalProps) => {
+	patientMmtTests,
+	mmtList,
+}: MmtModalProps) => {
 	const dispatch = useAppDispatch();
 	const { fetchWithTokenRefresh } = useFetcApihWithTokenRefresh();
 	const [tableIsBeingEdited, setTableIsBeingEdited] =
@@ -97,15 +85,13 @@ const VasModal: FC<VasModalProps> = ({
 	>([]);
 	const [tableRecordBeingEdited, setTableRecordBeingEdited] =
 		useState<TableColumnDefinitionType>();
-	const [vasNotes, setVasNotes] = useState<string>("");
-	const [painLevelSliderValue, setPainLevelSliderValue] = useState<number>(0);
-	const mid = 6;
-	const prevHighlightCls =
-		painLevelSliderValue >= mid ? "" : "icon-wrapper-active";
-	const nextHighlightCls =
-		painLevelSliderValue >= mid ? "icon-wrapper-active" : "";
+	const [mmtNotes, setMmtNotes] = useState<string>("");
+	const [chosenMmtGrade, setChosenMmtGrade] = useState<number | undefined>(
+		undefined
+	);
+	const [clickedMmt, setClickedMmt] = useState<number>();
 	const [datePickerValue, setDatePickerValue] = useState<Dayjs | null>(null);
-	const [chosenDate, setChosenDate] = useState<VasDateTimeType>({
+	const [chosenDate, setChosenDate] = useState<MmtDateTimeType>({
 		date: "",
 		time: "",
 	});
@@ -121,8 +107,8 @@ const VasModal: FC<VasModalProps> = ({
 
 	const columns: ColumnsType<TableColumnDefinitionType> = [
 		{
-			key: "vasId",
-			width: 1,
+			key: "mmtId",
+			width: 3,
 			dataIndex: "id",
 			render: (_, { id }) => (
 				<div style={{ visibility: "hidden", width: 0, height: 0 }}>
@@ -134,7 +120,7 @@ const VasModal: FC<VasModalProps> = ({
 			key: "date",
 			title: "Datum",
 			dataIndex: "dateTime",
-			width: 45,
+			width: 40,
 			sorter: (a, b) => {
 				const dateA = dayjs(`${a.dateTime.date} ${a.dateTime.time}`);
 				const dateB = dayjs(`${b.dateTime.date} ${b.dateTime.time}`);
@@ -155,27 +141,29 @@ const VasModal: FC<VasModalProps> = ({
 			),
 		},
 		{
-			key: "pain",
-			title: "Razina boli",
-			width: 40,
-			dataIndex: "painLevelAndNote",
-			render: (_, { painLevelAndNote }) => (
-				<span>{painLevelAndNote.painLevel}/10</span>
+			key: "gradeAndDescription",
+			title: "Ocjena",
+			width: 25,
+			dataIndex: "gradeAndDescription",
+			render: (_, { gradeAndDescription }) => (
+				<Tooltip
+					title={gradeAndDescription.description}
+					color='#045fbd'>
+					{gradeAndDescription.grade}
+				</Tooltip>
 			),
 		},
 		{
-			key: "notes",
-			title: "Zabilješke",
-			width: 120,
-			dataIndex: "painLevelAndNote",
-			render: (_, { painLevelAndNote }) => (
-				<span>{painLevelAndNote.note}</span>
-			),
+			key: "note",
+			title: "Zabilješka",
+			width: 150,
+			dataIndex: "note",
+			render: (_, { note }) => <span>{note}</span>,
 		},
 		{
 			key: "actions",
 			title: "Akcije",
-			width: 48,
+			width: 40,
 			render: (_, record) => (
 				<Space size={"small"}>
 					<Button
@@ -198,26 +186,25 @@ const VasModal: FC<VasModalProps> = ({
 
 	useEffect(() => {
 		physioFile.physioTest !== null
-			? physioFile.physioTest.vas.forEach((vt) => {
-					const vtDateTime = dayjs(vt.vasDateTime).format(
-						"YYYY-MM-DD HH:mm:ss"
+			? physioFile.physioTest.mmt.forEach((pm) => {
+					const pmDateTime = dayjs(pm.mmtDateTime).format(
+						"YYYY.MM.DD HH:mm:ss"
 					);
-
-					const fetchedDateTime: VasDateTimeType = {
-						date: vtDateTime.split(" ")[0],
-						time: vtDateTime.split(" ")[1],
+					const fetchedDateTime: MmtDateTimeType = {
+						date: pmDateTime.split(" ")[0],
+						time: pmDateTime.split(" ")[1],
 					};
-
 					setDataSavedToTable((prevState) => {
 						const newState = [...prevState];
 						newState.push({
 							key: generateRandomNumber(9, true)!,
-							id: vt.id,
+							id: pm.id,
 							dateTime: fetchedDateTime,
-							painLevelAndNote: {
-								painLevel: vt.painLevel,
-								note: vt.note,
+							gradeAndDescription: {
+								grade: pm.grade,
+								description: pm.description,
 							},
+							note: pm.note,
 						});
 
 						return newState;
@@ -255,23 +242,25 @@ const VasModal: FC<VasModalProps> = ({
 		return () => {
 			setDataSavedToTable([]);
 		};
-	}, [dispatch, fetchWithTokenRefresh, physioFile, physioFile.id, vasTests]);
+	}, [dispatch, fetchWithTokenRefresh, physioFile.id, physioFile.physioTest]);
 
 	const addRecordToTable = (
-		sliderValue: number,
-		chosenDateTime: VasDateTimeType
+		mmtGrade: number,
+		chosenDateTime: MmtDateTimeType
 	) => {
 		setDataSavedToTable((prevState) => {
 			const newState = [...prevState];
+			const foundMmt = mmtList.find((mmt) => mmt.grade === mmtGrade);
 			const randNum = generateRandomNumber(12)!;
 			newState.push({
 				key: randNum,
 				id: "",
 				dateTime: chosenDateTime,
-				painLevelAndNote: {
-					painLevel: sliderValue,
-					note: vasNotes,
+				gradeAndDescription: {
+					grade: foundMmt!.grade,
+					description: foundMmt!.description,
 				},
+				note: mmtNotes,
 			});
 
 			return newState;
@@ -287,66 +276,66 @@ const VasModal: FC<VasModalProps> = ({
 		setDataSavedToTable(newData);
 	};
 
-	const sendAddVasRequest = async (vasDto: CreateVasDto) => {
+	const sendAddMmtRequest = async (mmtDto: CreatePatientMmtRequestDto) => {
 		try {
 			fetchWithTokenRefresh(
 				{
-					url: api_routes.ROUTE_PHYSIO_TEST_ADD_NEW_VAS,
+					url: api_routes.ROUTE_PHYSIO_TEST_ADD_NEW_MMT,
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
-					body: vasDto,
+					body: mmtDto,
 				},
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Created) {
-						message.error("Nije moguće spremiti novi VAS!");
+						message.error("Nije moguće spremiti novi MMT!");
 						console.error(
-							"There was a error while saving new VAS: ",
+							"There was a error while saving new MMT: ",
 							physioFileResponse
 						);
 					} else {
-						addRecordToTable(painLevelSliderValue, chosenDate);
+						addRecordToTable(chosenMmtGrade!, chosenDate);
 
 						dispatch(
 							physioFileActions.setPhysioFile(
 								physioFileResponse.data!
 							)
 						);
-						message.success("Novi VAS uspješno spremljen!");
+						message.success("Novi MMT uspješno spremljen!");
 						dispatch(physioFileActions.setDataSaved(false));
 					}
 				}
 			);
 		} catch (error) {
-			console.error("Error posting new VAS:", error);
-			message.error("Neuspjelo spremanje novog VAS-a!");
+			console.error("Error posting new MMT:", error);
+			message.error("Neuspjelo spremanje novog MMT-a!");
 		}
 	};
 
-	const sendUpdateVasRequest = async (
-		vasToEditId: string,
-		updateDto: UpdateVasDto
+	const sendUpdateMmtRequest = async (
+		mmtToEditId: string,
+		updateDto: UpdatePatientMmtRequestDto
 	) => {
 		try {
 			fetchWithTokenRefresh(
 				{
 					url:
-						api_routes.ROUTE_PHYSIO_TEST_UPDATE_VAS_BY_ID +
-						`/${vasToEditId}`,
+						api_routes.ROUTE_PHYSIO_TEST_UPDATE_MMT_BY_ID +
+						`/${mmtToEditId}`,
 					method: "PUT",
 					headers: { "Content-Type": "application/json" },
 					body: updateDto,
 				},
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Ok) {
-						message.error("Nije moguće izmjeniti VAS!");
+						message.error("Nije moguće izmjeniti MMT!");
 						console.error(
-							"There was a error while updating VAS: ",
+							"There was a error while updating MMT: ",
 							physioFileResponse
 						);
 					} else {
 						deleteRecordFromTable(tableRecordBeingEdited!);
 
-						addRecordToTable(painLevelSliderValue, chosenDate);
+						addRecordToTable(chosenMmtGrade!, chosenDate);
 
 						dispatch(
 							physioFileActions.setPhysioFile(
@@ -364,23 +353,23 @@ const VasModal: FC<VasModalProps> = ({
 		}
 	};
 
-	const sendDeletePatientRassRequest = async (
-		deleteDto: DeleteVasDto,
+	const sendDeletePatientRassRequest = (
+		deleteDto: DeletePatientMmtRequestDto,
 		recordToDelete: TableColumnDefinitionType
 	) => {
 		try {
 			fetchWithTokenRefresh(
 				{
-					url: api_routes.ROUTE_PHYSIO_TEST_DELETE_VAS,
+					url: api_routes.ROUTE_PHYSIO_TEST_DELETE_MMT,
 					method: "DELETE",
 					headers: { "Content-Type": "application/json" },
 					body: deleteDto,
 				},
 				(deleteFileResponse: ApiResponse<NoReturnData>) => {
 					if (deleteFileResponse.status !== HttpStatusCode.Ok) {
-						message.error("Nije moguće izbrisati VAS!");
+						message.error("Nije moguće izbrisati MMT!");
 						console.error(
-							"There was a error while deleting VAS: ",
+							"There was a error while deleting MMT: ",
 							deleteFileResponse
 						);
 					} else {
@@ -390,14 +379,35 @@ const VasModal: FC<VasModalProps> = ({
 						setDataSavedToTable(newData);
 						dispatch(physioFileActions.setDataSaved(false));
 
-						message.success("VAS uspješno izbrisan!");
+						message.success("MMT uspješno izbrisan!");
 					}
 				}
 			);
 		} catch (error) {
-			console.error("Error deleting VAS:", error);
-			message.error("Neuspjelo brisanje VAS-a!");
+			console.error("Error deleting MMT:", error);
+			message.error("Neuspjelo brisanje MMT-a!");
 		}
+	};
+
+	const handleMmtClick = (
+		event: React.MouseEvent<Element, MouseEvent>,
+		index: number
+	) => {
+		const clickedGrade = parseInt(event.currentTarget.ariaValueText!);
+
+		setClickedMmt((prevClickedMmt) => {
+			let newClickedMmt = prevClickedMmt;
+
+			if (newClickedMmt === index) {
+				newClickedMmt = undefined;
+				setChosenMmtGrade(undefined);
+			} else {
+				newClickedMmt = index;
+				setChosenMmtGrade(clickedGrade);
+			}
+
+			return newClickedMmt;
+		});
 	};
 
 	const onDatePickerChange: DatePickerProps["onChange"] = (
@@ -416,33 +426,41 @@ const VasModal: FC<VasModalProps> = ({
 		setChosenDate({ date: dateString, time: currentTime });
 	};
 
-	const onVasNotesChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-		setVasNotes(event.target.value);
+	const onMmtNotesChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+		setMmtNotes(event.target.value);
 	};
 
 	const handleSaveChoice = () => {
-		if (isNullOrEmpty(chosenDate.date) || isNullOrEmpty(vasNotes)) {
+		if (
+			isNullOrEmpty(chosenDate.date) ||
+			isNullOrEmpty(mmtNotes) ||
+			chosenMmtGrade === undefined
+		) {
 			return;
 		}
 
+		const foundMmt = mmtList.find((mmt) => mmt.grade === chosenMmtGrade);
+
 		if (tableIsBeingEdited) {
-			const updateDto: UpdateVasDto = {
+			const updateDto: UpdatePatientMmtRequestDto = {
 				physioTestId: physioTest!.id,
-				painLevel: painLevelSliderValue,
-				vasDateTime: `${chosenDate.date}T${chosenDate.time}`,
-				note: vasNotes,
+				grade: foundMmt!.grade,
+				description: foundMmt!.description,
+				mmtDateTime: `${chosenDate.date}T${chosenDate.time}`,
+				note: mmtNotes,
 			};
 
-			sendUpdateVasRequest(tableRecordBeingEdited!.id, updateDto);
+			sendUpdateMmtRequest(tableRecordBeingEdited!.id, updateDto);
 		} else {
-			const createDto: CreateVasDto = {
+			const createDto: CreatePatientMmtRequestDto = {
 				physioTestId: physioTest!.id,
-				painLevel: painLevelSliderValue,
-				vasDateTime: `${chosenDate.date}T${chosenDate.time}`,
-				note: vasNotes,
+				grade: foundMmt!.grade,
+				description: foundMmt!.description,
+				mmtDateTime: `${chosenDate.date}T${chosenDate.time}`,
+				note: mmtNotes,
 			};
 
-			sendAddVasRequest(createDto);
+			sendAddMmtRequest(createDto);
 		}
 
 		resetModalStates();
@@ -458,7 +476,8 @@ const VasModal: FC<VasModalProps> = ({
 			key: tableRecord.key,
 			id: tableRecord.id,
 			dateTime: tableRecord.dateTime,
-			painLevelAndNote: tableRecord.painLevelAndNote,
+			gradeAndDescription: tableRecord.gradeAndDescription,
+			note: tableRecord.note,
 		});
 
 		setChosenDate({
@@ -469,8 +488,9 @@ const VasModal: FC<VasModalProps> = ({
 			dayjs(`${tableRecord.dateTime.date} ${tableRecord.dateTime.time}`)
 		);
 
-		setPainLevelSliderValue(tableRecord.painLevelAndNote.painLevel);
-		setVasNotes(tableRecord.painLevelAndNote.note);
+		setClickedMmt(tableRecord.gradeAndDescription.grade);
+		setChosenMmtGrade(tableRecord.gradeAndDescription.grade);
+		setMmtNotes(tableRecord.note);
 	};
 
 	const handleStopEditing = () => {
@@ -495,7 +515,7 @@ const VasModal: FC<VasModalProps> = ({
 			onOk() {
 				sendDeletePatientRassRequest(
 					{
-						vasId: tableRecord.id,
+						patientMmtId: tableRecord.id,
 						physioTestId: physioTest!.id,
 					},
 					tableRecord
@@ -510,8 +530,9 @@ const VasModal: FC<VasModalProps> = ({
 
 	const resetModalStates = () => {
 		setChosenDate({ date: "", time: "" });
-		setPainLevelSliderValue(0);
-		setVasNotes("");
+		setClickedMmt(undefined);
+		setChosenMmtGrade(undefined);
+		setMmtNotes("");
 		setDatePickerValue(null);
 		setTableIsBeingEdited(false);
 	};
@@ -535,19 +556,19 @@ const VasModal: FC<VasModalProps> = ({
 					onClick={() => {
 						!dataSaved && handleSavingDataBeforeExit();
 						resetModalStates();
-						dispatch(modalsShowActions.setShowVasModal(false));
+						dispatch(modalsShowActions.setShowMmtModal(false));
 					}}>
 					Izlaz
 				</Button>,
 			]}>
 			<Header className={modalStyles.modalsHeader}>
-				<span>VAS - Visual Analogue Scale</span>
+				<span>MMT - Manual Muscle Test</span>
 			</Header>
 			<Segment>
 				{!physioTest && <LoadingSpinner />}
 				{physioFile && physioTest && (
 					<Row>
-						<Col span={12}>
+						<Col span={9}>
 							<Segment isContent>
 								<DatePicker
 									placeholder='Odaberi datum'
@@ -562,47 +583,61 @@ const VasModal: FC<VasModalProps> = ({
 									onChange={onDatePickerChange}
 								/>
 								<hr style={{ width: "0px" }} />
-								<div className='icon-wrapper'>
-									<SmileOutlined
-										className={prevHighlightCls}
-									/>
-									<Slider
-										min={0}
-										max={10}
-										marks={sliderMarks}
-										step={null}
-										value={painLevelSliderValue}
-										onChange={setPainLevelSliderValue}
-										styles={{
-											track: {
-												background: "transparent",
-											},
-											rail: {
-												background: `linear-gradient(to right, #00ff00, #ff0000)`,
-											},
-										}}
-									/>
-									<FrownOutlined
-										className={nextHighlightCls}
-									/>
-								</div>
+
+								<ListGroup variant='flush'>
+									{mmtList.map((mmt, index) => (
+										<Fragment key={index}>
+											<ListGroup.Item
+												as={"a"}
+												key={index}
+												action
+												aria-valuetext={mmt.grade.toString()}
+												className={
+													clickedMmt === index
+														? `${modalStyles.clickedRass}`
+														: `${modalStyles.rassLinks}`
+												}
+												onClick={(e) =>
+													handleMmtClick(e, index)
+												}>
+												<Tooltip
+													title={mmt.description}
+													key={index}
+													color='#045fbd'>
+													{mmt.grade}{" - "}
+													{cutStringToNchars(
+														mmt.description,
+														40
+													)}
+												</Tooltip>
+											</ListGroup.Item>
+											<hr
+												style={{
+													width: "0px",
+													margin: "0px",
+													padding: "0px",
+												}}
+											/>
+										</Fragment>
+									))}
+								</ListGroup>
 								<hr style={{ width: "0px" }} />
 								<TextArea
-									id='vasNotes'
-									value={vasNotes}
+									id='mmtNotes'
+									value={mmtNotes}
 									autoSize={{ minRows: 4 }}
-									onChange={onVasNotesChange}
+									onChange={onMmtNotesChange}
 									placeholder='Zabilješka'
 									style={{ maxWidth: "inherit" }}
 									className={`${
-										isNullOrEmpty(vasNotes)
+										isNullOrEmpty(mmtNotes)
 											? modalStyles.notFilledHighlight
 											: ""
 									} ${modalStyles.modalsTextArea}`}
 								/>
 								<hr style={{ width: "0px" }} />
 								<Tooltip
-									title='Datum, razina boli i zabilješka su obavezni parametri!'
+									title='Datum, ocjena i zabilješka su obavezni parametri!'
 									color='#045fbd'
 									style={{
 										fontFamily: "Nunito, sans-serif",
@@ -618,7 +653,8 @@ const VasModal: FC<VasModalProps> = ({
 									icon={<SaveFilled />}
 									disabled={
 										isNullOrEmpty(chosenDate.date) ||
-										isNullOrEmpty(vasNotes)
+										isNullOrEmpty(mmtNotes) ||
+										clickedMmt === undefined
 									}
 									onClick={handleSaveChoice}>
 									Spremi odabir
@@ -636,7 +672,7 @@ const VasModal: FC<VasModalProps> = ({
 								)}
 							</Segment>
 						</Col>
-						<Col span={12}>
+						<Col span={15}>
 							<Segment
 								isContent
 								className={modalStyles.tableSegment}>
@@ -646,7 +682,7 @@ const VasModal: FC<VasModalProps> = ({
 									virtual
 									scroll={{ y: 400 }}
 									columns={columns}
-									className={modalStyles.vasTable}
+									className={modalStyles.mmtTable}
 									size='small'
 								/>
 							</Segment>
@@ -658,4 +694,4 @@ const VasModal: FC<VasModalProps> = ({
 	);
 };
 
-export default VasModal;
+export default MmtModal;

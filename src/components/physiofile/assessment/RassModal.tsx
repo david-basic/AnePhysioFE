@@ -56,6 +56,7 @@ type RassDateType = {
 
 type ScoreTermNoteAndIndex = {
 	scoreAndTerm: string;
+	scoreDescription: string;
 	additionalNotes: string;
 	index: number;
 };
@@ -143,6 +144,7 @@ const RassModal: FC<RassModalProps> = ({
 							scoreAndNoteAndIndex: {
 								additionalNotes: pr.additionalDescription,
 								scoreAndTerm: `${foundRass?.score}: ${foundRass?.term}`,
+								scoreDescription: pr.scoreDescription,
 								index: rass.chosenScoreIndex!,
 							},
 						});
@@ -191,7 +193,7 @@ const RassModal: FC<RassModalProps> = ({
 	const columns: ColumnsType<TableColumnDefinitionType> = [
 		{
 			key: "rassIndex",
-			width: 3,
+			width: 1,
 			dataIndex: "index",
 			render: (_, { scoreAndNoteAndIndex }) => (
 				<div style={{ visibility: "hidden", width: 0, height: 0 }}>
@@ -201,7 +203,7 @@ const RassModal: FC<RassModalProps> = ({
 		},
 		{
 			key: "rassId",
-			width: 3,
+			width: 1,
 			dataIndex: "id",
 			render: (_, { id }) => (
 				<div style={{ visibility: "hidden", width: 0, height: 0 }}>
@@ -213,7 +215,7 @@ const RassModal: FC<RassModalProps> = ({
 			key: "date",
 			title: "Datum",
 			dataIndex: "dateTime",
-			width: 90,
+			width: 35,
 			sorter: (a, b) => {
 				const dateA = dayjs(`${a.dateTime.date} ${a.dateTime.time}`);
 				const dateB = dayjs(`${b.dateTime.date} ${b.dateTime.time}`);
@@ -236,20 +238,31 @@ const RassModal: FC<RassModalProps> = ({
 		{
 			key: "scoreAndTerm",
 			title: "Ocjena",
-			width: 150,
+			width: 20,
 			dataIndex: "scoreAndNoteAndIndex",
 			render: (_, { scoreAndNoteAndIndex }) => (
 				<Tooltip
-					title={scoreAndNoteAndIndex.additionalNotes}
+					title={`${
+						scoreAndNoteAndIndex.scoreAndTerm.split(": ")[1]
+					} - ${scoreAndNoteAndIndex.scoreDescription}`}
 					color='#045fbd'>
-					{scoreAndNoteAndIndex.scoreAndTerm}
+					{scoreAndNoteAndIndex.scoreAndTerm.split(": ")[0]}
 				</Tooltip>
+			),
+		},
+		{
+			key: "additionalNote",
+			title: "Zabilješka",
+			width: 130,
+			dataIndex: "scoreAndNoteAndIndex",
+			render: (_, { scoreAndNoteAndIndex }) => (
+				<span>{scoreAndNoteAndIndex.additionalNotes}</span>
 			),
 		},
 		{
 			key: "actions",
 			title: "Akcije",
-			width: 90,
+			width: 40,
 			render: (_, record) => (
 				<Space size={"small"}>
 					<Button
@@ -438,6 +451,7 @@ const RassModal: FC<RassModalProps> = ({
 				scoreAndNoteAndIndex: {
 					additionalNotes: additionalNotes,
 					scoreAndTerm: `${foundRass?.score}: ${foundRass?.term}`,
+					scoreDescription: foundRass!.scoreDescription,
 					index: rass.chosenScoreIndex!,
 				},
 			});
@@ -722,7 +736,7 @@ const RassModal: FC<RassModalProps> = ({
 									virtual
 									scroll={{ y: 400 }}
 									columns={columns}
-									className={modalStyles.modalsTable}
+									className={modalStyles.rassTable}
 									size='small'
 								/>
 							</Segment>

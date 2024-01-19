@@ -18,7 +18,7 @@
 }
 
 .modalsWidth {
-    min-width: 1300px;
+    min-width: 1400px;
 }
 
 .modalsExitButton {
@@ -102,8 +102,22 @@
     justify-content: center;
 }
 
+.rassTable {
+    width: 700px;
+    max-height: 440px;
+    box-shadow: var(--box-shadow);
+    font-family: var(--font-family);
+}
+
 .vasTable {
-    width: 350px;
+    width: 550px;
+    max-height: 440px;
+    box-shadow: var(--box-shadow);
+    font-family: var(--font-family);
+}
+
+.mmtTable {
+    width: 700px;
     max-height: 440px;
     box-shadow: var(--box-shadow);
     font-family: var(--font-family);

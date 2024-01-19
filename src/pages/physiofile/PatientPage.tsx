@@ -27,6 +27,7 @@ import ConfirmLeavePhysioFileModal from "../../components/modals/ConfirmLeavePhy
 import ConfirmSavePhysioFileModal from "../../components/modals/ConfirmSavePhysioFileModal";
 import RassModal from "../../components/physiofile/assessment/RassModal";
 import VasModal from "../../components/physiofile/physioTests/vas/VasModal";
+import MmtModal from "../../components/physiofile/physioTests/mmt/MmtModal";
 
 const PatientPage: FC = () => {
 	const patientId = getIdFromUrl(useLocation());
@@ -184,14 +185,40 @@ const PatientPage: FC = () => {
 							<VasModal
 								showModal={showVasModal}
 								physioFile={physioFile}
-								physioTest={physioFile.physioTest}
+								physioTest={
+									physioFile.physioTest
+										? physioFile.physioTest
+										: null
+								}
 								vasTests={
 									physioFile.physioTest
 										? physioFile.physioTest.vas
 										: null
 								}
 							/>
-							<TestsButton label='MMT' />
+							<TestsButton
+								label='MMT'
+								onClick={() =>
+									dispatch(
+										modalsShowActions.setShowMmtModal(true)
+									)
+								}
+							/>
+							<MmtModal
+								showModal={showMmtModal}
+								physioFile={physioFile}
+								physioTest={
+									physioFile.physioTest
+										? physioFile.physioTest
+										: null
+								}
+								patientMmtTests={
+									physioFile.physioTest.mmt
+										? physioFile.physioTest.mmt
+										: null
+								}
+								mmtList={physioFile.mmtList}
+							/>
 							<TestsButton label='CPAx' />
 							<div
 								style={{ height: "auto" }}
