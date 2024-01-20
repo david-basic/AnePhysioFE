@@ -1,4 +1,8 @@
+import { FunctionalDiagnosisVM } from "./FunctionalDiagnosisVM";
+
 export interface PatientFunctionalDiagnosisVM {
-	name: string;
+	id: string;
 	selected: boolean;
+	functionalDiagnosis: FunctionalDiagnosisVM;
+	
 }
