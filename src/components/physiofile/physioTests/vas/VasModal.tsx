@@ -109,8 +109,8 @@ const VasModal: FC<VasModalProps> = ({
 		date: "",
 		time: "",
 	});
-	const dataSaved = useAppSelector(
-		(state) => state.physioFileReducer.dataSaved
+	const vasModalDataSaved = useAppSelector(
+		(state) => state.physioFileReducer.vasModalDataSaved
 	);
 	const dateOptions: Intl.DateTimeFormatOptions = {
 		day: "2-digit",
@@ -247,7 +247,9 @@ const VasModal: FC<VasModalProps> = ({
 									physioFileResponse.data!
 								)
 							);
-							dispatch(physioFileActions.setDataSaved(false));
+							dispatch(
+								physioFileActions.setVasModalDataSaved(false)
+							);
 						}
 					}
 			  );
@@ -312,7 +314,7 @@ const VasModal: FC<VasModalProps> = ({
 							)
 						);
 						message.success("Novi VAS uspješno spremljen!");
-						dispatch(physioFileActions.setDataSaved(false));
+						dispatch(physioFileActions.setVasModalDataSaved(false));
 					}
 				}
 			);
@@ -354,7 +356,7 @@ const VasModal: FC<VasModalProps> = ({
 							)
 						);
 						message.success("VAS uspješno izmijenjen!");
-						dispatch(physioFileActions.setDataSaved(false));
+						dispatch(physioFileActions.setVasModalDataSaved(false));
 					}
 				}
 			);
@@ -388,7 +390,7 @@ const VasModal: FC<VasModalProps> = ({
 							(item) => item.key !== recordToDelete.key
 						);
 						setDataSavedToTable(newData);
-						dispatch(physioFileActions.setDataSaved(false));
+						dispatch(physioFileActions.setVasModalDataSaved(false));
 
 						message.success("VAS uspješno izbrisan!");
 					}
@@ -506,6 +508,7 @@ const VasModal: FC<VasModalProps> = ({
 
 	const handleSavingDataBeforeExit = () => {
 		dispatch(physioFileActions.setPhysioFile(physioFile));
+		dispatch(physioFileActions.setVasModalDataSaved(true));
 	};
 
 	const resetModalStates = () => {
@@ -533,7 +536,7 @@ const VasModal: FC<VasModalProps> = ({
 					type='primary'
 					className={`${modalStyles.modalsButtons} ${modalStyles.modalsExitButton}`}
 					onClick={() => {
-						!dataSaved && handleSavingDataBeforeExit();
+						!vasModalDataSaved && handleSavingDataBeforeExit();
 						resetModalStates();
 						dispatch(modalsShowActions.setShowVasModal(false));
 					}}>
