@@ -8,14 +8,17 @@ import SegmentTitle from "./segments/SegmentTitle";
 import FunctionalDiagnoses from "./functionalDiagnosis/FunctionalDiagnoses";
 import Assessment from "./assessment/Assessment";
 import MkbsAndOperations from "./mkbsAndOperations/MkbsAndOperations";
+import { FunctionalDiagnosisVM } from "../../models/physiofile/functionalDiagnosis/FunctionalDiagnosisVM";
 
 type PhysioFileProps = {
 	physioFile: PhysioFileVM | undefined;
+	fdList: FunctionalDiagnosisVM[] | undefined;
 	isLoading: boolean;
 };
 
 const PhysioFile: FC<PhysioFileProps> = ({
 	isLoading,
+	fdList,
 	physioFile,
 }: PhysioFileProps) => {
 	return (
@@ -54,9 +57,11 @@ const PhysioFile: FC<PhysioFileProps> = ({
 								<SegmentTitle label='Funkcionalna dijagnoza:' />
 								<Segment isContent className={styles.texts}>
 									<FunctionalDiagnoses
-										patientDiagnoses={
+										physioFile={physioFile}
+										patientFunctionalDiagnoses={
 											physioFile.patientFunctionalDiagnoses
 										}
+										fdList={fdList ? fdList : undefined}
 									/>
 								</Segment>
 							</Segment>
