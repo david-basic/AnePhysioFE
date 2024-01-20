@@ -103,8 +103,8 @@ const RassModal: FC<RassModalProps> = ({
 	const physioFile = useAppSelector(
 		(state) => state.physioFileReducer.physioFile
 	);
-	const dataSaved = useAppSelector(
-		(state) => state.physioFileReducer.dataSaved
+	const rassModalDataSaved = useAppSelector(
+		(state) => state.physioFileReducer.rassModalDataSaved
 	);
 	const dateOptions: Intl.DateTimeFormatOptions = {
 		day: "2-digit",
@@ -174,7 +174,9 @@ const RassModal: FC<RassModalProps> = ({
 									physioFileResponse.data!
 								)
 							);
-							dispatch(physioFileActions.setDataSaved(false));
+							dispatch(
+								physioFileActions.setRassModalDataSaved(false)
+							);
 						}
 					}
 			  );
@@ -338,7 +340,9 @@ const RassModal: FC<RassModalProps> = ({
 							)
 						);
 						message.success("RASS uspješno izmijenjen!");
-						dispatch(physioFileActions.setDataSaved(false));
+						dispatch(
+							physioFileActions.setRassModalDataSaved(false)
+						);
 					}
 				}
 			);
@@ -376,7 +380,9 @@ const RassModal: FC<RassModalProps> = ({
 							)
 						);
 						message.success("Novi RASS uspješno spremljen!");
-						dispatch(physioFileActions.setDataSaved(false));
+						dispatch(
+							physioFileActions.setRassModalDataSaved(false)
+						);
 					}
 				}
 			);
@@ -512,7 +518,9 @@ const RassModal: FC<RassModalProps> = ({
 							(item) => item.key !== recordToDelete.key
 						);
 						setDataSavedToTable(newData);
-						dispatch(physioFileActions.setDataSaved(false));
+						dispatch(
+							physioFileActions.setRassModalDataSaved(false)
+						);
 
 						message.success("RASS uspješno izbrisan!");
 					}
@@ -585,6 +593,7 @@ const RassModal: FC<RassModalProps> = ({
 
 	const handleSavingDataBeforeExit = () => {
 		dispatch(physioFileActions.setPhysioFile(physioFile));
+		dispatch(physioFileActions.setRassModalDataSaved(true));
 	};
 
 	const resetModalStates = () => {
@@ -616,7 +625,7 @@ const RassModal: FC<RassModalProps> = ({
 					type='primary'
 					className={`${modalStyles.modalsButtons} ${modalStyles.modalsExitButton}`}
 					onClick={() => {
-						!dataSaved && handleSavingDataBeforeExit();
+						!rassModalDataSaved && handleSavingDataBeforeExit();
 						resetModalStates();
 						dispatch(modalsShowActions.setShowRassModal(false));
 					}}>

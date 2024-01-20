@@ -36,38 +36,38 @@ type AuthInitState = {
  * Interface used to define data object needed for login request on the API
  * @param username Username user input on the login form
  * @param password Password user input on the login form
- * 
+ *
  */
 interface LoginRequestData {
 	username: string;
 	password: string;
-};
+}
 /**
  * Interface used to define data object with tokens needed for authentication of a user
  * @param accessToken Access token used for JWT authentication
  * @param refreshToken Refresh token used for refreshing accessToken in JWT authentication
  * @param tokenType Token type used in JWT authentication
- * 
+ *
  */
 interface LoginResponseData {
 	accessToken: string;
 	refreshToken: string;
 	tokenType: string;
-};
+}
 /**
  * Interface used to define data object needed for register request on the API
  * @param firstname First name user input on the register form
  * @param lastname Last name user input on the register form
  * @param username Username user input on the register form
  * @param password Password user input on the register form
- * 
+ *
  */
 interface RegisterRequestData {
 	firstname: string;
 	lastname: string;
 	username: string;
 	password: string;
-};
+}
 /**
  * Interface used to define response object acquired as a response to the register request on the API
  * @param timestamp Timestamp denoting time of user register
@@ -82,7 +82,7 @@ interface ApiRegisterResponse {
 	success: boolean;
 	message: string;
 	data?: any;
-};
+}
 /**
  * Interfaces used to define a response object gained from a request on the API
  * @param timestamp Timestamp denoting time of response
@@ -121,22 +121,30 @@ type DepartmentLocalitiesInitStateType = {
 	jilSusak: DepartmentVM;
 	crc: DepartmentVM;
 	kardioJil: DepartmentVM;
-}
+};
 /**
  * @param physioFile Defines a Physiotherapist file object
- * @param dataSaved Indicates if the current physioFile state was saved to DB
+ * @param functionalDiagnosesList Defines a list of functional diagnoses
+ * @param xyDataSaved Indicates if the current state was saved to DB
  */
 type PhysioFileInitStateType = {
 	physioFile: PhysioFileVM;
-	dataSaved: boolean;
-}
+	functionalDiagnosisList: FunctionalDiagnosisVM[];
+	physioFileDataSaved: boolean;
+	rassModalDataSaved: boolean;
+	gcsModalDataSaved: boolean;
+	vasModalDataSaved: boolean;
+	mmtModalDataSaved: boolean;
+	cpaxModalDataSaved: boolean;
+	fdModalDataSaved: boolean;
+};
 /**
  * Type used for updating a PatientRass entity in the array
- * @param idToUpdate Defines the id of the rass in the Array. Id is generated sequentially 
+ * @param idToUpdate Defines the id of the rass in the Array. Id is generated sequentially
  * for that array when the object is first created
  * @param additionalDescription Defines the new updated description that needs saving for that object
  */
 type PatientRassAdditionalNotesUpdateType = {
 	idToUpdate: string;
 	additionalDescription: string;
-}
+};

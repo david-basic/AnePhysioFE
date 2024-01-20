@@ -8,6 +8,7 @@ import { type PhysioTestVM } from "../models/physiofile/physioTests/PhysioTestVM
 import { type PatientFunctionalDiagnosisVM } from "../models/physiofile/functionalDiagnosis/PatientFunctionalDiagnosisVM";
 import { type AssessmentVM } from "../models/physiofile/assessment/AssessmentVM";
 import { type PatientRassVM } from "../models/physiofile/assessment/PatientRassVM";
+import { type FunctionalDiagnosisVM } from "../models/physiofile/functionalDiagnosis/FunctionalDiagnosisVM";
 
 const fileInitState: PhysioFileVM = {
 	id: "",
@@ -32,7 +33,6 @@ const fileInitState: PhysioFileVM = {
 		leadingDoctor: { id: "", role: "", fullNameAndTitles: "" },
 		patientAge: 0,
 	},
-	fullFunctionalDiagnosisList: [],
 	patientFunctionalDiagnoses: [],
 	assessment: { id: "", patientRass: [], notes: "" },
 	fullRassList: [],
@@ -62,7 +62,14 @@ const fileInitState: PhysioFileVM = {
 
 const physioFileInitState: PhysioFileInitStateType = {
 	physioFile: fileInitState,
-	dataSaved: true,
+	functionalDiagnosisList: [],
+	physioFileDataSaved: true,
+	rassModalDataSaved: true,
+	gcsModalDataSaved: true,
+	vasModalDataSaved: true,
+	mmtModalDataSaved: true,
+	cpaxModalDataSaved: true,
+	fdModalDataSaved: true,
 };
 
 const physioFileSlice = createSlice({
@@ -72,8 +79,32 @@ const physioFileSlice = createSlice({
 		setPhysioFile: (state, action: PayloadAction<PhysioFileVM>) => {
 			state.physioFile = action.payload;
 		},
-		setDataSaved: (state, action: PayloadAction<boolean>) => {
-			state.dataSaved = action.payload;
+		setPhysioFileDataSaved: (state, action: PayloadAction<boolean>) => {
+			state.physioFileDataSaved = action.payload;
+		},
+		setRassModalDataSaved: (state, action: PayloadAction<boolean>) => {
+			state.rassModalDataSaved = action.payload;
+		},
+		setGcsModalDataSaved: (state, action: PayloadAction<boolean>) => {
+			state.gcsModalDataSaved = action.payload;
+		},
+		setVasModalDataSaved: (state, action: PayloadAction<boolean>) => {
+			state.vasModalDataSaved = action.payload;
+		},
+		setMmtModalDataSaved: (state, action: PayloadAction<boolean>) => {
+			state.mmtModalDataSaved = action.payload;
+		},
+		setCpaxModalDataSaved: (state, action: PayloadAction<boolean>) => {
+			state.cpaxModalDataSaved = action.payload;
+		},
+		setFuncDiagModalDataSaved: (state, action: PayloadAction<boolean>) => {
+			state.fdModalDataSaved = action.payload;
+		},
+		setFunctionalDiagnosisList: (
+			state,
+			action: PayloadAction<FunctionalDiagnosisVM[]>
+		) => {
+			state.functionalDiagnosisList = action.payload;
 		},
 		setPatient: (state, action: PayloadAction<PatientVM>) => {
 			state.physioFile.patient = action.payload;
@@ -113,7 +144,7 @@ const physioFileSlice = createSlice({
 		},
 		resetPhysioFileToInitValues: (state) => {
 			state.physioFile = fileInitState;
-			state.dataSaved = true;
+			state.physioFileDataSaved = true;
 		},
 	},
 });

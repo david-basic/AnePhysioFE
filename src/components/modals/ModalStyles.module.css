@@ -102,6 +102,13 @@
     justify-content: center;
 }
 
+.fdTable {
+    width: 700px;
+    max-height: 440px;
+    box-shadow: var(--box-shadow);
+    font-family: var(--font-family);
+}
+
 .rassTable {
     width: 700px;
     max-height: 440px;
