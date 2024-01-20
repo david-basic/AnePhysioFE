@@ -24,7 +24,6 @@ const ConfirmLeavePhysioFileModal: FC<ConfirmLeaveModalProps> = ({
 		dispatch(modalsShowActions.setShowLeaveModal(false));
 		dispatch(physioFileActions.setPhysioFileDataSaved(true));
 		dispatch(physioFileActions.resetPhysioFileToInitValues());
-		sessionStorage.setItem("physioPageLoadedOnce", "false");
 
 		navigateTo ? navigate(navigateTo) : navigate(-1);
 	};
