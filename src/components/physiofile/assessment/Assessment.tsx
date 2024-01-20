@@ -21,7 +21,7 @@ const Assessment: FC<AssessmentProps> = ({
 		event: ChangeEvent<HTMLTextAreaElement>
 	) => {
 		setAssesmentNotes(event.target.value);
-		dispatch(physioFileActions.setDataSaved(false));
+		dispatch(physioFileActions.setPhysioFileDataSaved(false));
 	};
 
 	return (
