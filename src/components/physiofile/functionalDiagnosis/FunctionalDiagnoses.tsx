@@ -1,51 +1,65 @@
-import { useState, type FC } from "react";
+import { type FC } from "react";
 import { type PatientFunctionalDiagnosisVM } from "../../../models/physiofile/functionalDiagnosis/PatientFunctionalDiagnosisVM";
-import { Checkbox, Col, Modal, Row } from "antd";
-import { CheckboxValueType } from "antd/es/checkbox/Group";
+import { Checkbox, Col, Row } from "antd";
+import { type CheckboxValueType } from "antd/es/checkbox/Group";
 import generateRandomNumber from "../../../util/generateRandomBigInteger";
 import { PlusCircle } from "react-bootstrap-icons";
-import localStyles from "./FunctionalDiagnoses.module.css";
 import parentStyles from "../PhysioFile.module.css";
 import { useAppDispatch } from "../../../hooks/use_app_dispatch";
+import { useAppSelector } from "../../../hooks/use_app_selector";
+import { type PhysioFileVM } from "../../../models/physiofile/PhysioFileVM";
+import FdModal from "./FdModal";
+import { modalsShowActions } from "../../../store/modals-show-slice";
+import { type FunctionalDiagnosisVM } from "../../../models/physiofile/functionalDiagnosis/FunctionalDiagnosisVM";
 import { physioFileActions } from "../../../store/physio-file-slice";
 
 type FunctionalDiagnosesProps = {
-	patientDiagnoses: PatientFunctionalDiagnosisVM[];
+	physioFile: PhysioFileVM;
+	patientFunctionalDiagnoses: PatientFunctionalDiagnosisVM[];
+	fdList: FunctionalDiagnosisVM[] | undefined;
 };
 
 const FunctionalDiagnoses: FC<FunctionalDiagnosesProps> = ({
-	patientDiagnoses,
+	physioFile,
+	patientFunctionalDiagnoses,
+	fdList,
 }: FunctionalDiagnosesProps) => {
-	const [showModal, setShowModal] = useState(false);
 	const dispatch = useAppDispatch();
+	const showFdModal = useAppSelector(
+		(state) => state.modalsShowReducer.showFdModal
+	);
 
 	const onCheckHandler = (checkedValues: CheckboxValueType[]) => {
-		const newPatientFunctionalDiagnosesState: PatientFunctionalDiagnosisVM[] = [];
+		const newPatientFunctionalDiagnosesState: PatientFunctionalDiagnosisVM[] =
+			[];
 		const checkedSet = new Set(checkedValues);
-		patientDiagnoses.forEach((pd) => {
-			checkedSet.has(pd.name)
+		patientFunctionalDiagnoses.forEach((patFuncDiag) => {
+			checkedSet.has(patFuncDiag.id)
 				? newPatientFunctionalDiagnosesState.push({
-						name: pd.name,
+						id: patFuncDiag.id,
 						selected: true,
+						functionalDiagnosis: patFuncDiag.functionalDiagnosis,
 				  })
-				: newPatientFunctionalDiagnosesState.push(pd);
+				: newPatientFunctionalDiagnosesState.push({
+						id: patFuncDiag.id,
+						selected: false,
+						functionalDiagnosis: patFuncDiag.functionalDiagnosis,
+				  });
 		});
 
-		dispatch(physioFileActions.setPatientFunctionalDiagnoses(newPatientFunctionalDiagnosesState));
-		dispatch(physioFileActions.setDataSaved(false));
-	};
-
-	const handleShowModal = () => {
-		setShowModal(true);
-	};
-
-	const handleSaveNewFunctionalDiagnosis = () => {
-		console.log("TODO actions to save the new functional diagnosis");
+		dispatch(
+			physioFileActions.setPatientFunctionalDiagnoses(
+				newPatientFunctionalDiagnosesState
+			)
+		);
+		dispatch(physioFileActions.setPhysioFileDataSaved(false));
 	};
 
 	const defaultSelectedValues: string[] = [];
-	patientDiagnoses.map(
-		(fd) => fd.selected && defaultSelectedValues.push(fd.name)
+	patientFunctionalDiagnoses.map(
+		(patientFuncDiag) =>
+			patientFuncDiag.selected &&
+			defaultSelectedValues.push(patientFuncDiag.id)
 	);
 
 	return (
@@ -53,40 +67,32 @@ const FunctionalDiagnoses: FC<FunctionalDiagnosesProps> = ({
 			onChange={onCheckHandler}
 			defaultValue={defaultSelectedValues}>
 			<Row>
-				{patientDiagnoses.map((fd) => (
+				{patientFunctionalDiagnoses.map((patientFuncDiag) => (
 					<Col key={generateRandomNumber(6, true)} span={10}>
 						<Checkbox
 							className={parentStyles.texts}
 							style={{ fontWeight: 400 }}
-							value={fd.name}>
-							{fd.name}
+							value={patientFuncDiag.id}>
+							{patientFuncDiag.functionalDiagnosis.description}
 						</Checkbox>
 					</Col>
 				))}
 				<Col span={8}>
 					<span
 						className={parentStyles.textsAsLinks}
-						onClick={handleShowModal}>
+						onClick={() =>
+							dispatch(modalsShowActions.setShowFdModal(true))
+						}>
 						<PlusCircle
 							className={parentStyles.iconButtonsInText}
 						/>{" "}
 						Dodaj novu
 					</span>
-					<Modal
-						title='Dodaj novu funkcionalnu dijagnozu'
-						centered
-						maskClosable={false}
-						open={showModal}
-						onOk={handleSaveNewFunctionalDiagnosis}
-						okText='Spremi'
-						okButtonProps={{ type: "primary" }}
-						cancelText='Odustani'
-						closable={false}
-						onCancel={() => setShowModal(false)}>
-						<h2>
-							Forma za dodavanje nove funkcionalne dijagnoze TODO
-						</h2>
-					</Modal>
+					<FdModal
+						showModal={showFdModal}
+						physioFile={physioFile}
+						fdList={fdList}
+					/>
 				</Col>
 			</Row>
 		</Checkbox.Group>
