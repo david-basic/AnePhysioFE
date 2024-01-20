@@ -22,9 +22,11 @@ import TextArea from "antd/es/input/TextArea";
 import { type UpdateFuncDiagRequestDto } from "../../../dto/PhysioFile/FuncDiag/UpdateFuncDiagRequestDto";
 import { type CreateFuncDiagRequestDto } from "../../../dto/PhysioFile/FuncDiag/CreateFuncDiagRequestDto";
 import api_routes from "../../../config/api_routes";
-import { type ApiResponse, type NoReturnData } from "../../../type";
+import { type ApiResponse } from "../../../type";
 import { HttpStatusCode } from "axios";
 import { type DeleteFunctionalDiagnosisRequestDto } from "../../../dto/PhysioFile/FuncDiag/DeleteFunctionalDiagnosisRequestDto";
+import { getIdFromUrl } from "../../../util/UrlHelper";
+import { useLocation } from "react-router-dom";
 
 type FdModalProps = {
 	showModal: boolean;
@@ -43,6 +45,7 @@ const FdModal: FC<FdModalProps> = ({
 	physioFile,
 	fdList,
 }: FdModalProps) => {
+	const patientId = getIdFromUrl(useLocation());
 	const dispatch = useAppDispatch();
 	const { fetchWithTokenRefresh, isLoading } = useFetcApihWithTokenRefresh();
 	const [tableIsBeingEdited, setTableIsBeingEdited] =
@@ -119,15 +122,14 @@ const FdModal: FC<FdModalProps> = ({
 		};
 	}, [fdList]);
 
-	const addDataToTable = () => {
-		// TODO for some reason the state update of setDAtaSavedToTable does not update the table when state is set!
+	const addRecordToTable = (newDescription: string) => {
 		setDataSavedToTable((prevState) => {
 			const newState = [...prevState];
 			const randNum = generateRandomNumber(12)!;
 			newState.push({
 				key: randNum,
 				id: "",
-				description: fdDescription,
+				description: newDescription,
 			});
 
 			return newState;
@@ -162,7 +164,7 @@ const FdModal: FC<FdModalProps> = ({
 							physioFileResponse
 						);
 					} else {
-						addDataToTable();
+						addRecordToTable(fdDescription);
 
 						dispatch(
 							physioFileActions.setPhysioFile(
@@ -210,7 +212,7 @@ const FdModal: FC<FdModalProps> = ({
 					} else {
 						deleteRecordFromTable(tableRecordBeingEdited!);
 
-						addDataToTable();
+						addRecordToTable(fdDescription);
 
 						dispatch(
 							physioFileActions.setPhysioFile(
@@ -244,7 +246,7 @@ const FdModal: FC<FdModalProps> = ({
 					headers: { "Content-Type": "application/json" },
 					body: deleteDto,
 				},
-				(deleteFileResponse: ApiResponse<NoReturnData>) => {
+				(deleteFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (deleteFileResponse.status !== HttpStatusCode.Ok) {
 						message.error(
 							"Nije moguće izbrisati funkcionalnu dijagnozu!"
@@ -260,6 +262,11 @@ const FdModal: FC<FdModalProps> = ({
 						setDataSavedToTable(newData);
 						dispatch(
 							physioFileActions.setPhysioFileDataSaved(false)
+						);
+						dispatch(
+							physioFileActions.setPhysioFile(
+								deleteFileResponse.data!
+							)
 						);
 
 						message.success(
@@ -283,12 +290,10 @@ const FdModal: FC<FdModalProps> = ({
 			return;
 		}
 
-		console.log("tableRecordBeingEdited...", tableRecordBeingEdited);
-
 		if (tableIsBeingEdited) {
 			const updateDto: UpdateFuncDiagRequestDto = {
 				physioFileId: physioFile.id,
-				description: tableRecordBeingEdited!.description,
+				description: fdDescription,
 			};
 
 			sendUpdateFdRequest(tableRecordBeingEdited!.id, updateDto);
@@ -348,8 +353,35 @@ const FdModal: FC<FdModalProps> = ({
 	};
 
 	const handleSavingDataBeforeExit = () => {
-		dispatch(physioFileActions.setPhysioFile(physioFile));
 		dispatch(physioFileActions.setFuncDiagModalDataSaved(true));
+
+		try {
+			fetchWithTokenRefresh(
+				{
+					url:
+						api_routes.ROUTE_PHYSIO_FILE_GET_BY_PATIENT_ID +
+						`/${patientId}`,
+					headers: { "Content-Type": "application/json" },
+				},
+				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
+					if (physioFileResponse.status !== HttpStatusCode.Ok) {
+						console.error(
+							"There was a error fetching physio file: ",
+							physioFileResponse
+						);
+					} else {
+						dispatch(
+							physioFileActions.setPhysioFile(
+								physioFileResponse.data!
+							)
+						);
+						console.log("HERE!!");
+					}
+				}
+			);
+		} catch (error) {
+			console.error("Error loading Patient page:", error);
+		}
 	};
 
 	const resetModalStates = () => {

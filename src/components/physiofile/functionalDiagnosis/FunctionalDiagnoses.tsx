@@ -67,7 +67,7 @@ const FunctionalDiagnoses: FC<FunctionalDiagnosesProps> = ({
 			onChange={onCheckHandler}
 			defaultValue={defaultSelectedValues}>
 			<Row>
-				{patientFunctionalDiagnoses.map((patientFuncDiag) => (
+				{physioFile.patientFunctionalDiagnoses.map((patientFuncDiag) => (
 					<Col key={generateRandomNumber(6, true)} span={10}>
 						<Checkbox
 							className={parentStyles.texts}

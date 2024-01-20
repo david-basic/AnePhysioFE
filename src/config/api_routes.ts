@@ -18,7 +18,7 @@ const api_routes = {
 
 	ROUTE_FUNC_DIAG_GET_ALL: `${apiRoutesParams.API}/functional-diagnosis-management/diagnoses`,
 	ROUTE_FUNC_DIAG_ADD_NEW: `${apiRoutesParams.API}/functional-diagnosis-management/diagnoses/new-fd`,
-	ROUTE_FUNC_DIAG_UPDATE_FD_BY_ID: `${apiRoutesParams.API}/functional-diagnosis-management/diagnoses/new-fd`,
+	ROUTE_FUNC_DIAG_UPDATE_FD_BY_ID: `${apiRoutesParams.API}/functional-diagnosis-management/diagnoses/update-fd`,
 	ROUTE_FUNC_DIAG_DELETE_FD: `${apiRoutesParams.API}/functional-diagnosis-management/diagnoses/delete-fd`,
 
 	ROUTE_ASSESSMENT_CREATE_NEW_BY_PHYSIO_FILE_ID: `${apiRoutesParams.API}/assessment-management/assessments/new-assessment`,
