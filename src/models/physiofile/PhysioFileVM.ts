@@ -21,7 +21,6 @@ export interface PhysioFileVM {
 	id: string;
 	fileOpenedBy: string;
 	patient: PatientVM;
-	fullFunctionalDiagnosisList: FunctionalDiagnosisVM[];
 	patientFunctionalDiagnoses: PatientFunctionalDiagnosisVM[];
 	assessment: AssessmentVM;
 	fullRassList: RassVM[];
