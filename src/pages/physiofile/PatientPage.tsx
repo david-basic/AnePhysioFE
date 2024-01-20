@@ -56,8 +56,9 @@ const PatientPage: FC = () => {
 		(state) => state.physioFileReducer.physioFile
 	);
 	const dataSaved = useAppSelector(
-		(state) => state.physioFileReducer.dataSaved
+		(state) => state.physioFileReducer.physioFileDataSaved
 	);
+	const fdList = useAppSelector(state => state.physioFileReducer.functionalDiagnosisList);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -85,6 +86,15 @@ const PatientPage: FC = () => {
 									physioFileResponse.data!
 								)
 							);
+
+							dispatch(
+								physioFileActions.setFunctionalDiagnosisList(
+									physioFileResponse.data!.patientFunctionalDiagnoses.map(
+										(pfd) => pfd.functionalDiagnosis
+									)
+								)
+							);
+
 							message.success(
 								"Fizioterapeutski karton dohvaćen!"
 							);
@@ -131,6 +141,7 @@ const PatientPage: FC = () => {
 						style={{ backgroundColor: "#d1f2ff" }}>
 						<PhysioFile
 							physioFile={physioFile}
+							fdList={fdList}
 							isLoading={isLoading}
 						/>
 					</Content>
@@ -213,7 +224,7 @@ const PatientPage: FC = () => {
 										: null
 								}
 								patientMmtTests={
-									physioFile.physioTest.mmt
+									physioFile.physioTest
 										? physioFile.physioTest.mmt
 										: null
 								}
