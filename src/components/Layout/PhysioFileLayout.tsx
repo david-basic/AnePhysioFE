@@ -28,7 +28,7 @@ const PhysioFileLayout: FC<PhysioFileLayoutProps> = ({
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 	const dataSaved = useAppSelector(
-		(state) => state.physioFileReducer.dataSaved
+		(state) => state.physioFileReducer.physioFileDataSaved
 	);
 	const showLeaveModal = useAppSelector(
 		(state) => state.modalsShowReducer.showLeaveModal
