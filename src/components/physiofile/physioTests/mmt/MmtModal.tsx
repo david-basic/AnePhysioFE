@@ -95,8 +95,8 @@ const MmtModal: FC<MmtModalProps> = ({
 		date: "",
 		time: "",
 	});
-	const dataSaved = useAppSelector(
-		(state) => state.physioFileReducer.dataSaved
+	const mmtModalDataSaved = useAppSelector(
+		(state) => state.physioFileReducer.mmtModalDataSaved
 	);
 	const dateOptions: Intl.DateTimeFormatOptions = {
 		day: "2-digit",
@@ -234,7 +234,9 @@ const MmtModal: FC<MmtModalProps> = ({
 									physioFileResponse.data!
 								)
 							);
-							dispatch(physioFileActions.setDataSaved(false));
+							dispatch(
+								physioFileActions.setMmtModalDataSaved(false)
+							);
 						}
 					}
 			  );
@@ -301,7 +303,7 @@ const MmtModal: FC<MmtModalProps> = ({
 							)
 						);
 						message.success("Novi MMT uspješno spremljen!");
-						dispatch(physioFileActions.setDataSaved(false));
+						dispatch(physioFileActions.setMmtModalDataSaved(false));
 					}
 				}
 			);
@@ -343,7 +345,7 @@ const MmtModal: FC<MmtModalProps> = ({
 							)
 						);
 						message.success("VAS uspješno izmijenjen!");
-						dispatch(physioFileActions.setDataSaved(false));
+						dispatch(physioFileActions.setMmtModalDataSaved(false));
 					}
 				}
 			);
@@ -377,7 +379,7 @@ const MmtModal: FC<MmtModalProps> = ({
 							(item) => item.key !== recordToDelete.key
 						);
 						setDataSavedToTable(newData);
-						dispatch(physioFileActions.setDataSaved(false));
+						dispatch(physioFileActions.setMmtModalDataSaved(false));
 
 						message.success("MMT uspješno izbrisan!");
 					}
@@ -526,6 +528,7 @@ const MmtModal: FC<MmtModalProps> = ({
 
 	const handleSavingDataBeforeExit = () => {
 		dispatch(physioFileActions.setPhysioFile(physioFile));
+		dispatch(physioFileActions.setMmtModalDataSaved(true));
 	};
 
 	const resetModalStates = () => {
@@ -554,7 +557,7 @@ const MmtModal: FC<MmtModalProps> = ({
 					type='primary'
 					className={`${modalStyles.modalsButtons} ${modalStyles.modalsExitButton}`}
 					onClick={() => {
-						!dataSaved && handleSavingDataBeforeExit();
+						!mmtModalDataSaved && handleSavingDataBeforeExit();
 						resetModalStates();
 						dispatch(modalsShowActions.setShowMmtModal(false));
 					}}>
@@ -604,7 +607,8 @@ const MmtModal: FC<MmtModalProps> = ({
 													title={mmt.description}
 													key={index}
 													color='#045fbd'>
-													{mmt.grade}{" - "}
+													{mmt.grade}
+													{" - "}
 													{cutStringToNchars(
 														mmt.description,
 														40
