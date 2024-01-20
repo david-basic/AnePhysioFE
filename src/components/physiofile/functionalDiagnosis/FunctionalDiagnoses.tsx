@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import { useState, type FC } from "react";
 import { type PatientFunctionalDiagnosisVM } from "../../../models/physiofile/functionalDiagnosis/PatientFunctionalDiagnosisVM";
 import { Checkbox, Col, Row } from "antd";
 import { type CheckboxValueType } from "antd/es/checkbox/Group";
@@ -27,6 +27,9 @@ const FunctionalDiagnoses: FC<FunctionalDiagnosesProps> = ({
 	const dispatch = useAppDispatch();
 	const showFdModal = useAppSelector(
 		(state) => state.modalsShowReducer.showFdModal
+	);
+	const [allPFD, setAllPFD] = useState<PatientFunctionalDiagnosisVM[]>(
+		patientFunctionalDiagnoses || []
 	);
 
 	const onCheckHandler = (checkedValues: CheckboxValueType[]) => {
@@ -67,7 +70,7 @@ const FunctionalDiagnoses: FC<FunctionalDiagnosesProps> = ({
 			onChange={onCheckHandler}
 			defaultValue={defaultSelectedValues}>
 			<Row>
-				{physioFile.patientFunctionalDiagnoses.map((patientFuncDiag) => (
+				{allPFD.map((patientFuncDiag) => (
 					<Col key={generateRandomNumber(6, true)} span={10}>
 						<Checkbox
 							className={parentStyles.texts}
@@ -92,6 +95,15 @@ const FunctionalDiagnoses: FC<FunctionalDiagnosesProps> = ({
 						showModal={showFdModal}
 						physioFile={physioFile}
 						fdList={fdList}
+						onAddFunctionalDiagnosis={(newPFDList) =>
+							setAllPFD(newPFDList)
+						}
+						onUpdateFunctionalDiagnosis={(newPFDList) =>
+							setAllPFD(newPFDList)
+						}
+						onRemoveFunctionalDiagnosis={(newPFDList) =>
+							setAllPFD(newPFDList)
+						}
 					/>
 				</Col>
 			</Row>

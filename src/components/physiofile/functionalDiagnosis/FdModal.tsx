@@ -25,13 +25,21 @@ import api_routes from "../../../config/api_routes";
 import { type ApiResponse } from "../../../type";
 import { HttpStatusCode } from "axios";
 import { type DeleteFunctionalDiagnosisRequestDto } from "../../../dto/PhysioFile/FuncDiag/DeleteFunctionalDiagnosisRequestDto";
-import { getIdFromUrl } from "../../../util/UrlHelper";
-import { useLocation } from "react-router-dom";
+import { type PatientFunctionalDiagnosisVM } from "../../../models/physiofile/functionalDiagnosis/PatientFunctionalDiagnosisVM";
 
 type FdModalProps = {
 	showModal: boolean;
 	physioFile: PhysioFileVM;
 	fdList: FunctionalDiagnosisVM[] | undefined;
+	onAddFunctionalDiagnosis: (
+		newPFDList: PatientFunctionalDiagnosisVM[]
+	) => void;
+	onRemoveFunctionalDiagnosis: (
+		newPFDList: PatientFunctionalDiagnosisVM[]
+	) => void;
+	onUpdateFunctionalDiagnosis: (
+		newPFDList: PatientFunctionalDiagnosisVM[]
+	) => void;
 };
 
 type TableColumnDefinitionType = {
@@ -44,8 +52,10 @@ const FdModal: FC<FdModalProps> = ({
 	showModal,
 	physioFile,
 	fdList,
+	onAddFunctionalDiagnosis,
+	onRemoveFunctionalDiagnosis,
+	onUpdateFunctionalDiagnosis,
 }: FdModalProps) => {
-	const patientId = getIdFromUrl(useLocation());
 	const dispatch = useAppDispatch();
 	const { fetchWithTokenRefresh, isLoading } = useFetcApihWithTokenRefresh();
 	const [tableIsBeingEdited, setTableIsBeingEdited] =
@@ -122,14 +132,14 @@ const FdModal: FC<FdModalProps> = ({
 		};
 	}, [fdList]);
 
-	const addRecordToTable = (newDescription: string) => {
+	const addRecordToTable = (newRecord: PatientFunctionalDiagnosisVM) => {
 		setDataSavedToTable((prevState) => {
 			const newState = [...prevState];
 			const randNum = generateRandomNumber(12)!;
 			newState.push({
 				key: randNum,
-				id: "",
-				description: newDescription,
+				id: newRecord.functionalDiagnosis.id,
+				description: newRecord.functionalDiagnosis.description,
 			});
 
 			return newState;
@@ -164,7 +174,18 @@ const FdModal: FC<FdModalProps> = ({
 							physioFileResponse
 						);
 					} else {
-						addRecordToTable(fdDescription);
+						const newRecord =
+							physioFileResponse.data!.patientFunctionalDiagnoses.filter(
+								(pfd) =>
+									pfd.functionalDiagnosis.description ===
+									fdDescription
+							)[0];
+
+						addRecordToTable(newRecord);
+
+						onAddFunctionalDiagnosis(
+							physioFileResponse.data!.patientFunctionalDiagnoses
+						);
 
 						dispatch(
 							physioFileActions.setPhysioFile(
@@ -210,15 +231,27 @@ const FdModal: FC<FdModalProps> = ({
 							physioFileResponse
 						);
 					} else {
+						const newRecord =
+							physioFileResponse.data!.patientFunctionalDiagnoses.filter(
+								(pfd) =>
+									pfd.functionalDiagnosis.description ===
+									fdDescription
+							)[0];
+
 						deleteRecordFromTable(tableRecordBeingEdited!);
 
-						addRecordToTable(fdDescription);
+						addRecordToTable(newRecord);
 
 						dispatch(
 							physioFileActions.setPhysioFile(
 								physioFileResponse.data!
 							)
 						);
+
+						onUpdateFunctionalDiagnosis(
+							physioFileResponse.data!.patientFunctionalDiagnoses
+						);
+
 						message.success(
 							"Funkcionalna dijagnoza uspješno izmijenjena!"
 						);
@@ -267,6 +300,10 @@ const FdModal: FC<FdModalProps> = ({
 							physioFileActions.setPhysioFile(
 								deleteFileResponse.data!
 							)
+						);
+
+						onRemoveFunctionalDiagnosis(
+							deleteFileResponse.data!.patientFunctionalDiagnoses
 						);
 
 						message.success(
@@ -354,34 +391,6 @@ const FdModal: FC<FdModalProps> = ({
 
 	const handleSavingDataBeforeExit = () => {
 		dispatch(physioFileActions.setFuncDiagModalDataSaved(true));
-
-		try {
-			fetchWithTokenRefresh(
-				{
-					url:
-						api_routes.ROUTE_PHYSIO_FILE_GET_BY_PATIENT_ID +
-						`/${patientId}`,
-					headers: { "Content-Type": "application/json" },
-				},
-				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
-					if (physioFileResponse.status !== HttpStatusCode.Ok) {
-						console.error(
-							"There was a error fetching physio file: ",
-							physioFileResponse
-						);
-					} else {
-						dispatch(
-							physioFileActions.setPhysioFile(
-								physioFileResponse.data!
-							)
-						);
-						console.log("HERE!!");
-					}
-				}
-			);
-		} catch (error) {
-			console.error("Error loading Patient page:", error);
-		}
 	};
 
 	const resetModalStates = () => {
