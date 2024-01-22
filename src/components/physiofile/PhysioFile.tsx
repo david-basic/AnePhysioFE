@@ -9,6 +9,9 @@ import FunctionalDiagnoses from "./functionalDiagnosis/FunctionalDiagnoses";
 import Assessment from "./assessment/Assessment";
 import MkbsAndOperations from "./mkbsAndOperations/MkbsAndOperations";
 import { FunctionalDiagnosisVM } from "../../models/physiofile/functionalDiagnosis/FunctionalDiagnosisVM";
+import PhysioGoals from "./physioGoals/PhysioGoals";
+import PhysioPlans from "./physioPlans/PhysioPlans";
+import PhysioNotes from "./notes/PhysioNotes";
 
 type PhysioFileProps = {
 	physioFile: PhysioFileVM | undefined;
@@ -83,6 +86,32 @@ const PhysioFile: FC<PhysioFileProps> = ({
 										operations={
 											physioFile.patient.operations
 										}
+									/>
+								</Segment>
+							</Segment>
+							<Segment id='physiotherapyGoals'>
+								<SegmentTitle label='Cilj fizioterapije:' />
+								<Segment isContent>
+									<PhysioGoals
+										goalsList={physioFile.fullGoalsList}
+										patientGoals={physioFile.patientGoals}
+									/>
+								</Segment>
+							</Segment>
+							<Segment id='physiotherapyPlans'>
+								<SegmentTitle label='Plan fizioterapije:' />
+								<Segment isContent>
+									<PhysioPlans
+										plansList={physioFile.fullPlansList}
+										patientPlans={physioFile.patientPlans}
+									/>
+								</Segment>
+							</Segment>
+							<Segment id='physioNotes'>
+								<SegmentTitle label='Zabilješke:' />
+								<Segment isContent>
+									<PhysioNotes
+										notes={physioFile.notes}
 									/>
 								</Segment>
 							</Segment>

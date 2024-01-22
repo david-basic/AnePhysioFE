@@ -1,9 +1,9 @@
-import { ChangeEvent, useState, type FC } from "react";
+import { type FocusEvent, type FC, useState, ChangeEvent } from "react";
 import { type AssessmentVM } from "../../../models/physiofile/assessment/AssessmentVM";
 import localStyles from "./Assessment.module.css";
 import TextArea from "antd/es/input/TextArea";
-import { useDispatch } from "react-redux";
 import { physioFileActions } from "../../../store/physio-file-slice";
+import { useAppDispatch } from "../../../hooks/use_app_dispatch";
 
 type AssessmentProps = {
 	patientAssessment: AssessmentVM;
@@ -12,15 +12,17 @@ type AssessmentProps = {
 const Assessment: FC<AssessmentProps> = ({
 	patientAssessment,
 }: AssessmentProps) => {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const [assesmentNotes, setAssesmentNotes] = useState(
 		patientAssessment.notes
 	);
 
-	const handleAssessmentNotesChange = (
-		event: ChangeEvent<HTMLTextAreaElement>
-	) => {
+	const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
 		setAssesmentNotes(event.target.value);
+	};
+
+	const handleFocusLost = (event: FocusEvent<HTMLTextAreaElement>) => {
+		dispatch(physioFileActions.setAssessmentNotes(event.target.value));
 		dispatch(physioFileActions.setPhysioFileDataSaved(false));
 	};
 
@@ -29,7 +31,8 @@ const Assessment: FC<AssessmentProps> = ({
 			id='assessmentNotes'
 			value={assesmentNotes}
 			autoSize={{ minRows: 4 }}
-			onChange={handleAssessmentNotesChange}
+			onChange={handleChange}
+			onBlur={handleFocusLost}
 			placeholder='...'
 			style={{ maxWidth: "930px" }}
 			className={localStyles.textArea}
