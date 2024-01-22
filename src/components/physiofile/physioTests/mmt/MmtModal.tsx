@@ -67,6 +67,7 @@ type TableColumnDefinitionType = {
 	dateTime: MmtDateTimeType;
 	gradeAndDescription: GradeAndDescription;
 	note: string;
+	index: number;
 };
 
 const MmtModal: FC<MmtModalProps> = ({
@@ -89,7 +90,7 @@ const MmtModal: FC<MmtModalProps> = ({
 	const [chosenMmtGrade, setChosenMmtGrade] = useState<number | undefined>(
 		undefined
 	);
-	const [clickedMmt, setClickedMmt] = useState<number>();
+	const [clickedIndex, setClickedIndex] = useState<number>();
 	const [datePickerValue, setDatePickerValue] = useState<Dayjs | null>(null);
 	const [chosenDate, setChosenDate] = useState<MmtDateTimeType>({
 		date: "",
@@ -156,7 +157,7 @@ const MmtModal: FC<MmtModalProps> = ({
 		{
 			key: "note",
 			title: "Zabilješka",
-			width: 150,
+			width: 145,
 			dataIndex: "note",
 			render: (_, { note }) => <span>{note}</span>,
 		},
@@ -205,6 +206,9 @@ const MmtModal: FC<MmtModalProps> = ({
 								description: pm.description,
 							},
 							note: pm.note,
+							index: mmtList.findIndex(
+								(m) => m.grade === pm.grade
+							),
 						});
 
 						return newState;
@@ -221,9 +225,6 @@ const MmtModal: FC<MmtModalProps> = ({
 						if (
 							physioFileResponse.status !== HttpStatusCode.Created
 						) {
-							message.error(
-								"Nije moguće kreirati novi Physio test!"
-							);
 							console.error(
 								"There was a error creating physio test: ",
 								physioFileResponse
@@ -244,7 +245,13 @@ const MmtModal: FC<MmtModalProps> = ({
 		return () => {
 			setDataSavedToTable([]);
 		};
-	}, [dispatch, fetchWithTokenRefresh, physioFile.id, physioFile.physioTest]);
+	}, [
+		dispatch,
+		fetchWithTokenRefresh,
+		mmtList,
+		physioFile.id,
+		physioFile.physioTest,
+	]);
 
 	const addRecordToTable = (
 		mmtGrade: number,
@@ -263,6 +270,7 @@ const MmtModal: FC<MmtModalProps> = ({
 					description: foundMmt!.description,
 				},
 				note: mmtNotes,
+				index: mmtList.findIndex((m) => m.grade === foundMmt!.grade),
 			});
 
 			return newState;
@@ -397,7 +405,7 @@ const MmtModal: FC<MmtModalProps> = ({
 	) => {
 		const clickedGrade = parseInt(event.currentTarget.ariaValueText!);
 
-		setClickedMmt((prevClickedMmt) => {
+		setClickedIndex((prevClickedMmt) => {
 			let newClickedMmt = prevClickedMmt;
 
 			if (newClickedMmt === index) {
@@ -480,6 +488,7 @@ const MmtModal: FC<MmtModalProps> = ({
 			dateTime: tableRecord.dateTime,
 			gradeAndDescription: tableRecord.gradeAndDescription,
 			note: tableRecord.note,
+			index: tableRecord.index,
 		});
 
 		setChosenDate({
@@ -490,7 +499,7 @@ const MmtModal: FC<MmtModalProps> = ({
 			dayjs(`${tableRecord.dateTime.date} ${tableRecord.dateTime.time}`)
 		);
 
-		setClickedMmt(tableRecord.gradeAndDescription.grade);
+		setClickedIndex(tableRecord.index);
 		setChosenMmtGrade(tableRecord.gradeAndDescription.grade);
 		setMmtNotes(tableRecord.note);
 	};
@@ -533,7 +542,7 @@ const MmtModal: FC<MmtModalProps> = ({
 
 	const resetModalStates = () => {
 		setChosenDate({ date: "", time: "" });
-		setClickedMmt(undefined);
+		setClickedIndex(undefined);
 		setChosenMmtGrade(undefined);
 		setMmtNotes("");
 		setDatePickerValue(null);
@@ -596,7 +605,7 @@ const MmtModal: FC<MmtModalProps> = ({
 												action
 												aria-valuetext={mmt.grade.toString()}
 												className={
-													clickedMmt === index
+													clickedIndex === index
 														? `${modalStyles.clickedRass}`
 														: `${modalStyles.rassLinks}`
 												}
@@ -658,7 +667,7 @@ const MmtModal: FC<MmtModalProps> = ({
 									disabled={
 										isNullOrEmpty(chosenDate.date) ||
 										isNullOrEmpty(mmtNotes) ||
-										clickedMmt === undefined
+										chosenMmtGrade === undefined
 									}
 									onClick={handleSaveChoice}>
 									Spremi odabir

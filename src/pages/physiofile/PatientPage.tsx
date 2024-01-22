@@ -28,6 +28,7 @@ import ConfirmSavePhysioFileModal from "../../components/modals/ConfirmSavePhysi
 import RassModal from "../../components/physiofile/assessment/RassModal";
 import VasModal from "../../components/physiofile/physioTests/vas/VasModal";
 import MmtModal from "../../components/physiofile/physioTests/mmt/MmtModal";
+import GcsModal from "../../components/physiofile/physioTests/gcs/GcsModal";
 
 const PatientPage: FC = () => {
 	const patientId = getIdFromUrl(useLocation());
@@ -58,7 +59,9 @@ const PatientPage: FC = () => {
 	const dataSaved = useAppSelector(
 		(state) => state.physioFileReducer.physioFileDataSaved
 	);
-	const fdList = useAppSelector(state => state.physioFileReducer.functionalDiagnosisList);
+	const fdList = useAppSelector(
+		(state) => state.physioFileReducer.functionalDiagnosisList
+	);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -184,7 +187,30 @@ const PatientPage: FC = () => {
 								}
 								rassList={physioFile.fullRassList}
 							/>
-							<TestsButton label='GCS' />
+							<TestsButton
+								label='GCS'
+								onClick={() =>
+									dispatch(
+										modalsShowActions.setShowGcsModal(true)
+									)
+								}
+							/>
+							<GcsModal
+								showModal={showGcsModal}
+								physioFile={physioFile}
+								physioTest={
+									physioFile.physioTest
+										? physioFile.physioTest
+										: null
+								}
+								gcsEyeResponses={
+									physioFile.allEyeOpeningResponses
+								}
+								gcsMotorResponses={physioFile.allMotorResponses}
+								gcsVerbalResponses={
+									physioFile.allVerbalResponses
+								}
+							/>
 							<TestsButton
 								label='VAS'
 								onClick={() =>

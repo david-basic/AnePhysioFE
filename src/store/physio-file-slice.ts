@@ -145,6 +145,12 @@ const physioFileSlice = createSlice({
 		resetPhysioFileToInitValues: (state) => {
 			state.physioFile = fileInitState;
 			state.physioFileDataSaved = true;
+			state.rassModalDataSaved = true;
+			state.gcsModalDataSaved = true;
+			state.vasModalDataSaved = true;
+			state.mmtModalDataSaved = true;
+			state.cpaxModalDataSaved = true;
+			state.fdModalDataSaved = true;
 		},
 	},
 });

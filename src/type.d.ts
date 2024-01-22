@@ -1,5 +1,6 @@
 import { DepartmentVM } from "./models/department/DepartmentVM";
 import { PhysioFileVM } from "./models/physiofile/PhysioFileVM";
+import { FunctionalDiagnosisVM } from "./models/physiofile/functionalDiagnosis/FunctionalDiagnosisVM";
 
 /**
  * Type used for configuring the request towards a API
@@ -137,6 +138,13 @@ type PhysioFileInitStateType = {
 	mmtModalDataSaved: boolean;
 	cpaxModalDataSaved: boolean;
 	fdModalDataSaved: boolean;
+};
+/**
+ * Type to persist data between refreshes
+ */
+type PhysioFilePersistanceInitStateType = {
+	physioFile: PhysioFileVM;
+	functionalDiagnosisList: FunctionalDiagnosisVM[];
 };
 /**
  * Type used for updating a PatientRass entity in the array

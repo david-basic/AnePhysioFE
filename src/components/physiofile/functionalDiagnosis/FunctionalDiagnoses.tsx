@@ -32,7 +32,7 @@ const FunctionalDiagnoses: FC<FunctionalDiagnosesProps> = ({
 		patientFunctionalDiagnoses || []
 	);
 
-	const onCheckHandler = (checkedValues: CheckboxValueType[]) => {
+	const onCheckedChangeHandler = (checkedValues: CheckboxValueType[]) => {
 		const newPatientFunctionalDiagnosesState: PatientFunctionalDiagnosisVM[] =
 			[];
 		const checkedSet = new Set(checkedValues);
@@ -67,7 +67,7 @@ const FunctionalDiagnoses: FC<FunctionalDiagnosesProps> = ({
 
 	return (
 		<Checkbox.Group
-			onChange={onCheckHandler}
+			onChange={onCheckedChangeHandler}
 			defaultValue={defaultSelectedValues}>
 			<Row>
 				{allPFD.map((patientFuncDiag) => (

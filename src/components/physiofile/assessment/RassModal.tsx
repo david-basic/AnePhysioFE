@@ -161,9 +161,6 @@ const RassModal: FC<RassModalProps> = ({
 					},
 					(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 						if (physioFileResponse.status !== HttpStatusCode.Ok) {
-							message.error(
-								"Nije moguće kreirati novu procjenu!"
-							);
 							console.error(
 								"There was a error creating assessment: ",
 								physioFileResponse

@@ -234,9 +234,6 @@ const VasModal: FC<VasModalProps> = ({
 						if (
 							physioFileResponse.status !== HttpStatusCode.Created
 						) {
-							message.error(
-								"Nije moguće kreirati novi Physio test!"
-							);
 							console.error(
 								"There was a error creating physio test: ",
 								physioFileResponse

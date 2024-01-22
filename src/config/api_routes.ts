@@ -27,12 +27,18 @@ const api_routes = {
 	ROUTE_ASSESSMENT_UPDATE_PATIENT_RASS_BY_ID: `${apiRoutesParams.API}/assessment-management/assessments/update-patient-rass`,
 
 	ROUTE_PHYSIO_TEST_CREATE_NEW_BY_PHYSIO_FILE_ID: `${apiRoutesParams.API}/physiotest-management/physiotests/new-physiotest`,
+
 	ROUTE_PHYSIO_TEST_ADD_NEW_VAS: `${apiRoutesParams.API}/physiotest-management/physiotests/new-vas`,
 	ROUTE_PHYSIO_TEST_UPDATE_VAS_BY_ID: `${apiRoutesParams.API}/physiotest-management/physiotests/update-vas`,
 	ROUTE_PHYSIO_TEST_DELETE_VAS: `${apiRoutesParams.API}/physiotest-management/physiotests/delete-vas`,
+
 	ROUTE_PHYSIO_TEST_ADD_NEW_MMT: `${apiRoutesParams.API}/physiotest-management/physiotests/new-mmt`,
 	ROUTE_PHYSIO_TEST_UPDATE_MMT_BY_ID: `${apiRoutesParams.API}/physiotest-management/physiotests/update-mmt`,
 	ROUTE_PHYSIO_TEST_DELETE_MMT: `${apiRoutesParams.API}/physiotest-management/physiotests/delete-mmt`,
+
+	ROUTE_PHYSIO_TEST_ADD_NEW_GCS: `${apiRoutesParams.API}/physiotest-management/physiotests/new-gcs`,
+	ROUTE_PHYSIO_TEST_UPDATE_GCS_BY_ID: `${apiRoutesParams.API}/physiotest-management/physiotests/update-gcs`,
+	ROUTE_PHYSIO_TEST_DELETE_GCS: `${apiRoutesParams.API}/physiotest-management/physiotests/delete-gcs`,
 };
 
 export default api_routes;
