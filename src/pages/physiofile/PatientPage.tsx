@@ -29,6 +29,7 @@ import RassModal from "../../components/physiofile/assessment/RassModal";
 import VasModal from "../../components/physiofile/physioTests/vas/VasModal";
 import MmtModal from "../../components/physiofile/physioTests/mmt/MmtModal";
 import GcsModal from "../../components/physiofile/physioTests/gcs/GcsModal";
+import CpaxModal from "../../components/physiofile/physioTests/cpax/CpaxModal";
 
 const PatientPage: FC = () => {
 	const patientId = getIdFromUrl(useLocation());
@@ -256,7 +257,29 @@ const PatientPage: FC = () => {
 								}
 								mmtList={physioFile.mmtList}
 							/>
-							<TestsButton label='CPAx' />
+							<TestsButton
+								label='CPAx'
+								onClick={() =>
+									dispatch(
+										modalsShowActions.setShowCpaxModal(true)
+									)
+								}
+							/>
+							<CpaxModal
+								showModal={showCpaxModal}
+								physioFile={physioFile}
+								physioTest={
+									physioFile.physioTest
+										? physioFile.physioTest
+										: null
+								}
+								patientCpaxTests={
+									physioFile.physioTest
+										? physioFile.physioTest.cpax
+										: null
+								}
+								aopList={physioFile.allAspectsOfPhysicality}
+							/>
 							<div
 								style={{ height: "auto" }}
 								className={styles.testButtons}>
@@ -305,6 +328,7 @@ const PatientPage: FC = () => {
 										showLeaveModal={showLeaveModal}
 									/>
 								</div>
+								C
 							</div>
 						</div>
 					</Flex>

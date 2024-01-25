@@ -225,7 +225,7 @@ const GcsModal: FC<GcsModalProps> = ({
 								)
 							);
 							dispatch(
-								physioFileActions.setMmtModalDataSaved(false)
+								physioFileActions.setGcsModalDataSaved(false)
 							);
 						}
 					}

@@ -39,6 +39,10 @@ const api_routes = {
 	ROUTE_PHYSIO_TEST_ADD_NEW_GCS: `${apiRoutesParams.API}/physiotest-management/physiotests/new-gcs`,
 	ROUTE_PHYSIO_TEST_UPDATE_GCS_BY_ID: `${apiRoutesParams.API}/physiotest-management/physiotests/update-gcs`,
 	ROUTE_PHYSIO_TEST_DELETE_GCS: `${apiRoutesParams.API}/physiotest-management/physiotests/delete-gcs`,
+
+	ROUTE_PHYSIO_TEST_ADD_NEW_CPAX: `${apiRoutesParams.API}/physiotest-management/physiotests/new-cpax`,
+	ROUTE_PHYSIO_TEST_UPDATE_CPAX_BY_ID: `${apiRoutesParams.API}/physiotest-management/physiotests/update-cpax`,
+	ROUTE_PHYSIO_TEST_DELETE_CPAX: `${apiRoutesParams.API}/physiotest-management/physiotests/delete-cpax`,
 };
 
 export default api_routes;
