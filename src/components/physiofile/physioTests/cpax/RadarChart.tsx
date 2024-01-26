@@ -84,8 +84,8 @@ const RadarChart: FC<RadarChartProps> = ({
 				},
 				grid: {
 					color: (context) => {
-						const value = context.tick.value; // The tick value (0 to 5)
-						return levelsColors[value] || "rgba(0, 0, 0, 0.1)"; // Use levelsColors or a default color for the backdrop
+						const value = context.tick.value;
+						return levelsColors[value] || "rgba(0, 0, 0, 0.1)";
 					},
 				},
 				angleLines: {
