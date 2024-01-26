@@ -328,7 +328,6 @@ const PatientPage: FC = () => {
 										showLeaveModal={showLeaveModal}
 									/>
 								</div>
-								C
 							</div>
 						</div>
 					</Flex>

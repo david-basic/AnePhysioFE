@@ -51,7 +51,7 @@ import { CreateCpaxRequestDto } from "../../../../dto/PhysioFile/PhysioTest/Cpax
 import { UpdateCpaxRequestDto } from "../../../../dto/PhysioFile/PhysioTest/Cpax/UpdateCpaxRequestDto";
 import { DeleteCpaxRequestDto } from "../../../../dto/PhysioFile/PhysioTest/Cpax/DeleteCpaxRequestDto";
 
-type CpaxDateTimeType = {
+export type CpaxDateTimeType = {
 	date: string;
 	time: string;
 };
@@ -165,6 +165,8 @@ const CpaxModal: FC<CpaxModalProps> = ({
 		(state) => state.physioFileReducer.cpaxModalDataSaved
 	);
 	const [cpaxToDisplay, setCpaxToDisplay] = useState<CpaxTableType>();
+	const [cpaxDateTimeToDisplay, setCpaxDateTimeToDisplay] =
+		useState<CpaxDateTimeType>();
 	const [chosenRespiratoryAopAndIndex, setChosenRespiratoryAopAndIndex] =
 		useState<AopAndIndex | undefined>(undefined);
 	const [chosenCoughAopAndIndex, setChosenCoughAopAndIndex] = useState<
@@ -1073,8 +1075,8 @@ const CpaxModal: FC<CpaxModalProps> = ({
 		event: React.MouseEvent<HTMLElement, MouseEvent>,
 		tableRecord: TableColumnDefinitionType
 	) => {
-		//TODO handle
 		setCpaxToDisplay(tableRecord.cpax);
+		setCpaxDateTimeToDisplay(tableRecord.dateTime);
 	};
 
 	const handleEditChoice = (
@@ -1199,7 +1201,6 @@ const CpaxModal: FC<CpaxModalProps> = ({
 	};
 
 	const resetModalStates = () => {
-		//TODO handle
 		setClickedRespiratoryAOPindex(undefined);
 		setClickedCoughAOPindex(undefined);
 		setClickedMovingWithinBedAOPindex(undefined);
@@ -1211,6 +1212,7 @@ const CpaxModal: FC<CpaxModalProps> = ({
 		setClickedSteppingAOPindex(undefined);
 		setClickedGripStrengthAOPindex(undefined);
 		setCpaxToDisplay(undefined);
+		setCpaxDateTimeToDisplay(undefined);
 		setChosenRespiratoryAopAndIndex(undefined);
 		setChosenCoughAopAndIndex(undefined);
 		setChosenMovingWithinBedAopAndIndex(undefined);
@@ -1760,7 +1762,15 @@ const CpaxModal: FC<CpaxModalProps> = ({
 									</div>
 								)}
 								{cpaxToDisplay && (
-									<RadarChart cpax={cpaxToDisplay} />
+									<div
+										className={
+											modalStyles.cpaxChartContainer
+										}>
+										<RadarChart
+											cpax={cpaxToDisplay}
+											dateTime={cpaxDateTimeToDisplay!}
+										/>
+									</div>
 								)}
 							</Segment>
 						</Col>
