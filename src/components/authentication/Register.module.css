@@ -1,0 +1,50 @@
+h1 {
+	font-size: 2.5rem;
+}
+
+.lighter-text {
+	color: gray;
+}
+
+.error-text{
+	color: lightcoral;
+}
+
+.success-text{
+	color: green;
+}
+
+.link-text {
+	color: black;
+	font-weight: bold;
+}
+.link-text:hover {
+	color: darkgray;
+}
+
+.content {
+	width: 450px;
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.centered-element {
+	margin: 0;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.btn-rounded-dark {
+	margin-top: 12px;
+	width: 350px;
+	background-color: black;
+	color: white;
+	border-color: black;
+}
+
+.register-form {
+	max-width: 350px;
+}

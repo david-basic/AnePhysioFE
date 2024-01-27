@@ -1,0 +1,55 @@
+:root {
+    --text-color: #045fbd;
+    --text-font-size: 20px;
+    --text-font-weight: 500;
+    --text-line-height: 26px;
+    --title-font-weight: 700;
+    --segment-left-margin: 20px;
+    --segment-content-left-margin: calc(33px - var(--segment-left-margin));
+    --box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.segments {
+    margin-top: 20px;
+    margin-left: var(--segment-left-margin);
+}
+
+.segmentContent {
+    margin-top: 4px;
+    margin-left: var(--segment-content-left-margin);
+}
+
+.titles {
+    color: var(--text-color);
+    font-weight: var(--title-font-weight);
+    font-size: var(--text-font-size);
+    line-height: var(--text-line-height);
+}
+
+.texts {
+    color: var(--text-color);
+    font-size: var(--text-font-size);
+    font-weight: var(--text-font-weight);
+    line-height: var(--text-line-height);
+}
+
+.iconButtonsInText {
+    width: 16px;
+    height: 16px;
+    color: #0f86ff;
+}
+
+.textsAsLinks {
+    color: #0f86ff;
+    font-size: var(--text-font-size);
+    line-height: var(--text-line-height);
+}
+
+.textsAsLinks:hover {
+    cursor: pointer;
+    font-weight: var(--title-font-weight);
+}
+
+.boxShadow {
+    box-shadow: var(--box-shadow);
+}

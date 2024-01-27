@@ -1,0 +1,50 @@
+h1 {
+    font-size: 3rem;
+}
+
+.lighter-text {
+    color: gray;
+}
+
+.list {
+    list-style-type: none;
+}
+
+.content {
+    width: 450px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.centered-element {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.btn-rounded-light {
+    margin-top: 12px;
+    width: 350px;
+    background-color: white;
+    color: black;
+    border-color: black;
+}
+
+.btn-rounded-dark {
+    margin-top: 12px;
+    width: 350px;
+    background-color: black;
+    color: white;
+    border-color: black;
+}
+
+.btn-rounded-light:active,
+.btn-rounded-dark:active {
+    background-color: gray;
+    outline-color: black;
+    color: whitesmoke;
+}

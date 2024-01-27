@@ -1,0 +1,147 @@
+:root {
+    --text-color: #045fbd;
+    --background-color: #a6d6f0;
+    --box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
+    --font-family: "Nunito", sans-serif;
+    --text-font-size: 20px;
+    --text-font-weight: 500;
+    --text-line-height: 26px;
+    --title-font-weight: 700;
+}
+
+.modalsGeneral {
+    font-family: var(--font-family);
+}
+
+.modalsButtons {
+    font-family: var(--font-family);
+}
+
+.modalsWidth {
+    min-width: 1400px;
+}
+
+.modalsExitButton {
+    font-weight: var(--title-font-weight);
+    font-size: 26px;
+    line-height: 26px;
+}
+
+.modalsHeader {
+    height: fit-content;
+    width: 100%;
+    background-color: var(--text-color);
+    color: white;
+    box-shadow: var(--box-shadow);
+    border-radius: 8px;
+    font-weight: var(--title-font-weight);
+    font-size: var(--text-font-size);
+    font-family: var(--font-family);
+}
+
+.modalsTable {
+    width: 450px;
+    max-height: 440px;
+    box-shadow: var(--box-shadow);
+    font-family: var(--font-family);
+}
+
+.modalsTextArea {
+    background-color: #d1f2ff;
+    color: var(--text-color);
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.notFilledHighlight {
+    border-color: red;
+}
+
+.infoIcon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.infoIcon:hover {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    color: #3181d1;
+}
+
+.rassLinks {
+    color: var(--text-color);
+    font-size: var(--text-font-size);
+    line-height: var(--text-line-height);
+    font-family: var(--font-family);
+}
+
+.rassLinks:hover {
+    cursor: pointer;
+    font-weight: var(--title-font-weight);
+}
+
+.clickedRass {
+    color: var(--text-color);
+    font-size: var(--text-font-size);
+    line-height: var(--text-line-height);
+    font-weight: var(--title-font-weight);
+    font-family: var(--font-family);
+}
+
+.icon {
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+    color: #ffffff;
+}
+
+.tableSegment {
+    display: flex;
+    justify-content: center;
+}
+
+.fdTable {
+    width: 700px;
+    max-height: 440px;
+    box-shadow: var(--box-shadow);
+    font-family: var(--font-family);
+}
+
+.rassTable {
+    width: 700px;
+    max-height: 440px;
+    box-shadow: var(--box-shadow);
+    font-family: var(--font-family);
+}
+
+.vasTable {
+    width: 550px;
+    max-height: 440px;
+    box-shadow: var(--box-shadow);
+    font-family: var(--font-family);
+}
+
+.mmtTable {
+    width: 700px;
+    max-height: 440px;
+    box-shadow: var(--box-shadow);
+    font-family: var(--font-family);
+}
+
+.cpaxChartContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 300px; 
+    box-shadow: var(--box-shadow);
+    font-family: var(--font-family);
+    border-radius: 8px;
+    margin-right: 40px;
+    margin-top: 20px;
+    padding: 10px;
+    justify-content: center;
+    /* background-color: #80c1e4; */
+    background-color: whitesmoke;
+}

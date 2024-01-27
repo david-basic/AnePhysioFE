@@ -1,0 +1,13 @@
+.occupied-bed-text {
+    font-weight: bold;
+}
+
+.free-bed-text {
+    margin-top: 0%;
+    margin-bottom: 0%;
+    font-weight: lighter;
+}
+
+.remove-list-style {
+    list-style: none;
+}

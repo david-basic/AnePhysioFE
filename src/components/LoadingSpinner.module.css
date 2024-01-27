@@ -1,0 +1,7 @@
+.loadingSpinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: inherit;
+  font-family: "Nunito", sans-serif;
+}
