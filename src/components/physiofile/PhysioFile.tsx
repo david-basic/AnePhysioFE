@@ -93,6 +93,7 @@ const PhysioFile: FC<PhysioFileProps> = ({
 								<SegmentTitle label='Cilj fizioterapije:' />
 								<Segment isContent>
 									<PhysioGoals
+										physioFile={physioFile}
 										goalsList={physioFile.fullGoalsList}
 										patientGoals={physioFile.patientGoals}
 									/>
@@ -102,6 +103,7 @@ const PhysioFile: FC<PhysioFileProps> = ({
 								<SegmentTitle label='Plan fizioterapije:' />
 								<Segment isContent>
 									<PhysioPlans
+										physioFile={physioFile}
 										plansList={physioFile.fullPlansList}
 										patientPlans={physioFile.patientPlans}
 									/>
@@ -110,9 +112,7 @@ const PhysioFile: FC<PhysioFileProps> = ({
 							<Segment id='physioNotes'>
 								<SegmentTitle label='Zabilješke:' />
 								<Segment isContent>
-									<PhysioNotes
-										notes={physioFile.notes}
-									/>
+									<PhysioNotes notes={physioFile.notes} />
 								</Segment>
 							</Segment>
 						</div>

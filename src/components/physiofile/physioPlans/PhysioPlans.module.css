@@ -1,0 +1,27 @@
+:root {
+    --checkbox-width: 130px;
+    --checkbox-margin-right: 8px;
+    --checkbox-padding-right: 8px;
+    --text-area-width: 930px;
+}
+
+.checkboxGroup {
+    width: 100%;
+}
+
+.col {
+    width: inherit;
+}
+
+.row {
+    width: inherit;
+}
+
+.checkbox {
+    width: var(--checkbox-width);
+    margin-right: var(--checkbox-margin-right);
+}
+
+.textArea {
+    width: calc(var(--text-area-width) - var(--checkbox-width) - var(--checkbox-margin-right) - var(--checkbox-padding-right));
+}

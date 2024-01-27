@@ -100,19 +100,13 @@ const physioFileSlice = createSlice({
 		setFuncDiagModalDataSaved: (state, action: PayloadAction<boolean>) => {
 			state.fdModalDataSaved = action.payload;
 		},
-		setFunctionalDiagnosisList: (
-			state,
-			action: PayloadAction<FunctionalDiagnosisVM[]>
-		) => {
+		setFunctionalDiagnosisList: (state, action: PayloadAction<FunctionalDiagnosisVM[]>) => {
 			state.functionalDiagnosisList = action.payload;
 		},
 		setPatient: (state, action: PayloadAction<PatientVM>) => {
 			state.physioFile.patient = action.payload;
 		},
-		setPatientFunctionalDiagnoses: (
-			state,
-			action: PayloadAction<PatientFunctionalDiagnosisVM[]>
-		) => {
+		setPatientFunctionalDiagnoses: (state, action: PayloadAction<PatientFunctionalDiagnosisVM[]>) => {
 			state.physioFile.patientFunctionalDiagnoses = action.payload;
 		},
 		setAssessment: (state, action: PayloadAction<AssessmentVM>) => {
@@ -127,8 +121,20 @@ const physioFileSlice = createSlice({
 		setPatientGoals: (state, action: PayloadAction<PatientGoalVM[]>) => {
 			state.physioFile.patientGoals = action.payload;
 		},
+		setIntubatedPatientGoalDescription: (state, action: PayloadAction<string>) => {
+			state.physioFile.patientGoals[0].description = action.payload;
+		},
+		setExtubatedPatientGoalDescription: (state, action: PayloadAction<string>) => {
+			state.physioFile.patientGoals[1].description = action.payload;
+		},
 		setPatientPlans: (state, action: PayloadAction<PatientPlanVM[]>) => {
 			state.physioFile.patientPlans = action.payload;
+		},
+		setIntubatedPatientPlanDescription: (state, action: PayloadAction<string>) => {
+			state.physioFile.patientPlans[0].description = action.payload;
+		},
+		setExtubatedPatientPlanDescription: (state, action: PayloadAction<string>) => {
+			state.physioFile.patientPlans[1].description = action.payload;
 		},
 		setNotes: (state, action: PayloadAction<string>) => {
 			state.physioFile.notes = action.payload;
