@@ -1,9 +1,11 @@
 import { type PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { type AuthInitState } from "../type";
+import { type UserVM } from "../models/UserVm";
 
 const authInitState: AuthInitState = {
 	isLoggedIn: false,
 	username: "",
+	user: {id: "", firstName: "", lastName: ""},
 	accessToken: "",
 	refreshToken: "",
 	tokenType: "Bearer",
@@ -20,6 +22,9 @@ const authSlice = createSlice({
 		setUsername: (state, action: PayloadAction<string>) => {
 			state.username = action.payload;
 		},
+		setUser: (state, action: PayloadAction<UserVM>) => {
+			state.user = action.payload;
+		},
 		setAccessToken: (state, action: PayloadAction<string>) => {
 			state.accessToken = action.payload;
 		},
@@ -35,6 +40,7 @@ const authSlice = createSlice({
 		resetAllStateToDefaults: (state) => {
 			state.isLoggedIn = authInitState.isLoggedIn;
 			state.username = authInitState.username;
+			state.user = authInitState.user;
 			state.accessToken = authInitState.accessToken;
 			state.refreshToken = authInitState.refreshToken;
 			state.tokenType = authInitState.tokenType;
