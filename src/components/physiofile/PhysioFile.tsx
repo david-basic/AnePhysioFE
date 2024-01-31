@@ -1,17 +1,19 @@
 import { type FC } from "react";
 import LoadingSpinner from "../LoadingSpinner";
 import { type PhysioFileVM } from "../../models/physiofile/PhysioFileVM";
-import { Flex } from "antd";
+import { Col, Flex, Row } from "antd";
 import styles from "./PhysioFile.module.css";
 import Segment from "./segments/Segment";
 import SegmentTitle from "./segments/SegmentTitle";
 import FunctionalDiagnoses from "./functionalDiagnosis/FunctionalDiagnoses";
 import Assessment from "./assessment/Assessment";
 import MkbsAndOperations from "./mkbsAndOperations/MkbsAndOperations";
-import { FunctionalDiagnosisVM } from "../../models/physiofile/functionalDiagnosis/FunctionalDiagnosisVM";
+import { type FunctionalDiagnosisVM } from "../../models/physiofile/functionalDiagnosis/FunctionalDiagnosisVM";
 import PhysioGoals from "./physioGoals/PhysioGoals";
 import PhysioPlans from "./physioPlans/PhysioPlans";
 import PhysioNotes from "./notes/PhysioNotes";
+import PhysioFinalAssessmentAndConclussion from "./conclussion/PhysioFinalAssessmentAndConclussion";
+import Procedures from "./procedures/Procedures";
 
 type PhysioFileProps = {
 	physioFile: PhysioFileVM | undefined;
@@ -114,6 +116,84 @@ const PhysioFile: FC<PhysioFileProps> = ({
 								<Segment isContent>
 									<PhysioNotes notes={physioFile.notes} />
 								</Segment>
+							</Segment>
+							<Segment id='finalAssessmentAndConclussion'>
+								<SegmentTitle label='Završna procjena i zaključak:' />
+								<Segment isContent>
+									<PhysioFinalAssessmentAndConclussion
+										conclussion={physioFile.conclussion}
+									/>
+								</Segment>
+							</Segment>
+							<Segment id='proceduresDone'>
+								<SegmentTitle label='Procedure:' />
+								<Segment isContent>
+									<Procedures
+										physioFile={physioFile}
+										procedureList={
+											physioFile.fullProcedureList
+												? physioFile.fullProcedureList
+												: undefined
+										}
+										patientProcedureList={
+											physioFile.patientProcedures
+												? physioFile.patientProcedures
+												: undefined
+										}
+										physioTherapistList={
+											physioFile.allPhysiotherapists
+												? physioFile.allPhysiotherapists
+												: undefined
+										}
+									/>
+								</Segment>
+							</Segment>
+							<Segment
+								id='openCloseSegment'
+								style={{ marginBottom: "30px" }}>
+								<Row>
+									<Col span={12}>
+										<SegmentTitle label='Karton otvorio/la:' />
+										<Segment
+											isContent
+											className={styles.texts}
+											style={{ fontWeight: "normal" }}>
+											<span>
+												{
+													physioFile.fileOpenedBy
+														.firstName
+												}{" "}
+												{
+													physioFile.fileOpenedBy
+														.lastName
+												}
+											</span>
+										</Segment>
+									</Col>
+									<Col span={12}>
+										<SegmentTitle label='Karton zatvorio/la:' />
+										<Segment
+											isContent
+											className={styles.texts}
+											style={{ fontWeight: "normal" }}>
+											{physioFile.fileClosedBy && (
+												<span>
+													{
+														physioFile.fileClosedBy
+															.firstName
+													}{" "}
+													{
+														physioFile.fileClosedBy
+															.lastName
+													}
+												</span>
+											)}
+											{!physioFile.fileClosedBy && (
+												<span>...</span>
+											)}
+										</Segment>
+									</Col>
+								</Row>
 							</Segment>
 						</div>
 					</Flex>

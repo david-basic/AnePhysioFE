@@ -1,0 +1,32 @@
+:root {
+    --box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
+    --font-family: "Nunito", sans-serif;
+}
+
+.row {
+    width: inherit;
+}
+
+.notFilledHighlight {
+    border-color: red;
+}
+
+.datePicker {
+    margin-right: 8px;
+}
+
+.select {
+    width: 242px;
+}
+
+.input {
+    width: 300px;
+    margin-right: 8px;
+}
+
+.table {
+    max-width: 930px;
+    max-height: 440px;
+    box-shadow: var(--box-shadow);
+    font-family: var(--font-family);
+}
