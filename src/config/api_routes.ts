@@ -43,6 +43,13 @@ const api_routes = {
 	ROUTE_PHYSIO_TEST_ADD_NEW_CPAX: `${apiRoutesParams.API}/physiotest-management/physiotests/new-cpax`,
 	ROUTE_PHYSIO_TEST_UPDATE_CPAX_BY_ID: `${apiRoutesParams.API}/physiotest-management/physiotests/update-cpax`,
 	ROUTE_PHYSIO_TEST_DELETE_CPAX: `${apiRoutesParams.API}/physiotest-management/physiotests/delete-cpax`,
+
+	ROUTE_PROCEDURE_ADD_NEW_PATIENT_PROCEDURE: `${apiRoutesParams.API}/procedure-management/procedure/new-patient-procedure`,
+	ROUTE_PROCEDURE_UPDATE_PATIENT_PROCEDURE_BY_ID: `${apiRoutesParams.API}/procedure-management/procedure/update-patient-procedure`,
+	ROUTE_PROCEDURE_DELETE_PATIENT_PROCEDURE: `${apiRoutesParams.API}/procedure-management/procedure/delete-patient-procedure`,
+	ROUTE_PROCEDURE_ADD_NEW_PROCEDURE: `${apiRoutesParams.API}/procedure-management/procedure/new-procedure`,
+	ROUTE_PROCEDURE_UPDATE_PROCEDURE_BY_ID: `${apiRoutesParams.API}/procedure-management/procedure/update-procedure`,
+	ROUTE_PROCEDURE_DELETE_PROCEDURE: `${apiRoutesParams.API}/procedure-management/procedure/delete-procedure`,
 };
 
 export default api_routes;

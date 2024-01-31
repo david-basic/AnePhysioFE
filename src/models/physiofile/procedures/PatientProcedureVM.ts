@@ -1,6 +1,7 @@
-import { ProcedureVM } from "./ProcedureVM";
+import { type UserVM } from "../../UserVm";
+import { type ProcedureVM } from "./ProcedureVM";
 
 export interface PatientProcedureVM extends ProcedureVM {
-	date: string;
-	workingTherapists: string;
+	dateTime: string;
+	workingTherapists: UserVM[];
 }

@@ -1,3 +1,4 @@
+import { UserVM } from "./models/UserVm";
 import { DepartmentVM } from "./models/department/DepartmentVM";
 import { PhysioFileVM } from "./models/physiofile/PhysioFileVM";
 import { FunctionalDiagnosisVM } from "./models/physiofile/functionalDiagnosis/FunctionalDiagnosisVM";
@@ -20,6 +21,7 @@ type RequestConfig = {
  * Type used to define the initial state of authentication in the application
  * @param isLoggedIn Denotes if the user is logged in or not. False by default
  * @param username Username of the logged in user. Empty string by default
+ * @param user User data of the logged in user.
  * @param accessToken Access token used for JWT authentication
  * @param refreshToken Refresh token used for refreshing access token in JWT authentication
  * @param tokenType Token type used in JWT authentication. "Bearer" by default
@@ -28,6 +30,7 @@ type RequestConfig = {
 type AuthInitState = {
 	isLoggedIn: boolean;
 	username: string;
+	user: UserVM;
 	accessToken: string;
 	refreshToken: string;
 	tokenType: string;
@@ -48,12 +51,14 @@ interface LoginRequestData {
  * @param accessToken Access token used for JWT authentication
  * @param refreshToken Refresh token used for refreshing accessToken in JWT authentication
  * @param tokenType Token type used in JWT authentication
- *
+ *@param user Currently logged in user data
+ * 
  */
 interface LoginResponseData {
 	accessToken: string;
 	refreshToken: string;
 	tokenType: string;
+	user: UserVM;
 }
 /**
  * Interface used to define data object needed for register request on the API
@@ -138,6 +143,7 @@ type PhysioFileInitStateType = {
 	mmtModalDataSaved: boolean;
 	cpaxModalDataSaved: boolean;
 	fdModalDataSaved: boolean;
+	procedureModalDataSaved: boolean;
 };
 /**
  * Type to persist data between refreshes
