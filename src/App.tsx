@@ -1,23 +1,23 @@
 import "./App.css";
 import client_routes from "./config/client_routes";
-import WelcomePage from "./pages/Auth/WelcomePage";
+import WelcomePage from "./pages/authentication/WelcomePage";
 import { useRoutes } from "react-router-dom";
-import LoginPage from "./pages/Auth/LoginPage";
-import RegisterPage from "./pages/Auth/RegisterPage";
-import Protected from "./components/Auth/Protected";
+import LoginPage from "./pages/authentication/LoginPage";
+import RegisterPage from "./pages/authentication/RegisterPage";
+import Protected from "./components/authentication/Protected";
 import HomePage from "./pages/HomePage";
-import MainLayout from "./components/Layout/MainLayout";
+import MainLayout from "./components/layout/MainLayout";
 import { type FC } from "react";
 import { useAppSelector } from "./hooks/use_app_selector";
 import JilRijekaHomePage from "./pages/departments/JilRijekaHomePage";
 import CrcHomePage from "./pages/departments/CrcHomePage";
 import JilSusakHomePage from "./pages/departments/JilSusakHomePage";
 import KardioJilHomePage from "./pages/departments/KardioJilHomePage";
+import PatientPage from "./pages/physiofile/PatientPage";
+import PhysioFileLayout from "./components/layout/PhysioFileLayout";
 
 const App: FC = () => {
-
 	const isLoggedIn = useAppSelector((state) => state.authReducer.isLoggedIn);
-	sessionStorage.setItem("tokenRefreshFlag", "false");
 
 	const authWelcomeRoute = {
 		path: client_routes.ROUTE_AUTH,
@@ -76,6 +76,15 @@ const App: FC = () => {
 			/>
 		),
 	};
+	const patientPageRoute = {
+		path: client_routes.ROUTE_PATIENTS_DETAILS,
+		element: (
+			<Protected
+				isLoggedIn={isLoggedIn}
+				children={<PhysioFileLayout children={<PatientPage />} />}
+			/>
+		),
+	};
 
 	const routing = useRoutes([
 		authWelcomeRoute,
@@ -86,6 +95,7 @@ const App: FC = () => {
 		crcHomeRoute,
 		jilSusakHomeRoute,
 		kardioJilHomeRoute,
+		patientPageRoute,
 	]);
 
 	return <>{routing}</>;

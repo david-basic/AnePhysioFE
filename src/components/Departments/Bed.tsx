@@ -1,5 +1,5 @@
 import { useState, type FC } from "react";
-import { type BedVM } from "../../models/BedVM";
+import { type BedVM } from "../../models/department/BedVM";
 import { Link } from "react-router-dom";
 import styles from "./Bed.module.css";
 import {
@@ -10,14 +10,14 @@ import {
 	Row,
 	message,
 } from "antd";
-import { XSquare } from "react-bootstrap-icons";
-import useFetchApi from "../../hooks/use_fetch_api";
 import { type ApiResponse } from "../../type";
-import { type PatientVM } from "../../models/PatientVM";
+import { type PatientVM } from "../../models/patient/PatientVM";
 import api_routes from "../../config/api_routes";
 import { HttpStatusCode } from "axios";
 import LoadingSpinner from "../LoadingSpinner";
 import constants from "../../config/constants";
+import client_routes, { clientRoutesParams } from "../../config/client_routes";
+import useFetcApihWithTokenRefresh from "../../hooks/use_fetch_api_with_token_refresh";
 
 type BedProps = {
 	bedNum: number;
@@ -29,14 +29,13 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 	const [descriptionItems, setDescriptionItems] = useState<
 		DescriptionsProps["items"]
 	>([]);
-	const { sendRequest: sendPatientDetailsRequest, isLoading } = useFetchApi();
-	const dataToTransfer = {
-		id: patient !== null ? patient!.id : null,
-	};
+	const { fetchWithTokenRefresh: sendPatientDetailsRequest, isLoading } =
+		useFetcApihWithTokenRefresh();
 	const dateOptions: Intl.DateTimeFormatOptions = {
 		day: "2-digit",
 		month: "2-digit",
 		year: "numeric",
+		timeZone: "CET",
 	};
 
 	const handleRightClick = (event: any) => {
@@ -61,7 +60,8 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 							label: constants.DATE_OF_BIRTH,
 							children: new Date(
 								Date.parse(fetchedPatientData!.birthDate)
-							).toLocaleDateString("hr-HR", dateOptions),
+							).toLocaleDateString("hr-HR", dateOptions).split(" ")
+							.join(""),
 						},
 						{
 							key: constants.PATIENT_AGE,
@@ -80,7 +80,7 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 								Date.parse(
 									fetchedPatientData!.admissionDateTime
 								)
-							).toLocaleString("hr-HR", { timeZone: "UTC" }),
+							).toLocaleString("hr-HR", { timeZone: "CET" }),
 						},
 						{
 							key: constants.PATIENT_ADDRESS,
@@ -102,7 +102,6 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 							label: constants.LEADING_MKB,
 							children: (
 								<p>
-									{fetchedPatientData?.leadingMkb.code}{" "}
 									{fetchedPatientData?.leadingMkb.displayName}
 								</p>
 							),
@@ -124,7 +123,7 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 															"remove-list-style"
 														]
 													}>
-													{mkb.code} {mkb.displayName}
+													{mkb.displayName}
 													<hr />
 												</li>
 											)
@@ -179,13 +178,15 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 
 	return (
 		<Row>
-			<Col span={22}>
+			<Col span={24}>
 				{patient !== null && (
 					<>
 						<Link
-							to={"#linkToAPage"}
+							to={client_routes.ROUTE_PATIENTS_DETAILS.replace(
+								clientRoutesParams.patientId,
+								patient!.id
+							)}
 							className={styles["occupied-bed-text"]}
-							state={dataToTransfer}
 							onContextMenu={handleRightClick}>
 							{`Bed ${bedNum}: ${
 								patient!.firstName + " " + patient!.lastName
@@ -224,7 +225,6 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 						}>{`Bed ${bedNum}: empty bed`}</p>
 				)}
 			</Col>
-			<Col span={2}>{patient === null && <XSquare />}</Col>
 		</Row>
 	);
 };

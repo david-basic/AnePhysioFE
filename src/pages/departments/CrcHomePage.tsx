@@ -1,5 +1,5 @@
 import { type FC } from "react";
-import Department from "../../components/Departments/Department";
+import Department from "../../components/departments/Department";
 import { useAppSelector } from "../../hooks/use_app_selector";
 
 const CrcHomePage: FC = () => {

@@ -1,7 +1,7 @@
 import { Layout } from "antd";
 import { type FC, type PropsWithChildren } from "react";
 import { Content } from "antd/es/layout/layout";
-import { Sidebar } from "./Sidebar";
+import { MainLayoutSidebar } from "./MainLayoutSidebar";
 import styles from "./MainLayout.module.css";
 
 type MainLayoutProps = PropsWithChildren;
@@ -11,7 +11,7 @@ const MainLayout: FC<MainLayoutProps> = ({ children }: MainLayoutProps) => {
 		<Layout>
 			<Content style={{ margin: 0 }}>
 				<Layout>
-					<Sidebar />
+					<MainLayoutSidebar />
 					<Layout className={`${styles["parent-container"]}`}>
 						<Content
 							className={`content_padding ${styles["centered-component"]}`}>

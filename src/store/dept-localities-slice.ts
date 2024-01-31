@@ -1,6 +1,6 @@
 import { type PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { type DepartmentVM } from "../models/DepartmentVM";
-import { type DepartmentLocalitiesInitState } from "../type";
+import { type DepartmentVM } from "../models/department/DepartmentVM";
+import { type DepartmentLocalitiesInitStateType } from "../type";
 
 const deptInitState: DepartmentVM = {
 	id: "",
@@ -10,7 +10,7 @@ const deptInitState: DepartmentVM = {
 	boxes: [],
 };
 
-const deptLocalitiesInitState: DepartmentLocalitiesInitState = {
+const deptLocalitiesInitState: DepartmentLocalitiesInitStateType = {
 	jilRIjeka: deptInitState,
 	jilSusak: deptInitState,
 	crc: deptInitState,

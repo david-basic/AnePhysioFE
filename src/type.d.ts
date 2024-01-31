@@ -1,4 +1,7 @@
-import { DepartmentVM } from "./models/DepartmentVM";
+import { UserVM } from "./models/UserVm";
+import { DepartmentVM } from "./models/department/DepartmentVM";
+import { PhysioFileVM } from "./models/physiofile/PhysioFileVM";
+import { FunctionalDiagnosisVM } from "./models/physiofile/functionalDiagnosis/FunctionalDiagnosisVM";
 
 /**
  * Type used for configuring the request towards a API
@@ -18,6 +21,7 @@ type RequestConfig = {
  * Type used to define the initial state of authentication in the application
  * @param isLoggedIn Denotes if the user is logged in or not. False by default
  * @param username Username of the logged in user. Empty string by default
+ * @param user User data of the logged in user.
  * @param accessToken Access token used for JWT authentication
  * @param refreshToken Refresh token used for refreshing access token in JWT authentication
  * @param tokenType Token type used in JWT authentication. "Bearer" by default
@@ -26,6 +30,7 @@ type RequestConfig = {
 type AuthInitState = {
 	isLoggedIn: boolean;
 	username: string;
+	user: UserVM;
 	accessToken: string;
 	refreshToken: string;
 	tokenType: string;
@@ -35,38 +40,40 @@ type AuthInitState = {
  * Interface used to define data object needed for login request on the API
  * @param username Username user input on the login form
  * @param password Password user input on the login form
- * 
+ *
  */
 interface LoginRequestData {
 	username: string;
 	password: string;
-};
+}
 /**
  * Interface used to define data object with tokens needed for authentication of a user
  * @param accessToken Access token used for JWT authentication
  * @param refreshToken Refresh token used for refreshing accessToken in JWT authentication
  * @param tokenType Token type used in JWT authentication
+ *@param user Currently logged in user data
  * 
  */
 interface LoginResponseData {
 	accessToken: string;
 	refreshToken: string;
 	tokenType: string;
-};
+	user: UserVM;
+}
 /**
  * Interface used to define data object needed for register request on the API
  * @param firstname First name user input on the register form
  * @param lastname Last name user input on the register form
  * @param username Username user input on the register form
  * @param password Password user input on the register form
- * 
+ *
  */
 interface RegisterRequestData {
 	firstname: string;
 	lastname: string;
 	username: string;
 	password: string;
-};
+}
 /**
  * Interface used to define response object acquired as a response to the register request on the API
  * @param timestamp Timestamp denoting time of user register
@@ -81,7 +88,7 @@ interface ApiRegisterResponse {
 	success: boolean;
 	message: string;
 	data?: any;
-};
+}
 /**
  * Interfaces used to define a response object gained from a request on the API
  * @param timestamp Timestamp denoting time of response
@@ -102,15 +109,56 @@ interface ApiResponse<T> {
 	path?: string;
 }
 /**
+ * Interface used when there is no return data from the API
+ * @param NoReturnData Will always be null in API response with no return data
+ */
+interface NoReturnData {
+	noData: string;
+}
+/**
  * Type used to define the initial state of the DepartmentLocalities state slice
  * @param jilRIjeka Defining Jil Rijeka locality state
  * @param jilSusak Defining Jil Sušak locality state
  * @param crc Defining CRC locality state
  * @param kardioJil Defining Kardio JIL locality state
  */
-type DepartmentLocalitiesInitState = {
+type DepartmentLocalitiesInitStateType = {
 	jilRIjeka: DepartmentVM;
 	jilSusak: DepartmentVM;
 	crc: DepartmentVM;
 	kardioJil: DepartmentVM;
-}
+};
+/**
+ * @param physioFile Defines a Physiotherapist file object
+ * @param functionalDiagnosesList Defines a list of functional diagnoses
+ * @param xyDataSaved Indicates if the current state was saved to DB
+ */
+type PhysioFileInitStateType = {
+	physioFile: PhysioFileVM;
+	functionalDiagnosisList: FunctionalDiagnosisVM[];
+	physioFileDataSaved: boolean;
+	rassModalDataSaved: boolean;
+	gcsModalDataSaved: boolean;
+	vasModalDataSaved: boolean;
+	mmtModalDataSaved: boolean;
+	cpaxModalDataSaved: boolean;
+	fdModalDataSaved: boolean;
+	procedureModalDataSaved: boolean;
+};
+/**
+ * Type to persist data between refreshes
+ */
+type PhysioFilePersistanceInitStateType = {
+	physioFile: PhysioFileVM;
+	functionalDiagnosisList: FunctionalDiagnosisVM[];
+};
+/**
+ * Type used for updating a PatientRass entity in the array
+ * @param idToUpdate Defines the id of the rass in the Array. Id is generated sequentially
+ * for that array when the object is first created
+ * @param additionalDescription Defines the new updated description that needs saving for that object
+ */
+type PatientRassAdditionalNotesUpdateType = {
+	idToUpdate: string;
+	additionalDescription: string;
+};

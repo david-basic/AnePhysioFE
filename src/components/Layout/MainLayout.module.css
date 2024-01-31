@@ -7,4 +7,5 @@
 
 .centered-component {
     justify-self: center;
+    inline-size: 100%;
 }
