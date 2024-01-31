@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent, useState, type FC } from "react";
+import { ChangeEvent, FocusEvent, useEffect, useState, type FC } from "react";
 import { type PlanVM } from "../../../models/physiofile/plans/PlanVM";
 import { type PatientPlanVM } from "../../../models/physiofile/plans/PatientPlanVM";
 import { PhysioFileVM } from "../../../models/physiofile/PhysioFileVM";
@@ -27,21 +27,26 @@ const PhysioPlans: FC<PhysioPlansProps> = ({
 		patientPlans || []
 	);
 	const [intubatedPatientPlan, setIntubatedPatientPlan] =
-		useState<PatientPlanVM>(allPatientPlans[0]);
+		useState<PatientPlanVM>(patientPlans[0]);
 	const [extubatedPatientPlan, setExtubatedPatientPlan] =
-		useState<PatientPlanVM>(allPatientPlans[1]);
-	const defaultSelectedValues: string[] = [];
-	allPatientPlans.map(
-		(pg) => pg.selected && defaultSelectedValues.push(pg.id)
-	);
+		useState<PatientPlanVM>(patientPlans[1]);
 	const [
 		intubatedPatientPlanDescription,
 		setIntubatedPatientPlanDescription,
-	] = useState<string>(allPatientPlans[0].description);
+	] = useState<string>("");
 	const [
 		extubatedPatientPlanDescription,
 		setExtubatedPatientPlanDescription,
-	] = useState<string>(allPatientPlans[1].description);
+	] = useState<string>("");
+	const defaultSelectedValues: string[] = [];
+	patientPlans.map((pp) => pp.selected && defaultSelectedValues.push(pp.id));
+
+	useEffect(() => {
+		if (patientPlans[0] && patientPlans[1]) {
+			setIntubatedPatientPlanDescription(patientPlans[0].description);
+			setExtubatedPatientPlanDescription(patientPlans[1].description);
+		}
+	}, [patientPlans]);
 
 	const onCheckedChangeHandler = (checkedValues: CheckboxValueType[]) => {
 		const newPatientPlansState: PatientPlanVM[] = [];
@@ -126,45 +131,49 @@ const PhysioPlans: FC<PhysioPlansProps> = ({
 			className={planStyles.checkboxGroup}
 			defaultValue={defaultSelectedValues}>
 			<Col className={planStyles.col}>
-				<Row
-					align='middle'
-					className={planStyles.row}
-					style={{ marginBottom: "8px" }}>
-					<Checkbox
-						className={`${fileStyles.texts} ${planStyles.checkbox}`}
-						style={{ fontWeight: 400 }}
-						value={intubatedPatientPlan.id}>
-						{intubatedPatientPlan.type}
-					</Checkbox>
-					{allPatientPlans[0].selected && (
-						<TextArea
-							value={intubatedPatientPlanDescription}
-							autoSize={{ minRows: 1, maxRows: 2 }}
-							onChange={handleChangeIntubatedDescription}
-							onBlur={handleLoseFocusIntubated}
-							placeholder={`${intubatedPatientPlan.type} planovi`}
-							className={`${assessmentStyles.textArea}  ${planStyles.textArea}`}
-						/>
-					)}
-				</Row>
-				<Row align='middle' className={planStyles.row}>
-					<Checkbox
-						className={`${fileStyles.texts} ${planStyles.checkbox}`}
-						style={{ fontWeight: 400 }}
-						value={extubatedPatientPlan.id}>
-						{extubatedPatientPlan.type}
-					</Checkbox>
-					{allPatientPlans[1].selected && (
-						<TextArea
-							value={extubatedPatientPlanDescription}
-							autoSize={{ minRows: 1, maxRows: 2 }}
-							onChange={handleChangeExtubatedDescription}
-							onBlur={handleLoseFocusExtubated}
-							placeholder={`${extubatedPatientPlan.type} planovi`}
-							className={`${assessmentStyles.textArea}  ${planStyles.textArea}`}
-						/>
-					)}
-				</Row>
+				{intubatedPatientPlan && (
+					<Row
+						align='middle'
+						className={planStyles.row}
+						style={{ marginBottom: "8px" }}>
+						<Checkbox
+							className={`${fileStyles.texts} ${planStyles.checkbox}`}
+							style={{ fontWeight: 400 }}
+							value={intubatedPatientPlan.id}>
+							{intubatedPatientPlan.type}
+						</Checkbox>
+						{allPatientPlans[0].selected && (
+							<TextArea
+								value={intubatedPatientPlanDescription}
+								autoSize={{ minRows: 1, maxRows: 2 }}
+								onChange={handleChangeIntubatedDescription}
+								onBlur={handleLoseFocusIntubated}
+								placeholder={`${intubatedPatientPlan.type} planovi`}
+								className={`${assessmentStyles.textArea}  ${planStyles.textArea}`}
+							/>
+						)}
+					</Row>
+				)}
+				{extubatedPatientPlan && (
+					<Row align='middle' className={planStyles.row}>
+						<Checkbox
+							className={`${fileStyles.texts} ${planStyles.checkbox}`}
+							style={{ fontWeight: 400 }}
+							value={extubatedPatientPlan.id}>
+							{extubatedPatientPlan.type}
+						</Checkbox>
+						{allPatientPlans[1].selected && (
+							<TextArea
+								value={extubatedPatientPlanDescription}
+								autoSize={{ minRows: 1, maxRows: 2 }}
+								onChange={handleChangeExtubatedDescription}
+								onBlur={handleLoseFocusExtubated}
+								placeholder={`${extubatedPatientPlan.type} planovi`}
+								className={`${assessmentStyles.textArea}  ${planStyles.textArea}`}
+							/>
+						)}
+					</Row>
+				)}
 			</Col>
 		</Checkbox.Group>
 	);

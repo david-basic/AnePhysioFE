@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent, useState, type FC } from "react";
+import { ChangeEvent, FocusEvent, useEffect, useState, type FC } from "react";
 import { type GoalVM } from "../../../models/physiofile/goals/GoalVM";
 import { type PatientGoalVM } from "../../../models/physiofile/goals/PatientGoalVM";
 import { PhysioFileVM } from "../../../models/physiofile/PhysioFileVM";
@@ -27,21 +27,26 @@ const PhysioGoals: FC<PhysioGoalsProps> = ({
 		patientGoals || []
 	);
 	const [intubatedPatientGoal, setIntubatedPatientGoal] =
-		useState<PatientGoalVM>(allPatientGoals[0]);
+		useState<PatientGoalVM>(patientGoals[0]);
 	const [extubatedPatientGoal, setExtubatedPatientGoal] =
-		useState<PatientGoalVM>(allPatientGoals[1]);
-	const defaultSelectedValues: string[] = [];
-	allPatientGoals.map(
-		(pg) => pg.selected && defaultSelectedValues.push(pg.id)
-	);
+		useState<PatientGoalVM>(patientGoals[1]);
 	const [
 		intubatedPatientGoalDescription,
 		setIntubatedPatientGoalDescription,
-	] = useState<string>(allPatientGoals[0].description);
+	] = useState<string>("");
 	const [
 		extubatedPatientGoalDescription,
 		setExtubatedPatientGoalDescription,
-	] = useState<string>(allPatientGoals[1].description);
+	] = useState<string>("");
+	const defaultSelectedValues: string[] = [];
+	patientGoals.map((pg) => pg.selected && defaultSelectedValues.push(pg.id));
+
+	useEffect(() => {
+		if (patientGoals[0] && patientGoals[1]) {
+			setIntubatedPatientGoalDescription(patientGoals[0].description);
+			setExtubatedPatientGoalDescription(patientGoals[1].description);
+		}
+	}, [patientGoals]);
 
 	const onCheckedChangeHandler = (checkedValues: CheckboxValueType[]) => {
 		const newPatientGoalsState: PatientGoalVM[] = [];
@@ -126,45 +131,49 @@ const PhysioGoals: FC<PhysioGoalsProps> = ({
 			className={goalStyles.checkboxGroup}
 			defaultValue={defaultSelectedValues}>
 			<Col className={goalStyles.col}>
-				<Row
-					align='middle'
-					className={goalStyles.row}
-					style={{ marginBottom: "8px" }}>
-					<Checkbox
-						className={`${fileStyles.texts} ${goalStyles.checkbox}`}
-						style={{ fontWeight: 400 }}
-						value={intubatedPatientGoal.id}>
-						{intubatedPatientGoal.type}
-					</Checkbox>
-					{allPatientGoals[0].selected && (
-						<TextArea
-							value={intubatedPatientGoalDescription}
-							autoSize={{ minRows: 1, maxRows: 2 }}
-							onChange={handleChangeIntubatedDescription}
-							onBlur={handleLoseFocusIntubated}
-							placeholder={`${intubatedPatientGoal.type} ciljevi`}
-							className={`${assessmentStyles.textArea}  ${goalStyles.textArea}`}
-						/>
-					)}
-				</Row>
-				<Row align='middle' className={goalStyles.row}>
-					<Checkbox
-						className={`${fileStyles.texts} ${goalStyles.checkbox}`}
-						style={{ fontWeight: 400 }}
-						value={extubatedPatientGoal.id}>
-						{extubatedPatientGoal.type}
-					</Checkbox>
-					{allPatientGoals[1].selected && (
-						<TextArea
-							value={extubatedPatientGoalDescription}
-							autoSize={{ minRows: 1, maxRows: 2 }}
-							onChange={handleChangeExtubatedDescription}
-							onBlur={handleLoseFocusExtubated}
-							placeholder={`${extubatedPatientGoal.type} ciljevi`}
-							className={`${assessmentStyles.textArea}  ${goalStyles.textArea}`}
-						/>
-					)}
-				</Row>
+				{intubatedPatientGoal && (
+					<Row
+						align='middle'
+						className={goalStyles.row}
+						style={{ marginBottom: "8px" }}>
+						<Checkbox
+							className={`${fileStyles.texts} ${goalStyles.checkbox}`}
+							style={{ fontWeight: 400 }}
+							value={intubatedPatientGoal.id}>
+							{intubatedPatientGoal.type}
+						</Checkbox>
+						{allPatientGoals[0].selected && (
+							<TextArea
+								value={intubatedPatientGoalDescription}
+								autoSize={{ minRows: 1, maxRows: 2 }}
+								onChange={handleChangeIntubatedDescription}
+								onBlur={handleLoseFocusIntubated}
+								placeholder={`${intubatedPatientGoal.type} ciljevi`}
+								className={`${assessmentStyles.textArea}  ${goalStyles.textArea}`}
+							/>
+						)}
+					</Row>
+				)}
+				{extubatedPatientGoal && (
+					<Row align='middle' className={goalStyles.row}>
+						<Checkbox
+							className={`${fileStyles.texts} ${goalStyles.checkbox}`}
+							style={{ fontWeight: 400 }}
+							value={extubatedPatientGoal.id}>
+							{extubatedPatientGoal.type}
+						</Checkbox>
+						{allPatientGoals[1].selected && (
+							<TextArea
+								value={extubatedPatientGoalDescription}
+								autoSize={{ minRows: 1, maxRows: 2 }}
+								onChange={handleChangeExtubatedDescription}
+								onBlur={handleLoseFocusExtubated}
+								placeholder={`${extubatedPatientGoal.type} ciljevi`}
+								className={`${assessmentStyles.textArea}  ${goalStyles.textArea}`}
+							/>
+						)}
+					</Row>
+				)}
 			</Col>
 		</Checkbox.Group>
 	);
