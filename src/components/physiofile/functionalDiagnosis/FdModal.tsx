@@ -437,7 +437,7 @@ const FdModal: FC<FdModalProps> = ({
 									value={fdDescription}
 									autoSize={{ minRows: 4 }}
 									onChange={onFdDescriptionChange}
-									placeholder='Zabilješka'
+									placeholder='Opis dijagnoze'
 									style={{ maxWidth: "inherit" }}
 									className={`${
 										isNullOrEmpty(fdDescription)

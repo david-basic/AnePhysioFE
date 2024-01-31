@@ -1,6 +1,5 @@
 import { type PatientVM } from "../patient/PatientVM";
 import { type AssessmentVM } from "./assessment/AssessmentVM";
-import { type FunctionalDiagnosisVM } from "./functionalDiagnosis/FunctionalDiagnosisVM";
 import { type GoalVM } from "./goals/GoalVM";
 import { type PatientFunctionalDiagnosisVM } from "./functionalDiagnosis/PatientFunctionalDiagnosisVM";
 import { type PatientGoalVM } from "./goals/PatientGoalVM";
@@ -19,7 +18,7 @@ import { type VerbalResponseVM } from "./physioTests/gcs/VerbalResponseVM";
 
 export interface PhysioFileVM {
 	id: string;
-	fileOpenedBy: string;
+	fileOpenedBy: UserVM;
 	patient: PatientVM;
 	patientFunctionalDiagnoses: PatientFunctionalDiagnosisVM[];
 	assessment: AssessmentVM;
@@ -38,6 +37,6 @@ export interface PhysioFileVM {
 	allVerbalResponses: VerbalResponseVM[];
 	mmtList: MmtVM[];
 	conclussion: string;
-	fileClosedBy: string;
+	fileClosedBy: UserVM;
 	allPhysiotherapists: UserVM[];
 }

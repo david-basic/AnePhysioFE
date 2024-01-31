@@ -72,6 +72,7 @@ const Login: FC = () => {
 				dispatch(
 					authActions.setTokenType(loginResponse.data!.tokenType)
 				);
+				dispatch(authActions.setUser(loginResponse.data!.user));
 
 				dispatch(authActions.setTokenIsValid(true));
 
