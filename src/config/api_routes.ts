@@ -25,6 +25,7 @@ const api_routes = {
 	ROUTE_ASSESSMENT_ADD_NEW_PATIENT_RASS: `${apiRoutesParams.API}/assessment-management/assessments/new-patient-rass`,
 	ROUTE_ASSESSMENT_DELETE_PATIENT_RASS: `${apiRoutesParams.API}/assessment-management/assessments/delete-patient-rass`,
 	ROUTE_ASSESSMENT_UPDATE_PATIENT_RASS_BY_ID: `${apiRoutesParams.API}/assessment-management/assessments/update-patient-rass`,
+	ROUTE_ASSESSMENT_UPDATE_POINTS_OF_PAIN_BY_ID: `${apiRoutesParams.API}/assessment-management/assessments/create-or-update-points-of-pain`,
 
 	ROUTE_PHYSIO_TEST_CREATE_NEW_BY_PHYSIO_FILE_ID: `${apiRoutesParams.API}/physiotest-management/physiotests/new-physiotest`,
 

@@ -14,6 +14,7 @@ import PhysioPlans from "./physioPlans/PhysioPlans";
 import PhysioNotes from "./notes/PhysioNotes";
 import PhysioFinalAssessmentAndConclussion from "./conclussion/PhysioFinalAssessmentAndConclussion";
 import Procedures from "./procedures/Procedures";
+import HumanBody from "./humanBody/HumanBody";
 
 type PhysioFileProps = {
 	physioFile: PhysioFileVM | undefined;
@@ -78,6 +79,11 @@ const PhysioFile: FC<PhysioFileProps> = ({
 											physioFile.assessment
 										}
 									/>
+								</Segment>
+							</Segment>
+							<Segment id='humanBody'>
+								<Segment isContent>
+									<HumanBody physioFile={physioFile} initialPoints={physioFile.assessment.pointsOfPain} />
 								</Segment>
 							</Segment>
 							<Segment id='otherMkbsAndOperations'>

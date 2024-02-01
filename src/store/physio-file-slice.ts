@@ -10,6 +10,7 @@ import { type AssessmentVM } from "../models/physiofile/assessment/AssessmentVM"
 import { type PatientRassVM } from "../models/physiofile/assessment/PatientRassVM";
 import { type FunctionalDiagnosisVM } from "../models/physiofile/functionalDiagnosis/FunctionalDiagnosisVM";
 import { UserVM } from "../models/UserVm";
+import { Point } from "../models/physiofile/assessment/Point";
 
 const fileInitState: PhysioFileVM = {
 	id: "",
@@ -35,7 +36,7 @@ const fileInitState: PhysioFileVM = {
 		patientAge: 0,
 	},
 	patientFunctionalDiagnoses: [],
-	assessment: { id: "", patientRass: [], notes: "" },
+	assessment: { id: "", patientRass: [], notes: "", pointsOfPain: [] },
 	fullRassList: [],
 	fullGoalsList: [],
 	patientGoals: [],
@@ -125,6 +126,9 @@ const physioFileSlice = createSlice({
 		},
 		setAssessmentNotes: (state, action: PayloadAction<string>) => {
 			state.physioFile.assessment.notes = action.payload;
+		},
+		setAssessmentPainPoints: (state, action: PayloadAction<Point[]>) => {
+			state.physioFile.assessment.pointsOfPain = action.payload;
 		},
 		setPatientRass: (state, action: PayloadAction<PatientRassVM[]>) => {
 			state.physioFile.assessment.patientRass = action.payload;

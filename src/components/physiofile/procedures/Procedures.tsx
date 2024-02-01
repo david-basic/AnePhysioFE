@@ -450,6 +450,9 @@ const Procedures: FC<ProceduresProps> = ({
 		if (isNullOrEmpty(dateString)) {
 			setChosenDateTime({ date: "", time: "" });
 			setDatePickerValue(null);
+			setChangedPatientProcedureDescription("");
+			setChosenTherapistsIds([]);
+			setChosenProcedures([]);
 			return;
 		}
 
