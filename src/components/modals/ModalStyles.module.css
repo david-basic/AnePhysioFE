@@ -3,7 +3,7 @@
     --background-color: #a6d6f0;
     --box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
     --font-family: "Nunito", sans-serif;
-    --text-font-size: 20px;
+    --text-font-size: 18px;
     --text-font-weight: 500;
     --text-line-height: 26px;
     --title-font-weight: 700;
@@ -100,6 +100,13 @@
 .tableSegment {
     display: flex;
     justify-content: center;
+    margin-top: 20px;
+}
+
+.cpaxTableSegment {
+    display: flex;
+    justify-content: start;
+    margin-top: 20px;
 }
 
 .fdTable {
@@ -124,7 +131,7 @@
 }
 
 .mmtTable {
-    width: 700px;
+    width: 400px;
     max-height: 440px;
     box-shadow: var(--box-shadow);
     font-family: var(--font-family);
@@ -135,6 +142,7 @@
     flex-direction: column;
     align-items: center;
     min-height: 300px; 
+    max-width: 930px;
     box-shadow: var(--box-shadow);
     font-family: var(--font-family);
     border-radius: 8px;
