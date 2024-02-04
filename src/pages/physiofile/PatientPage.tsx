@@ -317,6 +317,7 @@ const PatientPage: FC = () => {
 									/>
 									<ConfirmSavePhysioFileModal
 										showSaveModal={showSaveModal}
+										physioFile={physioFile}
 									/>
 									<TestsButton
 										className={fileStyles.cancelButton}
