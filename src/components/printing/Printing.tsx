@@ -546,7 +546,11 @@ const Printing: FC<PrintingProps> = ({
 					</h3>
 					<div style={{ fontSize: "18px", marginTop: "10px" }}>
 						<span>
-							Rođen/a:{" "}
+							{physioFile.patient.sex.displayName.toLowerCase()[0] ===
+							"m"
+								? "Rođen"
+								: "Rođena"}
+							:{" "}
 							{new Date(Date.parse(physioFile.patient.birthDate))
 								.toLocaleDateString("hr-HR", dateOptions)
 								.split(" ")
@@ -1078,10 +1082,16 @@ const Printing: FC<PrintingProps> = ({
 			<div
 				id='therapeutPrinting'
 				className={`${localStyles.therapeut} print-therapeut`}>
-				<span style={{ fontSize: "20px" }}>Fizioterapeut/kinja:</span>
+				<span style={{ fontSize: "20px" }}>
+					{currentPhysio.sex.toLowerCase()[0] === "m"
+						? "Fizioterapeut"
+						: "Fizioterapeutkinja"}
+					:
+				</span>
 				<br />
 				<h2 style={{ marginTop: "-20px" }} className='print-therapeut'>
-					{currentPhysio.firstName} {currentPhysio.lastName}
+					{currentPhysio.firstName} {currentPhysio.lastName},{" "}
+					{currentPhysio.title}
 				</h2>
 			</div>
 			<div id='dateOfPrinting' className={localStyles.dateOfPrinting}>

@@ -11,6 +11,7 @@ import {
 	message,
 } from "antd";
 import { type ApiResponse } from "../../type";
+import dayjs from "dayjs";
 import { type PatientVM } from "../../models/patient/PatientVM";
 import api_routes from "../../config/api_routes";
 import { HttpStatusCode } from "axios";
@@ -57,41 +58,41 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 					const items: DescriptionsProps["items"] = [
 						{
 							key: constants.DATE_OF_BIRTH,
-							label: constants.DATE_OF_BIRTH,
+							label: <b>{constants.DATE_OF_BIRTH}</b>,
 							children: new Date(
 								Date.parse(fetchedPatientData!.birthDate)
-							).toLocaleDateString("hr-HR", dateOptions).split(" ")
-							.join(""),
+							)
+								.toLocaleDateString("hr-HR", dateOptions)
+								.split(" ")
+								.join(""),
 						},
 						{
 							key: constants.PATIENT_AGE,
-							label: constants.PATIENT_AGE,
+							label: <b>{constants.PATIENT_AGE}</b>,
 							children: fetchedPatientData!.patientAge,
 						},
 						{
 							key: constants.SEX,
-							label: constants.SEX,
+							label: <b>{constants.SEX}</b>,
 							children: fetchedPatientData!.sex.displayName,
 						},
 						{
 							key: constants.ADMISSION_DATE,
-							label: constants.ADMISSION_DATE,
-							children: new Date(
-								Date.parse(
-									fetchedPatientData!.admissionDateTime
-								)
-							).toLocaleString("hr-HR", { timeZone: "CET" }),
+							label: <b>{constants.ADMISSION_DATE}</b>,
+							children: dayjs(
+								fetchedPatientData!.admissionDateTime
+							).format("DD.MM.YYYY HH:mm:ss"),
 						},
 						{
 							key: constants.PATIENT_ADDRESS,
 							span: 2,
-							label: constants.PATIENT_ADDRESS,
+							label: <b>{constants.PATIENT_ADDRESS}</b>,
 							children:
 								fetchedPatientData!.patientAddress.fullAddress,
 						},
 						{
 							key: constants.LEADING_DOCTOR,
-							label: constants.LEADING_DOCTOR,
+							label: <b>{constants.LEADING_DOCTOR}</b>,
 							children:
 								fetchedPatientData!.leadingDoctor
 									.fullNameAndTitles,
@@ -99,7 +100,7 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 						{
 							key: constants.LEADING_MKB,
 							span: 2,
-							label: constants.LEADING_MKB,
+							label: <b>{constants.LEADING_MKB}</b>,
 							children: (
 								<p>
 									{fetchedPatientData?.leadingMkb.displayName}
@@ -109,7 +110,7 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 						{
 							key: constants.PATIENT_MBKS,
 							span: 3,
-							label: constants.PATIENT_MBKS,
+							label: <b>{constants.PATIENT_MBKS}</b>,
 							children: (
 								<ul>
 									{fetchedPatientData!.patientMkbs.length >
@@ -136,7 +137,7 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 						{
 							key: constants.OPERATIONS,
 							span: 3,
-							label: constants.OPERATIONS,
+							label: <b>{constants.OPERATIONS}</b>,
 							children: (
 								<ul>
 									{fetchedPatientData?.operations !== null &&
@@ -193,7 +194,6 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 							}`}
 						</Link>
 						<Modal
-							title={`${patient?.firstName} ${patient?.lastName} - ${patientData?.identificationNumber}`}
 							centered
 							width='auto'
 							open={showModal}
@@ -207,10 +207,23 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 							{isLoading && <LoadingSpinner />}
 							{!isLoading && (
 								<Descriptions
-									title='Informacije pacijenta'
+									title={`Informacije pacijent${
+										patientData?.sex.displayName.toLowerCase()[0] ===
+										"f"
+											? "ice"
+											: "a"
+									} ${patient?.firstName} ${
+										patient?.lastName
+									} - ${patientData?.identificationNumber}`}
 									bordered
 									column={3}
 									size='small'
+									style={{
+										backgroundColor: "#d5e9f3",
+										margin: "15px",
+										padding: "20px",
+										borderRadius: "8px",
+									}}
 									items={descriptionItems}
 								/>
 							)}
