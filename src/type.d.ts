@@ -64,6 +64,8 @@ interface LoginResponseData {
  * Interface used to define data object needed for register request on the API
  * @param firstname First name user input on the register form
  * @param lastname Last name user input on the register form
+ * @param sex Physio's sex input on the register form
+ * @param title Physio's title input on the register form
  * @param username Username user input on the register form
  * @param password Password user input on the register form
  *
@@ -71,6 +73,8 @@ interface LoginResponseData {
 interface RegisterRequestData {
 	firstname: string;
 	lastname: string;
+	sex: string;
+	title: string;
 	username: string;
 	password: string;
 }

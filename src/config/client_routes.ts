@@ -30,6 +30,7 @@ export const sideBarKey = {
 	JilSusak: "sidebar-jil-susak",
 	KardioJil: "sidebar-kardio-jil",
 	LogOut: "sidebar-logout",
+	RegisterNewUser: "sidebar-register-new-user",
 };
 
 export default client_routes;

@@ -15,9 +15,6 @@ const Welcome: FC = () => {
 		}
 	}, [isLoggedIn, navigate]);
 
-	const navigateToRegister = () => {
-		navigate(client_routes.ROUTE_AUTH_REGISTER, { replace: true });
-	};
 	const navigateToLogin = () => {
 		navigate(client_routes.ROUTE_AUTH_LOGIN, { replace: true });
 	};
@@ -29,17 +26,10 @@ const Welcome: FC = () => {
 					<h1>AnePhysio</h1>
 				</li>
 				<li className={styles["lighter-text"]}>
-					<p>Thank you for choosing our application</p>
-				</li>
-				<li>
-					<Button
-						className={styles["btn-rounded-dark"]}
-						type='text'
-						shape='round'
-						size='large'
-						onClick={navigateToRegister}>
-						Register
-					</Button>
+					<p>
+						Aplikacija za fizioterapeute anesteziologije KBC-a
+						Rijeka
+					</p>
 				</li>
 				<li>
 					<Button
@@ -53,9 +43,9 @@ const Welcome: FC = () => {
 				</li>
 				<li className={styles["lighter-text"]}>
 					<p>
-						By accessing the application you accept Terms and
-						Conditions
-						<br /> and Privacy policy!
+						Izradio David Bašić, student 3. godine <br />{" "}
+						preddiplomskog stručnog studija programskog
+						<br /> inženjerstva na Sveučilištu Algebra u Zagrebu
 					</p>
 				</li>
 			</ul>

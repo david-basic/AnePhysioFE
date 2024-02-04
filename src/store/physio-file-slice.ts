@@ -14,7 +14,14 @@ import { Point } from "../models/physiofile/assessment/Point";
 
 const fileInitState: PhysioFileVM = {
 	id: "",
-	fileOpenedBy: { id: "", firstName: "", lastName: "" },
+	fileOpenedBy: {
+		id: "",
+		firstName: "",
+		lastName: "",
+		title: "",
+		role: "",
+		sex: "",
+	},
 	patient: {
 		id: "",
 		identificationNumber: 0,
@@ -58,7 +65,14 @@ const fileInitState: PhysioFileVM = {
 	allVerbalResponses: [],
 	mmtList: [],
 	conclussion: "",
-	fileClosedBy: { id: "", firstName: "", lastName: "" },
+	fileClosedBy: {
+		id: "",
+		firstName: "",
+		lastName: "",
+		title: "",
+		role: "",
+		sex: "",
+	},
 	allPhysiotherapists: [],
 	departmentId: "",
 };

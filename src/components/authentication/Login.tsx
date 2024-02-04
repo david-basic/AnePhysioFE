@@ -1,7 +1,7 @@
 import { type FC, useEffect, useState } from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import styles from "./Login.module.css";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import client_routes from "../../config/client_routes";
 import api_routes from "../../config/api_routes";
 import { authActions } from "../../store/auth-slice";
@@ -90,9 +90,9 @@ const Login: FC = () => {
 				className='login-form'
 				onFinish={onSubmit}
 				data-testid='loginForm'>
-				<h1>Log in</h1>
+				<h1>Prijava</h1>
 				<p className={styles["lighter-text"]}>
-					Enter your data to continue
+					Upišite podatke za prijavu da bi nastavili
 				</p>
 				{!loginValid && (
 					<p className={styles["error-text"]}>{loginErrorMessage}</p>
@@ -102,7 +102,7 @@ const Login: FC = () => {
 					rules={[
 						{
 							required: true,
-							message: "Please input username!",
+							message: "Unesite korisničko ime!",
 						},
 					]}>
 					<Input
@@ -110,7 +110,7 @@ const Login: FC = () => {
 						suffix={
 							<UserOutlined className='site-form-item-icon' />
 						}
-						placeholder='Username'
+						placeholder='Korisničko ime'
 					/>
 				</Form.Item>
 				<Form.Item
@@ -118,7 +118,7 @@ const Login: FC = () => {
 					rules={[
 						{
 							required: true,
-							message: "Please input password!",
+							message: "Unesite zaporku!",
 						},
 					]}>
 					<Input
@@ -127,7 +127,7 @@ const Login: FC = () => {
 							<LockOutlined className='site-form-item-icon' />
 						}
 						type='password'
-						placeholder='Password'
+						placeholder='Zaporka'
 					/>
 				</Form.Item>
 				<Form.Item>
@@ -138,18 +138,9 @@ const Login: FC = () => {
 						htmlType='submit'
 						data-testid='loginButton'
 						className={styles["btn-rounded-dark"]}>
-						Sign in
+						Prijava
 					</Button>
 				</Form.Item>
-				<p className={styles["lighter-text"]}>
-					I do not have an account.{" "}
-					<NavLink
-						className={styles["link-text"]}
-						to={client_routes.ROUTE_AUTH_REGISTER}
-						replace={true}>
-						Register.
-					</NavLink>
-				</p>
 			</Form>
 		</div>
 	);

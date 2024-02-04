@@ -82,7 +82,7 @@
 }
 
 .cpaxChartContainer {
-    max-height: fit-content; 
+    max-height: fit-content;
     max-width: 580px;
     font-family: var(--font-family);
     padding: 10px;

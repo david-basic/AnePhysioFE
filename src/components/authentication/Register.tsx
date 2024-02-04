@@ -1,13 +1,24 @@
 import { type FC, useRef, useState } from "react";
 import styles from "./Register.module.css";
 import { LockOutlined, IdcardOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Form, Input, InputRef } from "antd";
-import { NavLink, useNavigate } from "react-router-dom";
+import {
+	Button,
+	Checkbox,
+	Form,
+	Input,
+	InputRef,
+	Select,
+	RefSelectProps,
+} from "antd";
+import { useNavigate } from "react-router-dom";
 import client_routes from "../../config/client_routes";
 import api_routes from "../../config/api_routes";
 import { ApiRegisterResponse, RegisterRequestData } from "../../type";
 import useFetchApi from "../../hooks/use_fetch_api";
 import { HttpStatusCode } from "axios";
+import { Mortarboard } from "react-bootstrap-icons";
+
+const { Option } = Select;
 
 const Register: FC = () => {
 	const navigate = useNavigate();
@@ -17,6 +28,8 @@ const Register: FC = () => {
 
 	const firstNameRef = useRef<InputRef>(null);
 	const lastNameRef = useRef<InputRef>(null);
+	const titleRef = useRef<InputRef>(null);
+	const sexRef = useRef<RefSelectProps>(null);
 	const usernameRef = useRef<InputRef>(null);
 	const passwordRef = useRef<InputRef>(null);
 
@@ -28,6 +41,8 @@ const Register: FC = () => {
 		const registerUserInputData = {
 			firstName: values.firstname,
 			lastName: values.lastname,
+			sex: values.sex,
+			title: values.title,
 			username: values.username,
 			password: values.password,
 		};
@@ -67,9 +82,9 @@ const Register: FC = () => {
 				initialValues={{ remember: false }}
 				className={styles["register-form"]}
 				onFinish={onFinish}>
-				<h1>Registration</h1>
+				<h1>Registracija</h1>
 				<p className={styles["lighter-text"]}>
-					Input your data to continue
+					Unesite podatke novog korisnika za nastavak
 				</p>
 				{registerErrorMessage !== "" && (
 					<p className={styles["error-text"]}>
@@ -86,12 +101,12 @@ const Register: FC = () => {
 					rules={[
 						{
 							required: true,
-							message: "Please input your first name!",
+							message: "Molimo vas unesite ime!",
 						},
 					]}>
 					<Input
 						suffix={<IdcardOutlined />}
-						placeholder='First name'
+						placeholder='Ime'
 						ref={firstNameRef}
 					/>
 				</Form.Item>
@@ -100,21 +115,45 @@ const Register: FC = () => {
 					rules={[
 						{
 							required: true,
-							message: "Please input your last name!",
+							message: "Molimo vas unesite prezime!",
 						},
 					]}>
 					<Input
 						suffix={<IdcardOutlined />}
-						placeholder='Last name'
+						placeholder='Prezime'
 						ref={lastNameRef}
 					/>
+				</Form.Item>
+				<Form.Item
+					name='title'
+					rules={[
+						{
+							required: true,
+							message: "Molimo vas unesite titulu!",
+						},
+					]}>
+					<Input
+						suffix={<Mortarboard />}
+						placeholder='Titula'
+						ref={titleRef}
+					/>
+				</Form.Item>
+				<Form.Item
+					name='sex'
+					rules={[
+						{ required: true, message: "Molimo odaberite spol!" },
+					]}>
+					<Select placeholder='Spol' allowClear ref={sexRef}>
+						<Option value='male'>Muškarac</Option>
+						<Option value='female'>Žena</Option>
+					</Select>
 				</Form.Item>
 				<Form.Item
 					name='username'
 					rules={[
 						{
 							required: true,
-							message: "Please input your username!",
+							message: "Molimo vas unesite korisničko ime!",
 						},
 						({ getFieldValue }) => ({
 							validator(_) {
@@ -123,7 +162,7 @@ const Register: FC = () => {
 								}
 								return Promise.reject(
 									new Error(
-										"Username length must be at least 5 charachters"
+										"Duljina korisničkog imena mora biti barem 5 znakova!"
 									)
 								);
 							},
@@ -131,7 +170,7 @@ const Register: FC = () => {
 					]}>
 					<Input
 						suffix={<UserOutlined />}
-						placeholder='Username'
+						placeholder='Korisničko ime'
 						ref={usernameRef}
 					/>
 				</Form.Item>
@@ -145,13 +184,13 @@ const Register: FC = () => {
 								"^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,255}$"
 							),
 							message:
-								"Password must contain at least 1 number, 1 lowercase, 1 uppercase and 1 special character and it must not contain spaces.",
+								"Zaporka se mora sastojati od barem 1 broja, 1 malog, velikog slova i 1 specijalnog znaka i ne smije sadržavati razmake!",
 						},
 					]}>
 					<Input
 						suffix={<LockOutlined />}
 						type='password'
-						placeholder='Password'
+						placeholder='Zaporka'
 						ref={passwordRef}
 					/>
 				</Form.Item>
@@ -162,7 +201,7 @@ const Register: FC = () => {
 					rules={[
 						{
 							required: true,
-							message: "Please confirm the password!",
+							message: "Molimo vas potvrdite zaporku!",
 						},
 						({ getFieldValue }) => ({
 							validator(_, value) {
@@ -173,12 +212,12 @@ const Register: FC = () => {
 									return Promise.resolve();
 								}
 								return Promise.reject(
-									new Error("Passwords do not match!")
+									new Error("Zaporke nisu jednake!")
 								);
 							},
 						}),
 					]}>
-					<Input.Password placeholder='Confirm password' />
+					<Input.Password placeholder='Potvrda zaporke' />
 				</Form.Item>
 				<Form.Item>
 					<Form.Item
@@ -200,14 +239,14 @@ const Register: FC = () => {
 									}
 									return Promise.reject(
 										new Error(
-											"To continue please accept TOS and privacy policy"
+											"Za nastavak potvrdite pravila korištenja i politiku privatnosti!"
 										)
 									);
 								},
 							}),
 						]}>
 						<Checkbox name='accept' id='tos-checkbox'>
-							I accept TOS and Privacy policy.
+							Prihvaćam pravila korištenja i politiku privatnosti!
 						</Checkbox>
 					</Form.Item>
 				</Form.Item>
@@ -218,15 +257,15 @@ const Register: FC = () => {
 						size='large'
 						htmlType='submit'
 						className={styles["btn-rounded-dark"]}>
-						Register
+						Registriraj korisnika
 					</Button>
 				</Form.Item>
-				<p className={styles["lighter-text"]}>
-					Already registered?{" "}
+				{/* <p className={styles["lighter-text"]}>
+					Već ste registrirani?{" "}
 					<NavLink className={styles["link-text"]} to='/auth/login'>
-						Log in.
+						Prijava.
 					</NavLink>
-				</p>
+				</p> */}
 			</Form>
 		</div>
 	);

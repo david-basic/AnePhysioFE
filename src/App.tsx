@@ -30,7 +30,12 @@ const App: FC = () => {
 	};
 	const authRegisterRoute = {
 		path: client_routes.ROUTE_AUTH_REGISTER,
-		element: <RegisterPage />,
+		element: (
+			<Protected
+				isLoggedIn={isLoggedIn}
+				children={<MainLayout children={<RegisterPage />} />}
+			/>
+		),
 	};
 	const homeRoute = {
 		path: client_routes.ROUTE_HOME,
