@@ -1,17 +1,14 @@
-import { useEffect, useState, type FC } from "react";
-import { getIdFromUrl } from "../../util/UrlHelper";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useState, type FC } from "react";
+import { useNavigate } from "react-router-dom";
 import Layout, { Content, Header } from "antd/es/layout/layout";
-import fileStyles from "../../components/layout/PhysioFileLayout.module.css";
 import localStyles from "./PrintingPage.module.css";
-import Sider from "antd/es/layout/Sider";
 import Printing from "../../components/printing/Printing";
 import { Button, Flex, Tooltip } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import TestsButton from "../../components/physiofile/physioTests/TestsButton";
 import { PrinterFill } from "react-bootstrap-icons";
 import { useAppSelector } from "../../hooks/use_app_selector";
-import { DepartmentVM } from "../../models/department/DepartmentVM";
+import { type DepartmentVM } from "../../models/department/DepartmentVM";
 import PrintButton from "../../components/printing/PrintButton";
 
 const PrintingPage: FC = () => {

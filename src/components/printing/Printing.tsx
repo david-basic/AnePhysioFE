@@ -1,32 +1,30 @@
 import { Fragment, useEffect, useState, type FC } from "react";
 import "../../App.css";
 import localStyles from "./Printing.module.css";
-import { PhysioFileVM } from "../../models/physiofile/PhysioFileVM";
-import { UserVM } from "../../models/UserVm";
-import { DepartmentVM } from "../../models/department/DepartmentVM";
+import { type PhysioFileVM } from "../../models/physiofile/PhysioFileVM";
+import { type UserVM } from "../../models/UserVm";
+import { type DepartmentVM } from "../../models/department/DepartmentVM";
 import { Flex } from "antd";
 import generateRandomNumber from "../../util/generateRandomBigInteger";
 import femaleBodyImage from "../../assets/female-01.png";
 import maleBodyImage from "../../assets/male-01.png";
 import RadarChart from "../physiofile/physioTests/cpax/RadarChart";
 import {
-	CpaxDateTimeType,
-	CpaxTableType,
+	type CpaxDateTimeType,
+	type CpaxTableType,
 } from "../physiofile/physioTests/cpax/CpaxModal";
 import "dayjs/locale/hr";
-import dayjs, { type Dayjs } from "dayjs";
-import croLocale from "antd/es/date-picker/locale/hr_HR";
-import { GcsVM } from "../../models/physiofile/physioTests/gcs/GcsVM";
+import dayjs from "dayjs";
 import {
-	EyeResponseAndIndex,
-	GcsDateTimeType,
-	GcsTableType,
-	MotorResponseAndIndex,
-	VerbalResponseAndIndex,
+	type EyeResponseAndIndex,
+	type GcsDateTimeType,
+	type GcsTableType,
+	type MotorResponseAndIndex,
+	type VerbalResponseAndIndex,
 } from "../physiofile/physioTests/gcs/GcsModal";
 import {
-	MmtDateTimeType,
-	MmtGradeAndDescription,
+	type MmtDateTimeType,
+	type MmtGradeAndDescription,
 } from "../physiofile/physioTests/mmt/MmtModal";
 
 type PrintingProps = {
