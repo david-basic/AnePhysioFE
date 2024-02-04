@@ -205,7 +205,6 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 							}}
 							onCancel={() => setShowModal(false)}>
 							{isLoading && <LoadingSpinner />}
-							{}
 							{!isLoading && (
 								<Descriptions
 									title='Informacije pacijenta'

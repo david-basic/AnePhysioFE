@@ -60,6 +60,7 @@ const fileInitState: PhysioFileVM = {
 	conclussion: "",
 	fileClosedBy: { id: "", firstName: "", lastName: "" },
 	allPhysiotherapists: [],
+	departmentId: "",
 };
 
 const physioFileInitState: PhysioFileInitStateType = {

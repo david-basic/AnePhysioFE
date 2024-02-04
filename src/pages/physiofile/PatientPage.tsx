@@ -13,7 +13,7 @@ import { physioFileActions } from "../../store/physio-file-slice";
 import TestsButton from "../../components/physiofile/physioTests/TestsButton";
 import Sider from "antd/es/layout/Sider";
 import { Content, Header } from "antd/es/layout/layout";
-import styles from "../../components/layout/PhysioFileLayout.module.css";
+import fileStyles from "../../components/layout/PhysioFileLayout.module.css";
 import PatientDetails from "../../components/physiofile/patientDetails/PatientDetails";
 import {
 	CheckSquareFill,
@@ -30,6 +30,8 @@ import VasModal from "../../components/physiofile/physioTests/vas/VasModal";
 import MmtModal from "../../components/physiofile/physioTests/mmt/MmtModal";
 import GcsModal from "../../components/physiofile/physioTests/gcs/GcsModal";
 import CpaxModal from "../../components/physiofile/physioTests/cpax/CpaxModal";
+import CustomLink from "../../components/CustomLink";
+import client_routes, { clientRoutesParams } from "../../config/client_routes";
 
 const PatientPage: FC = () => {
 	const patientId = getIdFromUrl(useLocation());
@@ -135,13 +137,13 @@ const PatientPage: FC = () => {
 					backgroundColor: "#5ac8fa",
 					position: "fixed",
 				}}
-				className={styles.fileheader}>
+				className={fileStyles.fileheader}>
 				<PatientDetails patientData={physioFile.patient} />
 			</Header>
 			<Layout>
 				<Layout>
 					<Content
-						className={styles.filecontent}
+						className={fileStyles.filecontent}
 						style={{ backgroundColor: "#d1f2ff" }}>
 						<PhysioFile
 							physioFile={physioFile}
@@ -156,7 +158,7 @@ const PatientPage: FC = () => {
 						backgroundColor: "#1d82ea",
 						position: "fixed",
 					}}
-					className={styles.filesidebar}>
+					className={fileStyles.filesidebar}>
 					<Flex
 						vertical={true}
 						align='center'
@@ -165,7 +167,7 @@ const PatientPage: FC = () => {
 						}}>
 						<div
 							style={{ height: "100%" }}
-							className={styles.testButtons}>
+							className={fileStyles.testButtons}>
 							<TestsButton
 								label='RASS'
 								onClick={() =>
@@ -282,8 +284,14 @@ const PatientPage: FC = () => {
 							/>
 							<div
 								style={{ height: "auto" }}
-								className={styles.testButtons}>
-								<TestsButton
+								className={fileStyles.testButtons}>
+								<CustomLink
+									to={client_routes.ROUTE_PRINTING_PAGE.replace(
+										clientRoutesParams.patientId,
+										patientId
+									)}
+									askForConfirmation
+									confirmationText='Jeste li sigurni? Sve nespremljene promjene se neće moći ispisati!'
 									icon={<PrinterFill />}
 									label='Ispis'
 								/>
@@ -293,9 +301,9 @@ const PatientPage: FC = () => {
 								/>
 								<div
 									style={{ height: "auto" }}
-									className={styles.testButtons}>
+									className={fileStyles.testButtons}>
 									<TestsButton
-										className={styles.saveButton}
+										className={fileStyles.saveButton}
 										icon={<SaveFilled />}
 										label='Spremi'
 										onClick={() =>
@@ -311,7 +319,7 @@ const PatientPage: FC = () => {
 										showSaveModal={showSaveModal}
 									/>
 									<TestsButton
-										className={styles.cancelButton}
+										className={fileStyles.cancelButton}
 										icon={<XCircleFill />}
 										label='Odustani'
 										onClick={() =>

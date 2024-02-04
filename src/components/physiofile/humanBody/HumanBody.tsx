@@ -25,15 +25,15 @@ const HumanBody: FC<HumanBodyProps> = ({
 	initialPoints = [],
 }: HumanBodyProps) => {
 	const dispatch = useAppDispatch();
-	const { fetchWithTokenRefresh } = useFetcApihWithTokenRefresh();
+	const { fetchWithTokenRefresh, isLoading } = useFetcApihWithTokenRefresh();
 	const [points, setPoints] = useState<Point[]>(initialPoints);
 	const [pointsSaved, setPointsSaved] = useState<boolean>(true);
 	const leftMargin = 150;
 
 	const handleImageClick = (event: React.MouseEvent<HTMLImageElement>) => {
 		const boundingBox = event.currentTarget.getBoundingClientRect();
-		const x = event.clientX - boundingBox.left - 5 + leftMargin; //5 is how much the point generated is offset from the mouse click center
-		const y = event.clientY - boundingBox.top - 5;
+		const x = event.clientX - boundingBox.left - 4 + leftMargin; //5 is how much the point generated is offset from the mouse click center
+		const y = event.clientY - boundingBox.top - 4;
 
 		const clickedPoint = points.find(
 			(point) =>
@@ -78,9 +78,9 @@ const HumanBody: FC<HumanBodyProps> = ({
 				},
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Ok) {
-						message.error("Nije moguće spremiti nove točke!");
+						message.error("Nije moguće urediti točke!");
 						console.error(
-							"There was a error while saving new pain points: ",
+							"There was a error while updating pain points: ",
 							physioFileResponse
 						);
 					} else {
@@ -89,7 +89,7 @@ const HumanBody: FC<HumanBodyProps> = ({
 								physioFileResponse.data!
 							)
 						);
-						message.success("Nove točke boli uspješno spremljene!");
+						message.success("Točke boli uspješno spremljene!");
 						setPointsSaved(true);
 					}
 				}
@@ -112,7 +112,7 @@ const HumanBody: FC<HumanBodyProps> = ({
 					alt='Human body'
 					onClick={handleImageClick}
 					style={{
-						maxHeight: "630px",
+						maxHeight: "330px",
 						marginLeft: `${leftMargin}px`,
 						cursor: "crosshair",
 						borderRadius: "8px",
@@ -125,8 +125,8 @@ const HumanBody: FC<HumanBodyProps> = ({
 							position: "absolute",
 							left: point.x,
 							top: point.y,
-							width: 10,
-							height: 10,
+							width: 8,
+							height: 8,
 							backgroundColor: "red",
 							borderRadius: "50%",
 							cursor: "pointer",
@@ -147,7 +147,7 @@ const HumanBody: FC<HumanBodyProps> = ({
 					shape='round'
 					className={modalStyles.modalsButtons}
 					icon={<SaveFilled />}
-					disabled={pointsSaved}
+					disabled={pointsSaved || isLoading}
 					onClick={handleSaveChoice}>
 					Spremi odabir
 				</Button>

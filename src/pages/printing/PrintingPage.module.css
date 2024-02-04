@@ -1,0 +1,107 @@
+:root {
+    --main-sidebar-width: 131.11px;
+    --file-header-height: 141px;
+    --file-sider-width: 335px;
+    --content-padding-top: 50px;
+    --content-padding-bottom: 20px;
+    --box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.layoutcontainer {
+    display: flex;
+}
+
+.mainsidebar {
+    flex: 0 0 auto;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    overflow-y: auto;
+    box-shadow: var(--box-shadow)
+}
+
+.fileheader {
+    flex: 0 0 auto;
+    top: 0;
+    width: 100%;
+    height: var(--file-header-height);
+    z-index: 100;
+    padding: 0px 20px;
+    box-shadow: var(--box-shadow)
+}
+
+.filesidebar {
+    flex: 0 0 auto;
+    width: var(--file-sider-width);
+    right: 0;
+    top: var(--file-header-height);
+    bottom: 0;
+    overflow-y: auto;
+    opacity: 0.84;
+    align-items: center;
+    box-shadow: var(--box-shadow)
+}
+
+.filecontent {
+    flex: 1;
+    margin-top: var(--file-header-height);
+    overflow-y: auto;
+    height: 100%;
+    border-radius: 4px;
+}
+
+.mbstyle {
+    color: #045fbd;
+    font-size: 16px;
+    font-weight: 700;
+    margin-top: 10px;
+    padding: 1px 0;
+    line-height: 20px;
+}
+
+.titleText {
+    margin-top: 10px;
+    color: #d1f2ff;
+    font-size: 38px;
+    font-weight: 800;
+    line-height: 49px;
+    text-align: right;
+}
+
+.iconstyle {
+    width: 20px;
+    height: 20px;
+    color: #023f81;
+}
+
+.nameagestyle {
+    font-size: 24px;
+    font-weight: 700;
+    color: #023f81;
+}
+
+.stacking {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.iconAndText {
+    margin-top: 5px;
+    padding: 1px 0;
+    line-height: 22px;
+}
+
+.datestyle {
+    margin-top: 5px;
+    font-size: 16px;
+    color: #045fbd;
+    line-height: 20px;
+}
+
+.address {
+    margin-top: 5px;
+    font-size: 16px;
+    color: #045fbd;
+    line-height: 20px;
+}

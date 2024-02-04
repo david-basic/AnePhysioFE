@@ -19,6 +19,8 @@ const client_routes = {
 	ROUTE_DEPT_KARDIO_JIL: "/dept/kardio-jil",
 
 	ROUTE_PATIENTS_DETAILS: `/patients/details/${clientRoutesParams.patientId}`,
+
+	ROUTE_PRINTING_PAGE: `/patient/printing-page/${clientRoutesParams.patientId}`
 };
 
 export const sideBarKey = {

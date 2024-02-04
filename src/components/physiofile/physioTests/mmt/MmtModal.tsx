@@ -51,12 +51,12 @@ type MmtModalProps = {
 	mmtList: MmtVM[];
 };
 
-type MmtDateTimeType = {
+export type MmtDateTimeType = {
 	date: string;
 	time: string;
 };
 
-type GradeAndDescription = {
+export type MmtGradeAndDescription = {
 	grade: number;
 	description: string;
 };
@@ -65,7 +65,7 @@ type TableColumnDefinitionType = {
 	key: string;
 	id: string;
 	dateTime: MmtDateTimeType;
-	gradeAndDescription: GradeAndDescription;
+	gradeAndDescription: MmtGradeAndDescription;
 	note: string;
 	index: number;
 };
@@ -456,7 +456,7 @@ const MmtModal: FC<MmtModalProps> = ({
 				physioTestId: physioTest!.id,
 				grade: foundMmt!.grade,
 				description: foundMmt!.description,
-				mmtDateTime: `${chosenDate.date}T${chosenDate.time}`,
+				mmtDateTime: dayjs(`${chosenDate.date} ${chosenDate.time}`).format("YYYY-MM-DDTHH:mm:ss"),
 				note: mmtNotes,
 			};
 
@@ -466,7 +466,7 @@ const MmtModal: FC<MmtModalProps> = ({
 				physioTestId: physioTest!.id,
 				grade: foundMmt!.grade,
 				description: foundMmt!.description,
-				mmtDateTime: `${chosenDate.date}T${chosenDate.time}`,
+				mmtDateTime: dayjs(`${chosenDate.date} ${chosenDate.time}`).format("YYYY-MM-DDTHH:mm:ss"),
 				note: mmtNotes,
 			};
 
@@ -595,7 +595,6 @@ const MmtModal: FC<MmtModalProps> = ({
 									onChange={onDatePickerChange}
 								/>
 								<hr style={{ width: "0px" }} />
-
 								<ListGroup variant='flush'>
 									{mmtList.map((mmt, index) => (
 										<Fragment key={index}>
@@ -649,40 +648,44 @@ const MmtModal: FC<MmtModalProps> = ({
 									} ${modalStyles.modalsTextArea}`}
 								/>
 								<hr style={{ width: "0px" }} />
-								<Tooltip
-									title='Datum, ocjena i zabilješka su obavezni parametri!'
-									color='#045fbd'
-									style={{
-										fontFamily: "Nunito, sans-serif",
-									}}>
-									<InfoCircleFill
-										className={modalStyles.infoIcon}
-									/>
-								</Tooltip>
-								<Button
-									type='primary'
-									shape='round'
-									className={modalStyles.modalsButtons}
-									icon={<SaveFilled />}
-									disabled={
-										isNullOrEmpty(chosenDate.date) ||
-										isNullOrEmpty(mmtNotes) ||
-										chosenMmtGrade === undefined
-									}
-									onClick={handleSaveChoice}>
-									Spremi odabir
-								</Button>
-								{tableIsBeingEdited && (
+								<Row align={"middle"}>
+									<Tooltip
+										title='Datum, ocjena i zabilješka su obavezni parametri!'
+										color='#045fbd'
+										style={{
+											fontFamily: "Nunito, sans-serif",
+										}}>
+										<InfoCircleFill
+											className={modalStyles.infoIcon}
+										/>
+									</Tooltip>
 									<Button
 										type='primary'
 										shape='round'
-										danger
-										style={{ marginLeft: "4px" }}
 										className={modalStyles.modalsButtons}
-										onClick={handleStopEditing}>
-										Odustani
+										icon={<SaveFilled />}
+										disabled={
+											isNullOrEmpty(chosenDate.date) ||
+											isNullOrEmpty(mmtNotes) ||
+											chosenMmtGrade === undefined
+										}
+										onClick={handleSaveChoice}>
+										Spremi odabir
 									</Button>
-								)}
+									{tableIsBeingEdited && (
+										<Button
+											type='primary'
+											shape='round'
+											danger
+											style={{ marginLeft: "4px" }}
+											className={
+												modalStyles.modalsButtons
+											}
+											onClick={handleStopEditing}>
+											Odustani
+										</Button>
+									)}
+								</Row>
 							</Segment>
 						</Col>
 						<Col span={15}>

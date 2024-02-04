@@ -52,25 +52,25 @@ type GcsModalProps = {
 	gcsVerbalResponses: VerbalResponseVM[];
 };
 
-type GcsDateTimeType = {
+export type GcsDateTimeType = {
 	date: string;
 	time: string;
 };
 
-type EyeResponseAndIndex = {
+export type EyeResponseAndIndex = {
 	eyeResponse: EyeOpeningResponseVM;
 	index: number | undefined;
 };
-type MotorResponseAndIndex = {
+export type MotorResponseAndIndex = {
 	motorResponse: MotorResponseVM;
 	index: number | undefined;
 };
-type VerbalResponseAndIndex = {
+export type VerbalResponseAndIndex = {
 	verbalResponse: VerbalResponseVM;
 	index: number | undefined;
 };
 
-type GcsTableType = {
+export type GcsTableType = {
 	eyeResponseAndIndex: EyeResponseAndIndex;
 	motorResponseAndIndex: MotorResponseAndIndex;
 	verbalResponseAndIndex: VerbalResponseAndIndex;
@@ -288,7 +288,7 @@ const GcsModal: FC<GcsModalProps> = ({
 			width: 70,
 			render: (_, { gcs }) => (
 				<Tooltip
-					title={`E - ${gcs.eyeResponseAndIndex.eyeResponse.scale}V - ${gcs.verbalResponseAndIndex.verbalResponse.scale}M - ${gcs.motorResponseAndIndex.motorResponse.scale}`}>
+					title={`E - ${gcs.eyeResponseAndIndex.eyeResponse.scale}, V - ${gcs.verbalResponseAndIndex.verbalResponse.scale}, M - ${gcs.motorResponseAndIndex.motorResponse.scale}`}>
 					<span>
 						Ukupno:{" "}
 						{gcs.eyeResponseAndIndex.eyeResponse.score +
@@ -624,7 +624,9 @@ const GcsModal: FC<GcsModalProps> = ({
 				eyeOpeningResponse: chosenEyeResponseAndIndex.chosenER!,
 				verbalResponse: chosenVerbalResponseAndIndex.chosenVR!,
 				motorResponse: chosenMotorResponseAndIndex.chosenMR!,
-				gcsDateTime: `${chosenDateTime.date}T${chosenDateTime.time}`,
+				gcsDateTime: dayjs(
+					`${chosenDateTime.date} ${chosenDateTime.time}`
+				).format("YYYY-MM-DDTHH:mm:ss"),
 			};
 
 			sendUpdateGcsRequest(tableRecordBeingEdited!.id, updateDto);
@@ -634,7 +636,9 @@ const GcsModal: FC<GcsModalProps> = ({
 				eyeOpeningResponse: chosenEyeResponseAndIndex.chosenER!,
 				verbalResponse: chosenVerbalResponseAndIndex.chosenVR!,
 				motorResponse: chosenMotorResponseAndIndex.chosenMR!,
-				gcsDateTime: `${chosenDateTime.date}T${chosenDateTime.time}`,
+				gcsDateTime: dayjs(
+					`${chosenDateTime.date} ${chosenDateTime.time}`
+				).format("YYYY-MM-DDTHH:mm:ss"),
 			};
 
 			sendCreateGcsRequest(createDto);
@@ -897,44 +901,50 @@ const GcsModal: FC<GcsModalProps> = ({
 									))}
 								</ListGroup>
 								<hr style={{ width: "0px" }} />
-								<Tooltip
-									title='Datum, ocjena za otvaranje očiju, verbalna ocjena i motorička ocjena su obavezni parametri!'
-									color='#045fbd'
-									style={{
-										fontFamily: "Nunito, sans-serif",
-									}}>
-									<InfoCircleFill
-										className={modalStyles.infoIcon}
-									/>
-								</Tooltip>
-								<Button
-									type='primary'
-									shape='round'
-									className={modalStyles.modalsButtons}
-									icon={<SaveFilled />}
-									disabled={
-										isNullOrEmpty(chosenDateTime.date) ||
-										chosenEyeResponseAndIndex.chosenER ===
-											undefined ||
-										chosenVerbalResponseAndIndex.chosenVR ===
-											undefined ||
-										chosenMotorResponseAndIndex.chosenMR ===
-											undefined
-									}
-									onClick={handleSaveChoice}>
-									Spremi odabir
-								</Button>
-								{tableIsBeingEdited && (
+								<Row align={"middle"}>
+									<Tooltip
+										title='Datum, ocjena za otvaranje očiju, verbalna ocjena i motorička ocjena su obavezni parametri!'
+										color='#045fbd'
+										style={{
+											fontFamily: "Nunito, sans-serif",
+										}}>
+										<InfoCircleFill
+											className={modalStyles.infoIcon}
+										/>
+									</Tooltip>
 									<Button
 										type='primary'
 										shape='round'
-										danger
-										style={{ marginLeft: "4px" }}
 										className={modalStyles.modalsButtons}
-										onClick={handleStopEditing}>
-										Odustani
+										icon={<SaveFilled />}
+										disabled={
+											isNullOrEmpty(
+												chosenDateTime.date
+											) ||
+											chosenEyeResponseAndIndex.chosenER ===
+												undefined ||
+											chosenVerbalResponseAndIndex.chosenVR ===
+												undefined ||
+											chosenMotorResponseAndIndex.chosenMR ===
+												undefined
+										}
+										onClick={handleSaveChoice}>
+										Spremi odabir
 									</Button>
-								)}
+									{tableIsBeingEdited && (
+										<Button
+											type='primary'
+											shape='round'
+											danger
+											style={{ marginLeft: "4px" }}
+											className={
+												modalStyles.modalsButtons
+											}
+											onClick={handleStopEditing}>
+											Odustani
+										</Button>
+									)}
+								</Row>
 							</Segment>
 						</Col>
 						<Col span={15}>
@@ -947,7 +957,7 @@ const GcsModal: FC<GcsModalProps> = ({
 									virtual
 									scroll={{ y: 400 }}
 									columns={columns}
-									className={modalStyles.mmtTable}
+									className={modalStyles.gcsTable}
 									size='small'
 								/>
 							</Segment>

@@ -130,7 +130,21 @@
     font-family: var(--font-family);
 }
 
+.gcsTable {
+    width: 700px;
+    max-height: 440px;
+    box-shadow: var(--box-shadow);
+    font-family: var(--font-family);
+}
+
 .mmtTable {
+    width: 700px;
+    max-height: 440px;
+    box-shadow: var(--box-shadow);
+    font-family: var(--font-family);
+}
+
+.cpaxTable {
     width: 400px;
     max-height: 440px;
     box-shadow: var(--box-shadow);

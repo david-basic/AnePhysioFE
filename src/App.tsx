@@ -15,6 +15,7 @@ import JilSusakHomePage from "./pages/departments/JilSusakHomePage";
 import KardioJilHomePage from "./pages/departments/KardioJilHomePage";
 import PatientPage from "./pages/physiofile/PatientPage";
 import PhysioFileLayout from "./components/layout/PhysioFileLayout";
+import PrintingPage from "./pages/printing/PrintingPage";
 
 const App: FC = () => {
 	const isLoggedIn = useAppSelector((state) => state.authReducer.isLoggedIn);
@@ -85,6 +86,12 @@ const App: FC = () => {
 			/>
 		),
 	};
+	const printingPageRoute = {
+		path: client_routes.ROUTE_PRINTING_PAGE,
+		element: (
+			<Protected isLoggedIn={isLoggedIn} children={<PrintingPage />} />
+		),
+	};
 
 	const routing = useRoutes([
 		authWelcomeRoute,
@@ -96,6 +103,7 @@ const App: FC = () => {
 		jilSusakHomeRoute,
 		kardioJilHomeRoute,
 		patientPageRoute,
+		printingPageRoute,
 	]);
 
 	return <>{routing}</>;

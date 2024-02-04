@@ -19,6 +19,7 @@ const Box: FC<BoxVM> = (props: BoxVM) => {
 							bedNum={bedNumber++}
 							id={bed.id}
 							patient={bed.patient}
+							bedIsEmpty={bed.bedIsEmpty}
 						/>
 					</ListGroup.Item>
 				))}

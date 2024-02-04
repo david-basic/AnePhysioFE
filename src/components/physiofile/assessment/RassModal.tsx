@@ -407,7 +407,9 @@ const RassModal: FC<RassModalProps> = ({
 				score: foundRass!.score,
 				term: foundRass!.term,
 				scoreDescription: foundRass!.scoreDescription,
-				rassDateTime: `${chosenDate.date}T${chosenDate.time}`,
+				rassDateTime: dayjs(
+					`${chosenDate.date} ${chosenDate.time}`
+				).format("YYYY-MM-DDTHH:mm:ss"),
 				additionalDescription: additionalNotes,
 			};
 
@@ -418,7 +420,9 @@ const RassModal: FC<RassModalProps> = ({
 				score: foundRass!.score,
 				term: foundRass!.term,
 				scoreDescription: foundRass!.scoreDescription,
-				rassDateTime: `${chosenDate.date}T${chosenDate.time}`,
+				rassDateTime: dayjs(
+					`${chosenDate.date} ${chosenDate.time}`
+				).format("YYYY-MM-DDTHH:mm:ss"),
 				additionalDescription: additionalNotes,
 			};
 
@@ -695,41 +699,45 @@ const RassModal: FC<RassModalProps> = ({
 									className={modalStyles.modalsTextArea}
 								/>
 								<hr style={{ width: "0px" }} />
-								<Tooltip
-									title='Datum i ocjena su obavezni parametri!'
-									color='#045fbd'
-									style={{
-										fontFamily: "Nunito, sans-serif",
-									}}>
-									<InfoCircleFill
-										className={modalStyles.infoIcon}
-									/>
-								</Tooltip>
-								<Button
-									type='primary'
-									shape='round'
-									className={modalStyles.modalsButtons}
-									icon={<SaveFilled />}
-									disabled={
-										isNullOrEmpty(chosenDate.date) ||
-										isNullOrEmpty(
-											chosenRassScoreAndIndex.chosenScore
-										)
-									}
-									onClick={handleSaveChoice}>
-									Spremi odabir
-								</Button>
-								{tableIsBeingEdited && (
+								<Row align={"middle"}>
+									<Tooltip
+										title='Datum i ocjena su obavezni parametri!'
+										color='#045fbd'
+										style={{
+											fontFamily: "Nunito, sans-serif",
+										}}>
+										<InfoCircleFill
+											className={modalStyles.infoIcon}
+										/>
+									</Tooltip>
 									<Button
 										type='primary'
 										shape='round'
-										danger
-										style={{ marginLeft: "4px" }}
 										className={modalStyles.modalsButtons}
-										onClick={handleStopEditing}>
-										Odustani
+										icon={<SaveFilled />}
+										disabled={
+											isNullOrEmpty(chosenDate.date) ||
+											isNullOrEmpty(
+												chosenRassScoreAndIndex.chosenScore
+											)
+										}
+										onClick={handleSaveChoice}>
+										Spremi odabir
 									</Button>
-								)}
+									{tableIsBeingEdited && (
+										<Button
+											type='primary'
+											shape='round'
+											danger
+											style={{ marginLeft: "4px" }}
+											className={
+												modalStyles.modalsButtons
+											}
+											onClick={handleStopEditing}>
+											Odustani
+										</Button>
+									)}
+								</Row>
 							</Segment>
 						</Col>
 						<Col span={14}>

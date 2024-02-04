@@ -458,7 +458,7 @@ const CpaxModal: FC<CpaxModalProps> = ({
 			key: "cpaxDateTime",
 			title: "Datum",
 			dataIndex: "dateTime",
-			width: 25,
+			width: 15,
 			sorter: (a, b) => {
 				const dateA = dayjs(`${a.dateTime.date} ${a.dateTime.time}`);
 				const dateB = dayjs(`${b.dateTime.date} ${b.dateTime.time}`);
@@ -482,7 +482,7 @@ const CpaxModal: FC<CpaxModalProps> = ({
 			key: "cpax",
 			title: "Ocjena",
 			dataIndex: "cpax",
-			width: 20,
+			width: 15,
 			render: (_, { cpax }) => (
 				<span>
 					{cpax.coughAOPandIndex.aop.level +
@@ -502,7 +502,7 @@ const CpaxModal: FC<CpaxModalProps> = ({
 		{
 			key: "actions",
 			title: "Akcije",
-			width: 25,
+			width: 20,
 			render: (_, record) => (
 				<Space size={"small"}>
 					<Button
@@ -1042,7 +1042,9 @@ const CpaxModal: FC<CpaxModalProps> = ({
 				transferringFromBedAop:
 					chosenTransferringFromBedAopAndIndex!.aop,
 				supineToSittingAop: chosenSupineToSittingAopAndIndex!.aop,
-				cpaxDateTime: `${chosenDateTime.date}T${chosenDateTime.time}`,
+				cpaxDateTime: dayjs(
+					`${chosenDateTime.date} ${chosenDateTime.time}`
+				).format("YYYY-MM-DDTHH:mm:ss"),
 			};
 
 			sendUpdateCpaxRequest(tableRecordBeingEdited!.id, updateDto);
@@ -1060,7 +1062,9 @@ const CpaxModal: FC<CpaxModalProps> = ({
 				transferringFromBedAop:
 					chosenTransferringFromBedAopAndIndex!.aop,
 				supineToSittingAop: chosenSupineToSittingAopAndIndex!.aop,
-				cpaxDateTime: `${chosenDateTime.date}T${chosenDateTime.time}`,
+				cpaxDateTime: dayjs(
+					`${chosenDateTime.date} ${chosenDateTime.time}`
+				).format("YYYY-MM-DDTHH:mm:ss"),
 			};
 
 			sendCreateCpaxRequest(createDto);
@@ -1276,7 +1280,7 @@ const CpaxModal: FC<CpaxModalProps> = ({
 										virtual
 										scroll={{ y: 400 }}
 										columns={columns}
-										className={modalStyles.mmtTable}
+										className={modalStyles.cpaxTable}
 										size='small'
 									/>
 								</Segment>

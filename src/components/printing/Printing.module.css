@@ -1,0 +1,91 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-bottom: 50px;
+}
+
+.stacking {
+    display: flex;
+    flex-direction: column;
+}
+
+.hospitalInfo {
+    font-size: 20px;
+    color: gray;
+    line-height: 20px;
+}
+
+.printTitle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: -50px;
+    font-size: 20px;
+    line-height: 20px;
+    margin-bottom: 20px;
+}
+
+.splitterLine {
+    height: 2px;
+    color: black;
+    width: 100%;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.mainContent {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    width: 100%;
+}
+
+.physioFileData {
+    margin-top: -20px;
+}
+
+.styledTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.styledTableHeader {
+    background-color: transparent;
+    color: black;
+    font-weight: bold;
+    padding: 10px;
+    text-align: left;
+    border: 1px solid black;
+}
+
+.styledTableCell {
+    border: 1px solid black;
+    padding: 10px;
+}
+
+.therapeut {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: -20px;
+}
+
+.dateOfPrinting {
+    display: flex;
+    align-items: first baseline;
+    width: 100%;
+}
+
+.cpaxChartContainer {
+    max-height: fit-content; 
+    max-width: 580px;
+    font-family: var(--font-family);
+    padding: 10px;
+    justify-content: center;
+    background-color: transparent;
+}
