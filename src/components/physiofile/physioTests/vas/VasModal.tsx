@@ -180,13 +180,19 @@ const VasModal: FC<VasModalProps> = ({
 				<Space size={"small"}>
 					<Button
 						type='primary'
-						disabled={tableIsBeingEdited}
+						disabled={
+							tableIsBeingEdited ||
+							physioFile.fileClosedBy !== null
+						}
 						onClick={(e) => handleEditChoice(e, record)}
 						icon={<PencilFill className={modalStyles.icon} />}
 					/>
 					<Button
 						type='primary'
-						disabled={tableIsBeingEdited}
+						disabled={
+							tableIsBeingEdited ||
+							physioFile.fileClosedBy !== null
+						}
 						danger
 						onClick={(e) => handleDeleteChoice(e, record)}
 						icon={<X className={modalStyles.icon} />}
@@ -551,6 +557,7 @@ const VasModal: FC<VasModalProps> = ({
 							<Segment isContent>
 								<DatePicker
 									placeholder='Odaberi datum'
+									disabled={physioFile.fileClosedBy !== null}
 									format={croLocale.dateFormat}
 									locale={croLocale}
 									value={datePickerValue}
@@ -572,6 +579,7 @@ const VasModal: FC<VasModalProps> = ({
 										marks={sliderMarks}
 										step={null}
 										value={painLevelSliderValue}
+										disabled={physioFile.fileClosedBy !== null}
 										onChange={setPainLevelSliderValue}
 										styles={{
 											track: {
@@ -589,6 +597,7 @@ const VasModal: FC<VasModalProps> = ({
 								<hr style={{ width: "0px" }} />
 								<TextArea
 									id='vasNotes'
+									disabled={physioFile.fileClosedBy !== null}
 									value={vasNotes}
 									autoSize={{ minRows: 4 }}
 									onChange={onVasNotesChange}

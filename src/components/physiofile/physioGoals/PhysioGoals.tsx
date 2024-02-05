@@ -138,6 +138,7 @@ const PhysioGoals: FC<PhysioGoalsProps> = ({
 						style={{ marginBottom: "8px" }}>
 						<Checkbox
 							className={`${fileStyles.texts} ${goalStyles.checkbox}`}
+							disabled={physioFile.fileClosedBy !== null}
 							style={{ fontWeight: 400 }}
 							value={intubatedPatientGoal.id}>
 							{intubatedPatientGoal.type}
@@ -145,6 +146,7 @@ const PhysioGoals: FC<PhysioGoalsProps> = ({
 						{allPatientGoals[0].selected && (
 							<TextArea
 								value={intubatedPatientGoalDescription}
+								disabled={physioFile.fileClosedBy !== null}
 								autoSize={{ minRows: 1, maxRows: 2 }}
 								onChange={handleChangeIntubatedDescription}
 								onBlur={handleLoseFocusIntubated}
@@ -158,6 +160,7 @@ const PhysioGoals: FC<PhysioGoalsProps> = ({
 					<Row align='middle' className={goalStyles.row}>
 						<Checkbox
 							className={`${fileStyles.texts} ${goalStyles.checkbox}`}
+							disabled={physioFile.fileClosedBy !== null}
 							style={{ fontWeight: 400 }}
 							value={extubatedPatientGoal.id}>
 							{extubatedPatientGoal.type}
@@ -165,6 +168,7 @@ const PhysioGoals: FC<PhysioGoalsProps> = ({
 						{allPatientGoals[1].selected && (
 							<TextArea
 								value={extubatedPatientGoalDescription}
+								disabled={physioFile.fileClosedBy !== null}
 								autoSize={{ minRows: 1, maxRows: 2 }}
 								onChange={handleChangeExtubatedDescription}
 								onBlur={handleLoseFocusExtubated}

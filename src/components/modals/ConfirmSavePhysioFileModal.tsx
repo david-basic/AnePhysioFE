@@ -42,9 +42,6 @@ const ConfirmSavePhysioFileModal: FC<ConfirmSaveModalProps> = ({
 			conclussion,
 		};
 
-		console.log("physiofileId: ", physioFile.id);
-		console.log("updateDto: ", updateDto);
-
 		try {
 			fetchWithTokenRefresh(
 				{
@@ -80,8 +77,8 @@ const ConfirmSavePhysioFileModal: FC<ConfirmSaveModalProps> = ({
 				}
 			);
 		} catch (error) {
-			console.error("Error updating VAS:", error);
-			message.error("Neuspjela izmjena VAS-a!");
+			console.error("Error saving physio file:", error);
+			message.error("Neuspjelo spremanje fizioterapeutskog kartona!");
 		}
 
 		dispatch(modalsShowActions.setShowSaveModal(false));
@@ -102,8 +99,8 @@ const ConfirmSavePhysioFileModal: FC<ConfirmSaveModalProps> = ({
 			onCancel={() =>
 				dispatch(modalsShowActions.setShowSaveModal(false))
 			}>
-			<h1>Potvrda spremanja</h1>
-			<h2>Želite li spremiti podatke na kartonu?</h2>
+			<h2>Potvrda spremanja</h2>
+			<h3>Želite li spremiti podatke na kartonu?</h3>
 		</Modal>
 	);
 };

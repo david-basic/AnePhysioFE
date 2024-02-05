@@ -311,13 +311,19 @@ const GcsModal: FC<GcsModalProps> = ({
 				<Space size={"small"}>
 					<Button
 						type='primary'
-						disabled={tableIsBeingEdited}
+						disabled={
+							tableIsBeingEdited ||
+							physioFile.fileClosedBy !== null
+						}
 						onClick={(e) => handleEditChoice(e, record)}
 						icon={<PencilFill className={modalStyles.icon} />}
 					/>
 					<Button
 						type='primary'
-						disabled={tableIsBeingEdited}
+						disabled={
+							tableIsBeingEdited ||
+							physioFile.fileClosedBy !== null
+						}
 						danger
 						onClick={(e) => handleDeleteChoice(e, record)}
 						icon={<X className={modalStyles.icon} />}
@@ -778,6 +784,7 @@ const GcsModal: FC<GcsModalProps> = ({
 							<Segment isContent>
 								<DatePicker
 									placeholder='Odaberi datum'
+									disabled={physioFile.fileClosedBy !== null}
 									format={croLocale.dateFormat}
 									locale={croLocale}
 									value={datePickerValue}
@@ -807,6 +814,8 @@ const GcsModal: FC<GcsModalProps> = ({
 														: `${modalStyles.rassLinks}`
 												}
 												onClick={(e) =>
+													physioFile.fileClosedBy ===
+														null &&
 													handleEyeResponseClick(
 														e,
 														index
@@ -845,6 +854,8 @@ const GcsModal: FC<GcsModalProps> = ({
 														: `${modalStyles.rassLinks}`
 												}
 												onClick={(e) =>
+													physioFile.fileClosedBy ===
+														null &&
 													handleVerbalResponseClick(
 														e,
 														index
@@ -881,6 +892,8 @@ const GcsModal: FC<GcsModalProps> = ({
 														: `${modalStyles.rassLinks}`
 												}
 												onClick={(e) =>
+													physioFile.fileClosedBy ===
+														null &&
 													handleMotorResponseClick(
 														e,
 														index

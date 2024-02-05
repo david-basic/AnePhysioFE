@@ -210,13 +210,19 @@ const Procedures: FC<ProceduresProps> = ({
 				<Space size={"small"}>
 					<Button
 						type='primary'
-						disabled={tableIsBeingEdited}
+						disabled={
+							tableIsBeingEdited ||
+							physioFile.fileClosedBy !== null
+						}
 						onClick={(e) => handleEditChoice(e, record)}
 						icon={<PencilFill className={modalStyles.icon} />}
 					/>
 					<Button
 						type='primary'
-						disabled={tableIsBeingEdited}
+						disabled={
+							tableIsBeingEdited ||
+							physioFile.fileClosedBy !== null
+						}
 						danger
 						onClick={(e) => handleDeleteChoice(e, record)}
 						icon={<X className={modalStyles.icon} />}
@@ -587,6 +593,7 @@ const Procedures: FC<ProceduresProps> = ({
 				style={{ marginBottom: "10px" }}>
 				<DatePicker
 					placeholder='Odaberi datum'
+					disabled={physioFile.fileClosedBy !== null}
 					format={croLocale.dateFormat}
 					locale={croLocale}
 					value={datePickerValue}
@@ -685,6 +692,7 @@ const Procedures: FC<ProceduresProps> = ({
 				<Button
 					type='primary'
 					icon={<PlusCircle />}
+					disabled={physioFile.fileClosedBy !== null}
 					onClick={() =>
 						dispatch(modalsShowActions.setShowProcedureModal(true))
 					}>

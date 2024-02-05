@@ -16,6 +16,7 @@ const api_routes = {
 	ROUTE_PHYSIO_FILE_GET: `${apiRoutesParams.API}/physiofile-management/physiofiles`,
 	ROUTE_PHYSIO_FILE_GET_BY_PATIENT_ID: `${apiRoutesParams.API}/physiofile-management/physiofiles/patient`,
 	ROUTE_PHYSIO_FILE_UPDATE_BY_ID: `${apiRoutesParams.API}/physiofile-management/physiofiles/update-physiofile`,
+	ROUTE_PHYSIO_FILE_CLOSE_FILE_BY_ID: `${apiRoutesParams.API}/physiofile-management/physiofiles/close-physiofile`,
 
 	ROUTE_FUNC_DIAG_GET_ALL: `${apiRoutesParams.API}/functional-diagnosis-management/diagnoses`,
 	ROUTE_FUNC_DIAG_ADD_NEW: `${apiRoutesParams.API}/functional-diagnosis-management/diagnoses/new-fd`,

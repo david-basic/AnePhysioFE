@@ -266,13 +266,19 @@ const RassModal: FC<RassModalProps> = ({
 				<Space size={"small"}>
 					<Button
 						type='primary'
-						disabled={tableIsBeingEdited}
+						disabled={
+							tableIsBeingEdited ||
+							physioFile.fileClosedBy !== null
+						}
 						onClick={(e) => handleEditChoice(e, record)}
 						icon={<PencilFill className={modalStyles.icon} />}
 					/>
 					<Button
 						type='primary'
-						disabled={tableIsBeingEdited}
+						disabled={
+							tableIsBeingEdited ||
+							physioFile.fileClosedBy !== null
+						}
 						danger
 						onClick={(e) => handleDeleteChoice(e, record)}
 						icon={<X className={modalStyles.icon} />}
@@ -644,6 +650,7 @@ const RassModal: FC<RassModalProps> = ({
 							<Segment isContent>
 								<DatePicker
 									placeholder='Odaberi datum'
+									disabled={physioFile.fileClosedBy !== null}
 									format={croLocale.dateFormat}
 									locale={croLocale}
 									value={datePickerValue}
@@ -669,6 +676,8 @@ const RassModal: FC<RassModalProps> = ({
 														: `${modalStyles.rassLinks}`
 												}
 												onClick={(e) =>
+													physioFile.fileClosedBy ===
+														null &&
 													handleRassClick(e, index)
 												}>
 												<Tooltip
@@ -691,6 +700,7 @@ const RassModal: FC<RassModalProps> = ({
 								<hr style={{ width: "0px" }} />
 								<TextArea
 									id='rassAdditionalNotes'
+									disabled={physioFile.fileClosedBy !== null}
 									value={additionalNotes}
 									autoSize={{ minRows: 4 }}
 									onChange={handleAdditionalNotesChange}

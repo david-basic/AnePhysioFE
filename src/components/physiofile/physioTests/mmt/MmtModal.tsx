@@ -169,13 +169,19 @@ const MmtModal: FC<MmtModalProps> = ({
 				<Space size={"small"}>
 					<Button
 						type='primary'
-						disabled={tableIsBeingEdited}
+						disabled={
+							tableIsBeingEdited ||
+							physioFile.fileClosedBy !== null
+						}
 						onClick={(e) => handleEditChoice(e, record)}
 						icon={<PencilFill className={modalStyles.icon} />}
 					/>
 					<Button
 						type='primary'
-						disabled={tableIsBeingEdited}
+						disabled={
+							tableIsBeingEdited ||
+							physioFile.fileClosedBy !== null
+						}
 						danger
 						onClick={(e) => handleDeleteChoice(e, record)}
 						icon={<X className={modalStyles.icon} />}
@@ -456,7 +462,9 @@ const MmtModal: FC<MmtModalProps> = ({
 				physioTestId: physioTest!.id,
 				grade: foundMmt!.grade,
 				description: foundMmt!.description,
-				mmtDateTime: dayjs(`${chosenDate.date} ${chosenDate.time}`).format("YYYY-MM-DDTHH:mm:ss"),
+				mmtDateTime: dayjs(
+					`${chosenDate.date} ${chosenDate.time}`
+				).format("YYYY-MM-DDTHH:mm:ss"),
 				note: mmtNotes,
 			};
 
@@ -466,7 +474,9 @@ const MmtModal: FC<MmtModalProps> = ({
 				physioTestId: physioTest!.id,
 				grade: foundMmt!.grade,
 				description: foundMmt!.description,
-				mmtDateTime: dayjs(`${chosenDate.date} ${chosenDate.time}`).format("YYYY-MM-DDTHH:mm:ss"),
+				mmtDateTime: dayjs(
+					`${chosenDate.date} ${chosenDate.time}`
+				).format("YYYY-MM-DDTHH:mm:ss"),
 				note: mmtNotes,
 			};
 
@@ -584,6 +594,7 @@ const MmtModal: FC<MmtModalProps> = ({
 							<Segment isContent>
 								<DatePicker
 									placeholder='Odaberi datum'
+									disabled={physioFile.fileClosedBy !== null}
 									format={croLocale.dateFormat}
 									locale={croLocale}
 									value={datePickerValue}
@@ -609,6 +620,8 @@ const MmtModal: FC<MmtModalProps> = ({
 														: `${modalStyles.rassLinks}`
 												}
 												onClick={(e) =>
+													physioFile.fileClosedBy ===
+														null &&
 													handleMmtClick(e, index)
 												}>
 												<Tooltip
@@ -636,6 +649,7 @@ const MmtModal: FC<MmtModalProps> = ({
 								<hr style={{ width: "0px" }} />
 								<TextArea
 									id='mmtNotes'
+									disabled={physioFile.fileClosedBy !== null}
 									value={mmtNotes}
 									autoSize={{ minRows: 4 }}
 									onChange={onMmtNotesChange}

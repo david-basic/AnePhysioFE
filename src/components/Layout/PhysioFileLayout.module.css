@@ -57,7 +57,7 @@
     flex-direction: column;
     gap: 9px;
     margin-top: 75px;
-}
+}   
 
 .saveButton {
     background-color: #286e34;
@@ -65,10 +65,18 @@
 .saveButton:hover {
     background-color: #4cd964;
 }
+.saveButton:disabled {
+    background-color: #628d68;
+    cursor: not-allowed;
+}
 
 .cancelButton {
     background-color: #811f1a;
 }
 .cancelButton:hover {
     background-color: #ff3b30;
+}
+.cancelButton:disabled {
+    background-color: #805856;
+    cursor: not-allowed;
 }

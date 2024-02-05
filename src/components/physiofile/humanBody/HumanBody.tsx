@@ -31,8 +31,12 @@ const HumanBody: FC<HumanBodyProps> = ({
 	const leftMargin = 150;
 
 	const handleImageClick = (event: React.MouseEvent<HTMLImageElement>) => {
+		if (physioFile.fileClosedBy !== null) {
+			return;
+		}
+
 		const boundingBox = event.currentTarget.getBoundingClientRect();
-		const x = event.clientX - boundingBox.left - 4 + leftMargin; //5 is how much the point generated is offset from the mouse click center
+		const x = event.clientX - boundingBox.left - 4 + leftMargin; //4 is how much the point generated is offset from the mouse click center
 		const y = event.clientY - boundingBox.top - 4;
 
 		const clickedPoint = points.find(
@@ -114,7 +118,7 @@ const HumanBody: FC<HumanBodyProps> = ({
 					style={{
 						maxHeight: "330px",
 						marginLeft: `${leftMargin}px`,
-						cursor: "crosshair",
+						cursor:`${physioFile.fileClosedBy !== null ? "not-allowed" : "crosshair"}`,
 						borderRadius: "8px",
 					}}
 				/>

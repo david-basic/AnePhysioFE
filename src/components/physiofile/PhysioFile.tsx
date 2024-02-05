@@ -78,12 +78,18 @@ const PhysioFile: FC<PhysioFileProps> = ({
 										patientAssessment={
 											physioFile.assessment
 										}
+										physioFile={physioFile}
 									/>
 								</Segment>
 							</Segment>
 							<Segment id='humanBody'>
 								<Segment isContent>
-									<HumanBody physioFile={physioFile} initialPoints={physioFile.assessment.pointsOfPain} />
+									<HumanBody
+										physioFile={physioFile}
+										initialPoints={
+											physioFile.assessment.pointsOfPain
+										}
+									/>
 								</Segment>
 							</Segment>
 							<Segment id='otherMkbsAndOperations'>
@@ -120,13 +126,17 @@ const PhysioFile: FC<PhysioFileProps> = ({
 							<Segment id='physioNotes'>
 								<SegmentTitle label='Zabilješke:' />
 								<Segment isContent>
-									<PhysioNotes notes={physioFile.notes} />
+									<PhysioNotes
+										physioFile={physioFile}
+										notes={physioFile.notes}
+									/>
 								</Segment>
 							</Segment>
 							<Segment id='finalAssessmentAndConclussion'>
 								<SegmentTitle label='Završna procjena i zaključak:' />
 								<Segment isContent>
 									<PhysioFinalAssessmentAndConclussion
+										physioFile={physioFile}
 										conclussion={physioFile.conclussion}
 									/>
 								</Segment>
@@ -173,6 +183,8 @@ const PhysioFile: FC<PhysioFileProps> = ({
 													physioFile.fileOpenedBy
 														.lastName
 												}
+												{", "}
+												{physioFile.fileOpenedBy.title}
 											</span>
 										</Segment>
 									</Col>
@@ -191,6 +203,11 @@ const PhysioFile: FC<PhysioFileProps> = ({
 													{
 														physioFile.fileClosedBy
 															.lastName
+													}
+													{", "}
+													{
+														physioFile.fileOpenedBy
+															.title
 													}
 												</span>
 											)}

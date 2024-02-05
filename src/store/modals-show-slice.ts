@@ -10,6 +10,7 @@ type ModalsInitState = {
 	showCpaxModal: boolean;
 	showFdModal: boolean;
 	showProcedureModal: boolean;
+	showCloseFileModal: boolean;
 };
 
 const modalsShowInitState: ModalsInitState = {
@@ -22,6 +23,7 @@ const modalsShowInitState: ModalsInitState = {
 	showCpaxModal: false,
 	showFdModal: false,
 	showProcedureModal: false,
+	showCloseFileModal: false,
 };
 
 const modalsShowSlice = createSlice({
@@ -33,6 +35,9 @@ const modalsShowSlice = createSlice({
 		},
 		setShowSaveModal: (state, action: PayloadAction<boolean>) => {
 			state.showSaveModal = action.payload;
+		},
+		setShowCloseFileModal: (state, action: PayloadAction<boolean>) => {
+			state.showCloseFileModal = action.payload;
 		},
 		setShowRassModal: (state, action: PayloadAction<boolean>) => {
 			state.showRassModal = action.payload;
@@ -65,6 +70,7 @@ const modalsShowSlice = createSlice({
 			state.showCpaxModal = modalsShowInitState.showCpaxModal;
 			state.showFdModal = modalsShowInitState.showFdModal;
 			state.showProcedureModal = modalsShowInitState.showProcedureModal;
+			state.showCloseFileModal = modalsShowInitState.showCloseFileModal;
 		},
 	},
 });

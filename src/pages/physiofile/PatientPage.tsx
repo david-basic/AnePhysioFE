@@ -32,6 +32,7 @@ import GcsModal from "../../components/physiofile/physioTests/gcs/GcsModal";
 import CpaxModal from "../../components/physiofile/physioTests/cpax/CpaxModal";
 import CustomLink from "../../components/CustomLink";
 import client_routes, { clientRoutesParams } from "../../config/client_routes";
+import ConfirmCloseFileModal from "../../components/modals/ConfirmCloseFileModal";
 
 const PatientPage: FC = () => {
 	const patientId = getIdFromUrl(useLocation());
@@ -55,6 +56,7 @@ const PatientPage: FC = () => {
 		showRassModal,
 		showSaveModal,
 		showVasModal,
+		showCloseFileModal,
 	} = useAppSelector((state) => state.modalsShowReducer);
 	const physioFile = useAppSelector(
 		(state) => state.physioFileReducer.physioFile
@@ -298,6 +300,20 @@ const PatientPage: FC = () => {
 								<TestsButton
 									icon={<CheckSquareFill />}
 									label='Zaključi'
+									className={fileStyles.cancelButton}
+									disabled={physioFile.fileClosedBy !== null}
+									onClick={() =>
+										!dataSaved &&
+										dispatch(
+											modalsShowActions.setShowCloseFileModal(
+												true
+											)
+										)
+									}
+								/>
+								<ConfirmCloseFileModal
+									physioFile={physioFile}
+									showCloseFileModal={showCloseFileModal}
 								/>
 								<div
 									style={{ height: "auto" }}
@@ -306,6 +322,7 @@ const PatientPage: FC = () => {
 										className={fileStyles.saveButton}
 										icon={<SaveFilled />}
 										label='Spremi'
+										disabled={physioFile.fileClosedBy !== null}
 										onClick={() =>
 											!dataSaved &&
 											dispatch(
@@ -316,8 +333,8 @@ const PatientPage: FC = () => {
 										}
 									/>
 									<ConfirmSavePhysioFileModal
-										showSaveModal={showSaveModal}
 										physioFile={physioFile}
+										showSaveModal={showSaveModal}
 									/>
 									<TestsButton
 										className={fileStyles.cancelButton}

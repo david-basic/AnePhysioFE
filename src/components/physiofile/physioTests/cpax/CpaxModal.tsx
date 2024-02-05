@@ -513,13 +513,19 @@ const CpaxModal: FC<CpaxModalProps> = ({
 					/>
 					<Button
 						type='primary'
-						disabled={tableIsBeingEdited}
+						disabled={
+							tableIsBeingEdited ||
+							physioFile.fileClosedBy !== null
+						}
 						onClick={(e) => handleEditChoice(e, record)}
 						icon={<PencilFill className={modalStyles.icon} />}
 					/>
 					<Button
 						type='primary'
-						disabled={tableIsBeingEdited}
+						disabled={
+							tableIsBeingEdited ||
+							physioFile.fileClosedBy !== null
+						}
 						danger
 						onClick={(e) => handleDeleteChoice(e, record)}
 						icon={<X className={modalStyles.icon} />}
@@ -1332,6 +1338,9 @@ const CpaxModal: FC<CpaxModalProps> = ({
 										</Tooltip>
 										<DatePicker
 											placeholder='Odaberi datum'
+											disabled={
+												physioFile.fileClosedBy !== null
+											}
 											format={croLocale.dateFormat}
 											locale={croLocale}
 											value={datePickerValue}
@@ -1364,6 +1373,8 @@ const CpaxModal: FC<CpaxModalProps> = ({
 															: `${modalStyles.rassLinks}`
 													}
 													onClick={(e) =>
+														physioFile.fileClosedBy ===
+															null &&
 														handleRespiratoryAOPclick(
 															e,
 															index
@@ -1399,6 +1410,8 @@ const CpaxModal: FC<CpaxModalProps> = ({
 															: `${modalStyles.rassLinks}`
 													}
 													onClick={(e) =>
+														physioFile.fileClosedBy ===
+															null &&
 														handleCoughAOPclick(
 															e,
 															index
@@ -1435,6 +1448,8 @@ const CpaxModal: FC<CpaxModalProps> = ({
 																: `${modalStyles.rassLinks}`
 														}
 														onClick={(e) =>
+															physioFile.fileClosedBy ===
+																null &&
 															handleMovingWithinBedAOPClick(
 																e,
 																index
@@ -1472,6 +1487,8 @@ const CpaxModal: FC<CpaxModalProps> = ({
 																: `${modalStyles.rassLinks}`
 														}
 														onClick={(e) =>
+															physioFile.fileClosedBy ===
+																null &&
 															handleSupineToSittingAOPClick(
 																e,
 																index
@@ -1509,6 +1526,8 @@ const CpaxModal: FC<CpaxModalProps> = ({
 																: `${modalStyles.rassLinks}`
 														}
 														onClick={(e) =>
+															physioFile.fileClosedBy ===
+																null &&
 															handleDynamicSittingAOPClick(
 																e,
 																index
@@ -1548,6 +1567,8 @@ const CpaxModal: FC<CpaxModalProps> = ({
 																: `${modalStyles.rassLinks}`
 														}
 														onClick={(e) =>
+															physioFile.fileClosedBy ===
+																null &&
 															handleStandingBalanceAOPClick(
 																e,
 																index
@@ -1586,6 +1607,8 @@ const CpaxModal: FC<CpaxModalProps> = ({
 															: `${modalStyles.rassLinks}`
 													}
 													onClick={(e) =>
+														physioFile.fileClosedBy ===
+															null &&
 														handleSitToStandAOPclick(
 															e,
 															index
@@ -1622,6 +1645,8 @@ const CpaxModal: FC<CpaxModalProps> = ({
 																: `${modalStyles.rassLinks}`
 														}
 														onClick={(e) =>
+															physioFile.fileClosedBy ===
+																null &&
 															handleTransferringFromBedAOPClick(
 																e,
 																index
@@ -1658,6 +1683,8 @@ const CpaxModal: FC<CpaxModalProps> = ({
 															: `${modalStyles.rassLinks}`
 													}
 													onClick={(e) =>
+														physioFile.fileClosedBy ===
+															null &&
 														handleSteppingAOPClick(
 															e,
 															index
@@ -1695,6 +1722,8 @@ const CpaxModal: FC<CpaxModalProps> = ({
 															: `${modalStyles.rassLinks}`
 													}
 													onClick={(e) =>
+														physioFile.fileClosedBy ===
+															null &&
 														handleGripStrengthAOPClick(
 															e,
 															index
