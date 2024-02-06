@@ -19,7 +19,7 @@ import { modalsShowActions } from "../store/modals-show-slice";
 import client_routes from "../config/client_routes";
 import localforage from "localforage";
 import { useNavigate } from "react-router-dom";
-import anephysioLogo from "../assets/anephysio-01.png";
+import anephysioLogo from "../assets/anephysio-01-blue.png";
 
 const HomePage: FC = () => {
 	const { sendRequest: fetchDepartmentsRequest } = useFetchApi();
