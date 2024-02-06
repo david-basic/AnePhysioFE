@@ -1,11 +1,10 @@
 import "./App.css";
 import client_routes from "./config/client_routes";
 import WelcomePage from "./pages/authentication/WelcomePage";
-import { useRoutes } from "react-router-dom";
+import { useLocation, useRoutes } from "react-router-dom";
 import LoginPage from "./pages/authentication/LoginPage";
 import RegisterPage from "./pages/authentication/RegisterPage";
 import Protected from "./components/authentication/Protected";
-import HomePage from "./pages/HomePage";
 import MainLayout from "./components/layout/MainLayout";
 import { type FC } from "react";
 import { useAppSelector } from "./hooks/use_app_selector";
@@ -16,9 +15,12 @@ import KardioJilHomePage from "./pages/departments/KardioJilHomePage";
 import PatientPage from "./pages/physiofile/PatientPage";
 import PhysioFileLayout from "./components/layout/PhysioFileLayout";
 import PrintingPage from "./pages/printing/PrintingPage";
+import HomePage from "./pages/HomePage";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 const App: FC = () => {
 	const isLoggedIn = useAppSelector((state) => state.authReducer.isLoggedIn);
+	const location = useLocation();
 
 	const authWelcomeRoute = {
 		path: client_routes.ROUTE_AUTH,
@@ -40,10 +42,7 @@ const App: FC = () => {
 	const homeRoute = {
 		path: client_routes.ROUTE_HOME,
 		element: (
-			<Protected
-				isLoggedIn={isLoggedIn}
-				children={<MainLayout children={<HomePage />} />}
-			/>
+			<Protected isLoggedIn={isLoggedIn} children={<HomePage />} />
 		),
 	};
 	const jilRijekaHomeRoute = {
@@ -111,7 +110,13 @@ const App: FC = () => {
 		printingPageRoute,
 	]);
 
-	return <>{routing}</>;
+	return (
+		<TransitionGroup>
+			<CSSTransition key={location.key} classNames="fade" timeout={500}>
+				{routing}
+			</CSSTransition>
+		</TransitionGroup>
+	);
 };
 
 export default App;
