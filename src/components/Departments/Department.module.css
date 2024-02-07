@@ -1,0 +1,72 @@
+.departmentContainer {
+    background-color: #aad3ff;
+    height: 100vh;
+}
+
+.header {
+    background-color: #004a8c;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.headerTitle {
+    color: white;
+    font-family: "Nunito", sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    margin: 20px;
+}
+
+/* rijeka */
+.rijekaBox1 {
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+
+.rijekaBox2 {
+    margin-bottom: 20px;
+}
+
+.rijekaIzolacija {
+    margin-right: 20px;
+}
+
+/* crc */
+.firstCrcRow {
+    width: 100%;
+}
+
+.secondCrcRow {
+    width: 100%;
+}
+
+.crcBox1 {
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+
+.crcIzolacija {
+    margin-right: 20px;
+}
+
+/* susak */
+.leftSusakCol {
+    margin-right: 20px;
+}
+
+.susakOpci {
+    height: 720px;
+}
+
+.susakIzolacija {
+    margin-bottom: 20px;
+}
+
+/* kardio */
+.kardioBox {
+    margin-top: 107px;
+    width: 700px;
+    height: 380px;
+}

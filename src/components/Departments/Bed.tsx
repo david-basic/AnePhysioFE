@@ -1,7 +1,6 @@
 import { useState, type FC } from "react";
 import { type BedVM } from "../../models/department/BedVM";
-import { Link } from "react-router-dom";
-import styles from "./Bed.module.css";
+import localStyles from "./Bed.module.css";
 import {
 	Col,
 	Descriptions,
@@ -19,12 +18,11 @@ import LoadingSpinner from "../LoadingSpinner";
 import constants from "../../config/constants";
 import client_routes, { clientRoutesParams } from "../../config/client_routes";
 import useFetcApihWithTokenRefresh from "../../hooks/use_fetch_api_with_token_refresh";
+import CustomBedButton from "./CustomBedButton";
 
-type BedProps = {
-	bedNum: number;
-} & BedVM;
+type BedProps = {} & BedVM;
 
-const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
+const Bed: FC<BedProps> = ({ patient }: BedProps) => {
 	const [showModal, setShowModal] = useState(false);
 	const [patientData, setPatientData] = useState<PatientVM>();
 	const [descriptionItems, setDescriptionItems] = useState<
@@ -120,7 +118,7 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 												<li
 													key={mkb.id}
 													className={
-														styles[
+														localStyles[
 															"remove-list-style"
 														]
 													}>
@@ -146,7 +144,7 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 												<li
 													key={op.id}
 													className={
-														styles[
+														localStyles[
 															"remove-list-style"
 														]
 													}>
@@ -182,17 +180,22 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 			<Col span={24}>
 				{patient !== null && (
 					<>
-						<Link
+						<CustomBedButton
 							to={client_routes.ROUTE_PATIENTS_DETAILS.replace(
 								clientRoutesParams.patientId,
 								patient!.id
 							)}
-							className={styles["occupied-bed-text"]}
-							onContextMenu={handleRightClick}>
-							{`Bed ${bedNum}: ${
+							label={`${
 								patient!.firstName + " " + patient!.lastName
 							}`}
-						</Link>
+							bedIsEmpty={false}
+							icon={
+								<svg viewBox='0 0 640 512'>
+									<path d='M176 288C220.1 288 256 252.1 256 208S220.1 128 176 128S96 163.9 96 208S131.9 288 176 288zM544 128H304C295.2 128 288 135.2 288 144V320H64V48C64 39.16 56.84 32 48 32h-32C7.163 32 0 39.16 0 48v416C0 472.8 7.163 480 16 480h32C56.84 480 64 472.8 64 464V416h512v48c0 8.837 7.163 16 16 16h32c8.837 0 16-7.163 16-16V224C640 170.1 597 128 544 128z'></path>
+								</svg>
+							}
+							onContextMenu={handleRightClick}
+						/>
 						<Modal
 							centered
 							width='auto'
@@ -231,10 +234,16 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 					</>
 				)}
 				{patient === null && (
-					<p
-						className={
-							styles["free-bed-text"]
-						}>{`Bed ${bedNum}: empty bed`}</p>
+					<CustomBedButton
+						to='#'
+						label={""}
+						bedIsEmpty={true}
+						icon={
+							<svg viewBox='0 0 640 512'>
+								<path d='M176 288C220.1 288 256 252.1 256 208S220.1 128 176 128S96 163.9 96 208S131.9 288 176 288zM544 128H304C295.2 128 288 135.2 288 144V320H64V48C64 39.16 56.84 32 48 32h-32C7.163 32 0 39.16 0 48v416C0 472.8 7.163 480 16 480h32C56.84 480 64 472.8 64 464V416h512v48c0 8.837 7.163 16 16 16h32c8.837 0 16-7.163 16-16V224C640 170.1 597 128 544 128z'></path>
+							</svg>
+						}
+					/>
 				)}
 			</Col>
 		</Row>

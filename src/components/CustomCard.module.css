@@ -1,0 +1,8 @@
+.card {
+    font-family: "Nunito", sans-serif;
+    height: 350px;
+    width: 500px;
+    background-color: white;
+    border: 2px solid #004a8c;
+    box-sizing: border-box;
+}

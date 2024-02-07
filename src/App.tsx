@@ -6,7 +6,7 @@ import LoginPage from "./pages/authentication/LoginPage";
 import RegisterPage from "./pages/authentication/RegisterPage";
 import Protected from "./components/authentication/Protected";
 import MainLayout from "./components/layout/MainLayout";
-import { type FC } from "react";
+import { useRef, type FC } from "react";
 import { useAppSelector } from "./hooks/use_app_selector";
 import JilRijekaHomePage from "./pages/departments/JilRijekaHomePage";
 import CrcHomePage from "./pages/departments/CrcHomePage";
@@ -21,6 +21,7 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 const App: FC = () => {
 	const isLoggedIn = useAppSelector((state) => state.authReducer.isLoggedIn);
 	const location = useLocation();
+	const nodeRef = useRef(null);
 
 	const authWelcomeRoute = {
 		path: client_routes.ROUTE_AUTH,
@@ -41,9 +42,7 @@ const App: FC = () => {
 	};
 	const homeRoute = {
 		path: client_routes.ROUTE_HOME,
-		element: (
-			<Protected isLoggedIn={isLoggedIn} children={<HomePage />} />
-		),
+		element: <Protected isLoggedIn={isLoggedIn} children={<HomePage />} />,
 	};
 	const jilRijekaHomeRoute = {
 		path: client_routes.ROUTE_DEPT_JIL_RIJEKA,
@@ -112,8 +111,12 @@ const App: FC = () => {
 
 	return (
 		<TransitionGroup>
-			<CSSTransition key={location.key} classNames="fade" timeout={500}>
-				{routing}
+			<CSSTransition
+				nodeRef={nodeRef}
+				key={location.key}
+				classNames='fade'
+				timeout={300}>
+				<div ref={nodeRef}>{routing}</div>
 			</CSSTransition>
 		</TransitionGroup>
 	);
