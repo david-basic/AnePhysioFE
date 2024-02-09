@@ -22,7 +22,7 @@ const PrintingPage: FC = () => {
 		(state) => state.deptLocalitiesReducer
 	);
 	const physioFile = useAppSelector(
-		(state) => state.physioFileReducer.physioFile
+		(state) => state.physioFileReducer.currentPhysioFile
 	);
 	const currentPhysio = useAppSelector((state) => state.authReducer.user);
 

@@ -138,8 +138,10 @@ type DepartmentLocalitiesInitStateType = {
  * @param xyDataSaved Indicates if the current state was saved to DB
  */
 type PhysioFileInitStateType = {
-	physioFile: PhysioFileVM;
+	currentPhysioFile: PhysioFileVM;
+	currentPatientPhysioFileList: PhysioFileVM[];
 	functionalDiagnosisList: FunctionalDiagnosisVM[];
+	currentPatientId: string;
 	physioFileDataSaved: boolean;
 	rassModalDataSaved: boolean;
 	gcsModalDataSaved: boolean;

@@ -11,6 +11,7 @@ type ModalsInitState = {
 	showFdModal: boolean;
 	showProcedureModal: boolean;
 	showCloseFileModal: boolean;
+	showChoosePhysioFileModal: boolean;
 };
 
 const modalsShowInitState: ModalsInitState = {
@@ -24,6 +25,7 @@ const modalsShowInitState: ModalsInitState = {
 	showFdModal: false,
 	showProcedureModal: false,
 	showCloseFileModal: false,
+	showChoosePhysioFileModal: false,
 };
 
 const modalsShowSlice = createSlice({
@@ -60,6 +62,9 @@ const modalsShowSlice = createSlice({
 		setShowProcedureModal: (state, action: PayloadAction<boolean>) => {
 			state.showProcedureModal = action.payload;
 		},
+		setShowChoosePhysioFileModal: (state, action: PayloadAction<boolean>) => {
+			state.showChoosePhysioFileModal = action.payload;
+		},
 		resetAllStateToDefaults: (state) => {
 			state.showLeaveModal = modalsShowInitState.showLeaveModal;
 			state.showSaveModal = modalsShowInitState.showSaveModal;
@@ -71,6 +76,7 @@ const modalsShowSlice = createSlice({
 			state.showFdModal = modalsShowInitState.showFdModal;
 			state.showProcedureModal = modalsShowInitState.showProcedureModal;
 			state.showCloseFileModal = modalsShowInitState.showCloseFileModal;
+			state.showChoosePhysioFileModal = modalsShowInitState.showChoosePhysioFileModal;
 		},
 	},
 });

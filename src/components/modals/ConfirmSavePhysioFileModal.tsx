@@ -63,7 +63,7 @@ const ConfirmSavePhysioFileModal: FC<ConfirmSaveModalProps> = ({
 						);
 					} else {
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);

@@ -38,6 +38,7 @@ export interface PhysioFileVM {
 	mmtList: MmtVM[];
 	conclussion: string;
 	fileClosedBy: UserVM;
+	fileClosedAt: string;
 	allPhysiotherapists: UserVM[];
 	departmentId: string;
 }

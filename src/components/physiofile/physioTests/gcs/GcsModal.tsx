@@ -220,7 +220,7 @@ const GcsModal: FC<GcsModalProps> = ({
 							);
 						} else {
 							dispatch(
-								physioFileActions.setPhysioFile(
+								physioFileActions.setCurrentPhysioFile(
 									physioFileResponse.data!
 								)
 							);
@@ -358,7 +358,7 @@ const GcsModal: FC<GcsModalProps> = ({
 						);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -405,7 +405,7 @@ const GcsModal: FC<GcsModalProps> = ({
 						);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -727,7 +727,7 @@ const GcsModal: FC<GcsModalProps> = ({
 	};
 
 	const handleSavingDataBeforeExit = () => {
-		dispatch(physioFileActions.setPhysioFile(physioFile));
+		dispatch(physioFileActions.setCurrentPhysioFile(physioFile));
 		dispatch(physioFileActions.setGcsModalDataSaved(true));
 	};
 

@@ -101,7 +101,7 @@ const RassModal: FC<RassModalProps> = ({
 		TableColumnDefinitionType[]
 	>([]);
 	const physioFile = useAppSelector(
-		(state) => state.physioFileReducer.physioFile
+		(state) => state.physioFileReducer.currentPhysioFile
 	);
 	const rassModalDataSaved = useAppSelector(
 		(state) => state.physioFileReducer.rassModalDataSaved
@@ -114,69 +114,44 @@ const RassModal: FC<RassModalProps> = ({
 	};
 
 	useEffect(() => {
-		patientRassTests
-			? patientRassTests.forEach((pr) => {
-					const prDateTime = dayjs(pr.rassDateTime).format(
-						"YYYY-MM-DD HH:mm:ss"
+		patientRassTests &&
+			patientRassTests.forEach((pr) => {
+				const prDateTime = dayjs(pr.rassDateTime).format(
+					"YYYY-MM-DD HH:mm:ss"
+				);
+
+				const dateTimeToBeStoredToTable: RassDateType = {
+					date: prDateTime.split(" ")[0],
+					time: prDateTime.split(" ")[1],
+				};
+
+				const rass: RassChosenScoreAndIndex = {
+					chosenScore: pr.score,
+					chosenScoreIndex: rassList.findIndex(
+						(r) => r.score === pr.score
+					),
+				};
+
+				setDataSavedToTable((prevState) => {
+					const newState = [...prevState];
+					const foundRass = rassList.find(
+						(r) => r.score === rass.chosenScore
 					);
-
-					const dateTimeToBeStoredToTable: RassDateType = {
-						date: prDateTime.split(" ")[0],
-						time: prDateTime.split(" ")[1],
-					};
-
-					const rass: RassChosenScoreAndIndex = {
-						chosenScore: pr.score,
-						chosenScoreIndex: rassList.findIndex(
-							(r) => r.score === pr.score
-						),
-					};
-
-					setDataSavedToTable((prevState) => {
-						const newState = [...prevState];
-						const foundRass = rassList.find(
-							(r) => r.score === rass.chosenScore
-						);
-						newState.push({
-							key: generateRandomNumber(9, true)!,
-							id: pr.id,
-							dateTime: dateTimeToBeStoredToTable,
-							scoreAndNoteAndIndex: {
-								additionalNotes: pr.additionalDescription,
-								scoreAndTerm: `${foundRass?.score}: ${foundRass?.term}`,
-								scoreDescription: pr.scoreDescription,
-								index: rass.chosenScoreIndex!,
-							},
-						});
-
-						return newState;
+					newState.push({
+						key: generateRandomNumber(9, true)!,
+						id: pr.id,
+						dateTime: dateTimeToBeStoredToTable,
+						scoreAndNoteAndIndex: {
+							additionalNotes: pr.additionalDescription,
+							scoreAndTerm: `${foundRass?.score}: ${foundRass?.term}`,
+							scoreDescription: pr.scoreDescription,
+							index: rass.chosenScoreIndex!,
+						},
 					});
-			  })
-			: fetchWithTokenRefresh(
-					{
-						url:
-							api_routes.ROUTE_ASSESSMENT_CREATE_NEW_BY_PHYSIO_FILE_ID +
-							`/${physioFile.id}`,
-						headers: { "Content-Type": "application/json" },
-					},
-					(physioFileResponse: ApiResponse<PhysioFileVM>) => {
-						if (physioFileResponse.status !== HttpStatusCode.Ok) {
-							console.error(
-								"There was a error creating assessment: ",
-								physioFileResponse
-							);
-						} else {
-							dispatch(
-								physioFileActions.setPhysioFile(
-									physioFileResponse.data!
-								)
-							);
-							dispatch(
-								physioFileActions.setRassModalDataSaved(false)
-							);
-						}
-					}
-			  );
+
+					return newState;
+				});
+			});
 
 		return () => {
 			setDataSavedToTable([]);
@@ -338,7 +313,7 @@ const RassModal: FC<RassModalProps> = ({
 						addRecordToTable(chosenRassScoreAndIndex, chosenDate);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -378,7 +353,7 @@ const RassModal: FC<RassModalProps> = ({
 						addRecordToTable(chosenRecord, chosenDate);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -599,7 +574,7 @@ const RassModal: FC<RassModalProps> = ({
 	};
 
 	const handleSavingDataBeforeExit = () => {
-		dispatch(physioFileActions.setPhysioFile(physioFile));
+		dispatch(physioFileActions.setCurrentPhysioFile(physioFile));
 		dispatch(physioFileActions.setRassModalDataSaved(true));
 	};
 

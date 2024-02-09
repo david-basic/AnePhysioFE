@@ -1,5 +1,5 @@
 :root {
-    --main-sidebar-width: 141.97px;
+    /* --main-sidebar-width: 141.97px; */
     --file-header-height: 141px;
     --file-sider-width: 335px;
     --content-padding-top: 50px;
@@ -23,8 +23,10 @@
 .fileheader {
     flex: 0 0 auto;
     top: 0;
-    left: var(--main-sidebar-width);
-    width: calc(100% - var(--main-sidebar-width));
+    left: 0;
+    /* left: var(--main-sidebar-width); */
+    /* width: calc(100% - var(--main-sidebar-width)); */
+    width: 100%;
     height: var(--file-header-height);
     z-index: 100;
     padding: 0px 20px;
@@ -46,7 +48,7 @@
 .filecontent {
     flex: 1;
     margin-top: var(--file-header-height);
-    margin-left: var(--main-sidebar-width);
+    /* margin-left: var(--main-sidebar-width); */
     margin-right: var(--file-sider-width);
     overflow-y: auto;
     border-radius: 4px;

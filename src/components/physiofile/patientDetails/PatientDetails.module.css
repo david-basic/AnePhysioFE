@@ -1,5 +1,5 @@
 .mbstyle {
-  color: #045fbd;
+  color: #aad3ff;
   font-size: 16px;
   font-weight: 700;
   margin-top: 10px;
@@ -9,7 +9,7 @@
 
 .titleText {
   margin-top: 10px;
-  color: #d1f2ff;
+  color: #e5e5e5;
   font-size: 38px;
   font-weight: 800;
   line-height: 49px;
@@ -19,13 +19,13 @@
 .iconstyle {
   width: 20px;
   height: 20px;
-  color: #023f81;
+  color: #e5e5e5;
 }
 
 .nameagestyle {
   font-size: 24px;
   font-weight: 700;
-  color: #023f81;
+  color: #e5e5e5;
 }
 
 .stacking {
@@ -42,13 +42,13 @@
 .datestyle {
   margin-top: 5px;
   font-size: 16px;
-  color: #045fbd;
+  color: #aad3ff;
   line-height: 20px;
 }
 
 .address {
   margin-top: 5px;
   font-size: 16px;
-  color: #045fbd;
+  color: #aad3ff;
   line-height: 20px;
 }

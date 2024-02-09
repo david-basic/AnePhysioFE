@@ -258,7 +258,7 @@ const Procedures: FC<ProceduresProps> = ({
 						);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -306,7 +306,7 @@ const Procedures: FC<ProceduresProps> = ({
 						);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);

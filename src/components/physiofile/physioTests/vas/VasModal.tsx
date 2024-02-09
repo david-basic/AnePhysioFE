@@ -246,7 +246,7 @@ const VasModal: FC<VasModalProps> = ({
 							);
 						} else {
 							dispatch(
-								physioFileActions.setPhysioFile(
+								physioFileActions.setCurrentPhysioFile(
 									physioFileResponse.data!
 								)
 							);
@@ -312,7 +312,7 @@ const VasModal: FC<VasModalProps> = ({
 						addRecordToTable(painLevelSliderValue, chosenDate);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -354,7 +354,7 @@ const VasModal: FC<VasModalProps> = ({
 						addRecordToTable(painLevelSliderValue, chosenDate);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -510,7 +510,7 @@ const VasModal: FC<VasModalProps> = ({
 	};
 
 	const handleSavingDataBeforeExit = () => {
-		dispatch(physioFileActions.setPhysioFile(physioFile));
+		dispatch(physioFileActions.setCurrentPhysioFile(physioFile));
 		dispatch(physioFileActions.setVasModalDataSaved(true));
 	};
 

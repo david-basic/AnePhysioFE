@@ -421,7 +421,7 @@ const CpaxModal: FC<CpaxModalProps> = ({
 							);
 						} else {
 							dispatch(
-								physioFileActions.setPhysioFile(
+								physioFileActions.setCurrentPhysioFile(
 									physioFileResponse.data!
 								)
 							);
@@ -895,7 +895,7 @@ const CpaxModal: FC<CpaxModalProps> = ({
 						);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -935,7 +935,7 @@ const CpaxModal: FC<CpaxModalProps> = ({
 						);
 					} else {
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -1238,7 +1238,7 @@ const CpaxModal: FC<CpaxModalProps> = ({
 	};
 
 	const handleSavingDataBeforeExit = () => {
-		dispatch(physioFileActions.setPhysioFile(physioFile));
+		dispatch(physioFileActions.setCurrentPhysioFile(physioFile));
 		dispatch(physioFileActions.setCpaxModalDataSaved(true));
 	};
 

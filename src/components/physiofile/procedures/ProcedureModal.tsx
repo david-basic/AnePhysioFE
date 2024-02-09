@@ -145,7 +145,7 @@ const ProcedureModal: FC<ProcedureModalProps> = ({
 							physioFileActions.setPhysioFileDataSaved(false)
 						);
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								deleteFileResponse.data!
 							)
 						);
@@ -195,7 +195,7 @@ const ProcedureModal: FC<ProcedureModalProps> = ({
 						);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -244,7 +244,7 @@ const ProcedureModal: FC<ProcedureModalProps> = ({
 						addRecordToTable(newRecord);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);

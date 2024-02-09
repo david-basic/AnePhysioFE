@@ -188,7 +188,7 @@ const FdModal: FC<FdModalProps> = ({
 						);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -243,7 +243,7 @@ const FdModal: FC<FdModalProps> = ({
 						addRecordToTable(newRecord);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -297,7 +297,7 @@ const FdModal: FC<FdModalProps> = ({
 							physioFileActions.setPhysioFileDataSaved(false)
 						);
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								deleteFileResponse.data!
 							)
 						);

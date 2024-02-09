@@ -1,95 +1,135 @@
 import {
 	type ReactNode,
 	type FC,
-	MouseEvent,
-	ButtonHTMLAttributes,
+	type MouseEvent,
+	type ButtonHTMLAttributes,
 } from "react";
 import localStyles from "./CustomBedButton.module.css";
-import { useNavigate } from "react-router-dom";
-import confirm from "antd/es/modal/confirm";
-import { Row } from "antd";
+import { Row, message } from "antd";
+import useFetcApihWithTokenRefresh from "../../hooks/use_fetch_api_with_token_refresh";
+import api_routes from "../../config/api_routes";
+import { type ApiResponse } from "../../type";
+import { type PhysioFileVM } from "../../models/physiofile/PhysioFileVM";
+import { HttpStatusCode } from "axios";
+import { physioFileActions } from "../../store/physio-file-slice";
+import { useAppDispatch } from "../../hooks/use_app_dispatch";
+import { modalsShowActions } from "../../store/modals-show-slice";
 
 type CustomBedButtonProps = {
 	label: string;
 	to: string;
+	patientId?: string;
 	bedIsEmpty: boolean;
-	moreThenOnePhysioFileExists?: boolean;
 	icon?: ReactNode;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 const CustomBedLink: FC<CustomBedButtonProps> = ({
 	label,
-	moreThenOnePhysioFileExists,
 	icon,
 	bedIsEmpty,
+	patientId,
 	to,
 	...buttonProps
 }: CustomBedButtonProps) => {
 	const { className: passedClassName, ...otherButtonProps } = buttonProps;
-	const navigate = useNavigate();
+	const dispatch = useAppDispatch();
+	const { fetchWithTokenRefresh, isLoading } = useFetcApihWithTokenRefresh();
 
 	const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
-		if (bedIsEmpty) {
+		if (bedIsEmpty ||isLoading) {
 			e.preventDefault();
 			return;
 		}
 
-		if (moreThenOnePhysioFileExists) {
-			e.preventDefault();
-			confirm({
-				content: <p>TODO remove confirm add proper modal</p>,
-				onOk() {
-					navigate(to);
+		//TODO remove
+		// when clicking on name of the patient, fetch of all physio files that have patient with id should be done
+		// open modal to choose which physio file to navigate to
+		// if only one physio file and active show it but hide the create new button
+		// if only one physio file and clsoed show it but show the create new button
+		// if there are multiple physio files, show modal to choose which one to navigate to
+		// if there are no physio files, button in modal creates new one with all neccessary objects initialized
+		try {
+			fetchWithTokenRefresh(
+				{
+					url:
+						api_routes.ROUTE_PHYSIO_FILE_GET_ALL_BY_PATIENT_ID +
+						`/${patientId}`,
+					headers: { "Content-Type": "application/json" },
 				},
-			});
+				(physioFileResponse: ApiResponse<PhysioFileVM[]>) => {
+					if (physioFileResponse.status !== HttpStatusCode.Ok) {
+						message.error(
+							"Nije moguće dohvatiti fizioterapeutske kartone pacijenta!"
+						);
+						console.error(
+							"There was a error while fetching physio files: ",
+							physioFileResponse
+						);
+					} else {
+						dispatch(
+							physioFileActions.setCurrentPatientPhysioFileList(
+								physioFileResponse.data!
+							)
+						);
+						message.success(
+							"Dohvaćeni fizioterapeutski kartoni pacijenta!"
+						);
+						dispatch(
+							modalsShowActions.setShowChoosePhysioFileModal(true)
+						);
+						dispatch(physioFileActions.setCurrentPatientId(patientId!));
+					}
+				}
+			);
+		} catch (error) {
+			console.error("Error fetching physio files:", error);
+			message.error(
+				"Neuspjelo dohvaćanje fizioterapeutskih kartona pacijenta!"
+			);
 		}
-
-		navigate(to);
 	};
 
 	return (
-		<Row
-			align={"middle"}
-			className={bedIsEmpty ? localStyles.rowEmpty : localStyles.row}>
-			<button
-				className={
-					passedClassName
-						? `${passedClassName} ${localStyles.customButton}`
-						: localStyles.customButton
-				}
-				style={
-					bedIsEmpty
-						? { cursor: "not-allowed" }
-						: { cursor: "pointer" }
-				}
-				disabled={bedIsEmpty}
-				onClick={bedIsEmpty ? undefined : handleClick}
-				{...otherButtonProps}>
-				{icon && (
+		<>
+			<Row
+				align={"middle"}
+				className={bedIsEmpty ? localStyles.rowEmpty : localStyles.row}>
+				<button
+					className={
+						passedClassName
+							? `${passedClassName} ${localStyles.customButton}`
+							: localStyles.customButton
+					}
+					style={
+						bedIsEmpty
+							? { cursor: "not-allowed" }
+							: { cursor: "pointer" }
+					}
+					disabled={bedIsEmpty || isLoading}
+					onClick={bedIsEmpty || isLoading ? undefined : handleClick}
+					{...otherButtonProps}>
+					{icon && (
+						<span
+							className={
+								bedIsEmpty
+									? localStyles.bedEmptyIcon
+									: localStyles.icon
+							}>
+							{icon}
+						</span>
+					)}
 					<span
 						className={
 							bedIsEmpty
-								? localStyles.bedEmptyIcon
-								: localStyles.icon
+								? localStyles.bedEmptyLabel
+								: localStyles.label
 						}>
-						{icon}
+						{label}
 					</span>
-				)}
-				<span
-					className={
-						bedIsEmpty
-							? localStyles.bedEmptyLabel
-							: localStyles.label
-					}>
-					{label}
-				</span>
-			</button>
-		</Row>
+				</button>
+			</Row>
+		</>
 	);
-};
-
-CustomBedLink.defaultProps = {
-	moreThenOnePhysioFileExists: false,
 };
 
 export default CustomBedLink;

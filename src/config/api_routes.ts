@@ -14,7 +14,9 @@ const api_routes = {
 	ROUTE_PATIENT_GET: `${apiRoutesParams.API}/patient-management/patients`,
 
 	ROUTE_PHYSIO_FILE_GET: `${apiRoutesParams.API}/physiofile-management/physiofiles`,
-	ROUTE_PHYSIO_FILE_GET_BY_PATIENT_ID: `${apiRoutesParams.API}/physiofile-management/physiofiles/patient`,
+	ROUTE_PHYSIO_FILE_GET_BY_ID: `${apiRoutesParams.API}/physiofile-management/physiofiles/file`,
+	ROUTE_PHYSIO_FILE_GET_LATEST_ACTIVE_OR_CREATE_NEW_BY_PATIENT_ID: `${apiRoutesParams.API}/physiofile-management/physiofiles/patient`,
+	ROUTE_PHYSIO_FILE_GET_ALL_BY_PATIENT_ID: `${apiRoutesParams.API}/physiofile-management/physiofiles/all-of-patient`,
 	ROUTE_PHYSIO_FILE_UPDATE_BY_ID: `${apiRoutesParams.API}/physiofile-management/physiofiles/update-physiofile`,
 	ROUTE_PHYSIO_FILE_CLOSE_FILE_BY_ID: `${apiRoutesParams.API}/physiofile-management/physiofiles/close-physiofile`,
 

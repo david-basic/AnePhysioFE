@@ -237,7 +237,7 @@ const MmtModal: FC<MmtModalProps> = ({
 							);
 						} else {
 							dispatch(
-								physioFileActions.setPhysioFile(
+								physioFileActions.setCurrentPhysioFile(
 									physioFileResponse.data!
 								)
 							);
@@ -312,7 +312,7 @@ const MmtModal: FC<MmtModalProps> = ({
 						addRecordToTable(chosenMmtGrade!, chosenDate);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -354,7 +354,7 @@ const MmtModal: FC<MmtModalProps> = ({
 						addRecordToTable(chosenMmtGrade!, chosenDate);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -546,7 +546,7 @@ const MmtModal: FC<MmtModalProps> = ({
 	};
 
 	const handleSavingDataBeforeExit = () => {
-		dispatch(physioFileActions.setPhysioFile(physioFile));
+		dispatch(physioFileActions.setCurrentPhysioFile(physioFile));
 		dispatch(physioFileActions.setMmtModalDataSaved(true));
 	};
 

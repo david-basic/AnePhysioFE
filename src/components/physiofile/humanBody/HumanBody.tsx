@@ -89,7 +89,7 @@ const HumanBody: FC<HumanBodyProps> = ({
 						);
 					} else {
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);

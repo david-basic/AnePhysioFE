@@ -51,7 +51,7 @@ const ConfirmCloseFileModal: FC<ConfirmCloseFileModalProps> = ({
 						);
 					} else {
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -89,8 +89,9 @@ const ConfirmCloseFileModal: FC<ConfirmCloseFileModalProps> = ({
 			}>
 			<h2>Potvrda zaključavanja</h2>
 			<h3>
-				Želite li zaključati karton? Nakon zaključavanja više neće biti
-				moguće raditi izmjene na kartonu!
+				Želite li zaključati karton?<br />Nakon zaključavanja više
+				neće biti moguće raditi izmjene na kartonu!<br />Sve ne spremljene
+				izmjene biti će izgubljene!
 			</h3>
 		</Modal>
 	);

@@ -19,15 +19,25 @@ import constants from "../../config/constants";
 import client_routes, { clientRoutesParams } from "../../config/client_routes";
 import useFetcApihWithTokenRefresh from "../../hooks/use_fetch_api_with_token_refresh";
 import CustomBedButton from "./CustomBedButton";
+import { useAppSelector } from "../../hooks/use_app_selector";
+import ChoosePhysioFileModal from "./ChoosePhysioFileModal";
 
-type BedProps = {} & BedVM;
+type BedProps = {
+	departmentName: string;
+} & BedVM;
 
-const Bed: FC<BedProps> = ({ patient }: BedProps) => {
+const Bed: FC<BedProps> = ({ patient, departmentName }: BedProps) => {
 	const [showModal, setShowModal] = useState(false);
 	const [patientData, setPatientData] = useState<PatientVM>();
 	const [descriptionItems, setDescriptionItems] = useState<
 		DescriptionsProps["items"]
 	>([]);
+	const currentPatientPhysioFilesList = useAppSelector(
+		(state) => state.physioFileReducer.currentPatientPhysioFileList
+	);
+	const showChoosePhysioFileModal = useAppSelector(
+		(state) => state.modalsShowReducer.showChoosePhysioFileModal
+	);
 	const { fetchWithTokenRefresh: sendPatientDetailsRequest, isLoading } =
 		useFetcApihWithTokenRefresh();
 	const dateOptions: Intl.DateTimeFormatOptions = {
@@ -181,10 +191,11 @@ const Bed: FC<BedProps> = ({ patient }: BedProps) => {
 				{patient !== null && (
 					<>
 						<CustomBedButton
-							to={client_routes.ROUTE_PATIENTS_DETAILS.replace(
+							to={client_routes.ROUTE_PHYSIO_FILE_BY_ID.replace(
 								clientRoutesParams.patientId,
 								patient!.id
 							)}
+							patientId={patient!.id}
 							label={`${
 								patient!.firstName + " " + patient!.lastName
 							}`}
@@ -195,6 +206,12 @@ const Bed: FC<BedProps> = ({ patient }: BedProps) => {
 								</svg>
 							}
 							onContextMenu={handleRightClick}
+						/>
+						<ChoosePhysioFileModal
+							showModal={showChoosePhysioFileModal}
+							loadingData={isLoading}
+							physioFilesList={currentPatientPhysioFilesList}
+							departmentName={departmentName}
 						/>
 						<Modal
 							centered

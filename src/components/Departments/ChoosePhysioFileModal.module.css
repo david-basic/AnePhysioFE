@@ -1,0 +1,6 @@
+.table {
+    width: 550px;
+    max-height: 440px;
+    box-shadow: var(--box-shadow);
+    font-family: var(--font-family);
+}

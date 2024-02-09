@@ -33,6 +33,7 @@ const Box: FC<BoxProps> = ({
 							id={bed.id}
 							patient={bed.patient}
 							bedIsEmpty={bed.bedIsEmpty}
+							departmentName={departmentName}
 						/>
 					</ListGroup.Item>
 				))}

@@ -1,5 +1,6 @@
 export const clientRoutesParams = {
 	patientId: ":patientId",
+	physioFileId: ":physioFileId",
 };
 
 const client_routes = {
@@ -18,9 +19,9 @@ const client_routes = {
 	ROUTE_DEPT_JIL_SUSAK: "/dept/jil-susak",
 	ROUTE_DEPT_KARDIO_JIL: "/dept/kardio-jil",
 
-	ROUTE_PATIENTS_DETAILS: `/patients/details/${clientRoutesParams.patientId}`,
+	ROUTE_PHYSIO_FILE_BY_ID: `/patient/physio-file/${clientRoutesParams.physioFileId}`,
 
-	ROUTE_PRINTING_PAGE: `/patient/printing-page/${clientRoutesParams.patientId}`
+	ROUTE_PRINTING_PAGE: `/patient/printing-page/${clientRoutesParams.patientId}`,
 };
 
 export const sideBarKey = {

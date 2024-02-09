@@ -81,11 +81,12 @@ const App: FC = () => {
 		),
 	};
 	const patientPageRoute = {
-		path: client_routes.ROUTE_PATIENTS_DETAILS,
+		path: client_routes.ROUTE_PHYSIO_FILE_BY_ID,
 		element: (
 			<Protected
 				isLoggedIn={isLoggedIn}
-				children={<PhysioFileLayout children={<PatientPage />} />}
+				// children={<PhysioFileLayout children={<PatientPage />} />}
+				children={<PatientPage />}
 			/>
 		),
 	};
