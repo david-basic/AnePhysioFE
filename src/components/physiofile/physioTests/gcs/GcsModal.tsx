@@ -214,6 +214,7 @@ const GcsModal: FC<GcsModalProps> = ({
 						if (
 							physioFileResponse.status !== HttpStatusCode.Created
 						) {
+							message.error(physioFileResponse.message);
 							console.error(
 								"There was a error creating physio test: ",
 								physioFileResponse
@@ -345,6 +346,7 @@ const GcsModal: FC<GcsModalProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Created) {
 						message.error("Nije moguće spremiti novi GCS!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while saving new GCS: ",
 							physioFileResponse
@@ -390,6 +392,7 @@ const GcsModal: FC<GcsModalProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće izmjeniti GCS!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while updating GCS: ",
 							physioFileResponse
@@ -435,6 +438,7 @@ const GcsModal: FC<GcsModalProps> = ({
 				(deleteFileResponse: ApiResponse<NoReturnData>) => {
 					if (deleteFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće izbrisati GCS!");
+						message.error(deleteFileResponse.message);
 						console.error(
 							"There was a error while deleting GCS: ",
 							deleteFileResponse

@@ -1,6 +1,6 @@
 import { useEffect, useState, type FC } from "react";
 import localStyles from "./HomePage.module.css";
-import { Button, Col, Modal, Row, Tooltip } from "antd";
+import { Button, Col, Modal, Row, Tooltip, message } from "antd";
 import CustomLink from "../components/CustomLink";
 import { useAppDispatch } from "../hooks/use_app_dispatch";
 import { useAppSelector } from "../hooks/use_app_selector";
@@ -64,6 +64,7 @@ const HomePage: FC = () => {
 								departmentResponseData.status !==
 								HttpStatusCode.Ok
 							) {
+								message.error(departmentResponseData.message);
 								console.error(
 									"There was a error fetching departments"
 								);

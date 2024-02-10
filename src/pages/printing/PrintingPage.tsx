@@ -58,7 +58,7 @@ const PrintingPage: FC = () => {
 		<>
 			<Header
 				style={{
-					backgroundColor: "#5ac8fa",
+					backgroundColor: "#023f81",
 					position: "fixed",
 				}}
 				className={localStyles.fileheader}>
@@ -119,7 +119,6 @@ const PrintingPage: FC = () => {
 								icon={<PrinterFill />}
 							/>
 						</Flex>
-						{/*TODO add some options for the printing*/}
 					</div>
 					<div style={{ width: "20%" }}></div>
 					<div

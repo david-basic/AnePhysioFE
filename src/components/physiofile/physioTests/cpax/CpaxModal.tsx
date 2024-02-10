@@ -415,6 +415,7 @@ const CpaxModal: FC<CpaxModalProps> = ({
 						if (
 							physioFileResponse.status !== HttpStatusCode.Created
 						) {
+							message.error(physioFileResponse.message);
 							console.error(
 								"There was a error creating physio test: ",
 								physioFileResponse
@@ -875,6 +876,7 @@ const CpaxModal: FC<CpaxModalProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Created) {
 						message.error("Nije moguće spremiti novi CPAx!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while saving new CPAx: ",
 							physioFileResponse
@@ -929,6 +931,7 @@ const CpaxModal: FC<CpaxModalProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće izmjeniti CPAx!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while updating CPAx: ",
 							physioFileResponse
@@ -984,6 +987,7 @@ const CpaxModal: FC<CpaxModalProps> = ({
 				(deleteFileResponse: ApiResponse<NoReturnData>) => {
 					if (deleteFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće izbrisati CPAx!");
+						message.error(deleteFileResponse.message);
 						console.error(
 							"There was a error while deleting CPAx: ",
 							deleteFileResponse

@@ -231,6 +231,7 @@ const MmtModal: FC<MmtModalProps> = ({
 						if (
 							physioFileResponse.status !== HttpStatusCode.Created
 						) {
+							message.error(physioFileResponse.message);
 							console.error(
 								"There was a error creating physio test: ",
 								physioFileResponse
@@ -304,6 +305,7 @@ const MmtModal: FC<MmtModalProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Created) {
 						message.error("Nije moguće spremiti novi MMT!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while saving new MMT: ",
 							physioFileResponse
@@ -344,6 +346,7 @@ const MmtModal: FC<MmtModalProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće izmjeniti MMT!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while updating MMT: ",
 							physioFileResponse
@@ -384,6 +387,7 @@ const MmtModal: FC<MmtModalProps> = ({
 				(deleteFileResponse: ApiResponse<NoReturnData>) => {
 					if (deleteFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće izbrisati MMT!");
+						message.error(deleteFileResponse.message);
 						console.error(
 							"There was a error while deleting MMT: ",
 							deleteFileResponse

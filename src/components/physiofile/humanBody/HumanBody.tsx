@@ -83,6 +83,7 @@ const HumanBody: FC<HumanBodyProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće urediti točke!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while updating pain points: ",
 							physioFileResponse
@@ -118,7 +119,11 @@ const HumanBody: FC<HumanBodyProps> = ({
 					style={{
 						maxHeight: "330px",
 						marginLeft: `${leftMargin}px`,
-						cursor:`${physioFile.fileClosedBy !== null ? "not-allowed" : "crosshair"}`,
+						cursor: `${
+							physioFile.fileClosedBy !== null
+								? "not-allowed"
+								: "crosshair"
+						}`,
 						borderRadius: "8px",
 					}}
 				/>

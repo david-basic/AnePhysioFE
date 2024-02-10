@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import { type PatientVM } from "../../models/patient/PatientVM";
-import { Flex, Row } from "antd";
+import { Flex } from "antd";
 import LoadingSpinner from "../LoadingSpinner";
 import localStyles from "./ChoosePhysioFilePatientDetails.module.css";
 

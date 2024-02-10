@@ -78,6 +78,7 @@ const PatientPage: FC = () => {
 							message.error(
 								"Nije moguće dohvatiti fizioterapeutski karton!"
 							);
+							message.error(physioFileResponse.message);
 							console.error(
 								"There was a error fetching physio file: ",
 								physioFileResponse
@@ -101,7 +102,11 @@ const PatientPage: FC = () => {
 								"Fizioterapeutski karton dohvaćen!"
 							);
 
-							dispatch(modalsShowActions.setShowChoosePhysioFileModal(false));
+							dispatch(
+								modalsShowActions.setShowChoosePhysioFileModal(
+									false
+								)
+							);
 						}
 
 						setApiCallMade(true);

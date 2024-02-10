@@ -36,18 +36,11 @@ const CustomBedLink: FC<CustomBedButtonProps> = ({
 	const { fetchWithTokenRefresh, isLoading } = useFetcApihWithTokenRefresh();
 
 	const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
-		if (bedIsEmpty ||isLoading) {
+		if (bedIsEmpty || isLoading) {
 			e.preventDefault();
 			return;
 		}
 
-		//TODO remove
-		// when clicking on name of the patient, fetch of all physio files that have patient with id should be done
-		// open modal to choose which physio file to navigate to
-		// if only one physio file and active show it but hide the create new button
-		// if only one physio file and clsoed show it but show the create new button
-		// if there are multiple physio files, show modal to choose which one to navigate to
-		// if there are no physio files, button in modal creates new one with all neccessary objects initialized
 		try {
 			fetchWithTokenRefresh(
 				{
@@ -61,6 +54,7 @@ const CustomBedLink: FC<CustomBedButtonProps> = ({
 						message.error(
 							"Nije moguće dohvatiti fizioterapeutske kartone pacijenta!"
 						);
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while fetching physio files: ",
 							physioFileResponse
@@ -77,7 +71,9 @@ const CustomBedLink: FC<CustomBedButtonProps> = ({
 						dispatch(
 							modalsShowActions.setShowChoosePhysioFileModal(true)
 						);
-						dispatch(physioFileActions.setCurrentPatientId(patientId!));
+						dispatch(
+							physioFileActions.setCurrentPatientId(patientId!)
+						);
 					}
 				}
 			);

@@ -53,9 +53,7 @@ const useRefreshCurrentToken = () => {
 					dispatch(authActions.setTokenIsValid(false));
 
 					navigate(client_routes.ROUTE_AUTH, { replace: true });
-					message.warning(
-						"Your session expired! Please sign in again."
-					);
+					message.warning(responseData.message);
 				} else {
 					dispatch(
 						authActions.setTokenType(responseData.data!.tokenType)

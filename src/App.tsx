@@ -13,7 +13,6 @@ import CrcHomePage from "./pages/departments/CrcHomePage";
 import JilSusakHomePage from "./pages/departments/JilSusakHomePage";
 import KardioJilHomePage from "./pages/departments/KardioJilHomePage";
 import PatientPage from "./pages/physiofile/PatientPage";
-import PhysioFileLayout from "./components/layout/PhysioFileLayout";
 import PrintingPage from "./pages/printing/PrintingPage";
 import HomePage from "./pages/HomePage";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
@@ -85,7 +84,6 @@ const App: FC = () => {
 		element: (
 			<Protected
 				isLoggedIn={isLoggedIn}
-				// children={<PhysioFileLayout children={<PatientPage />} />}
 				children={<PatientPage />}
 			/>
 		),

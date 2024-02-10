@@ -57,6 +57,7 @@ const ConfirmSavePhysioFileModal: FC<ConfirmSaveModalProps> = ({
 						message.error(
 							"Nije moguće spremiti fizioterapeutski karton!"
 						);
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while saving physio file: ",
 							physioFileResponse

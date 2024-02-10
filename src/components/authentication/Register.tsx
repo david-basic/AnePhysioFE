@@ -144,8 +144,8 @@ const Register: FC = () => {
 						{ required: true, message: "Molimo odaberite spol!" },
 					]}>
 					<Select placeholder='Spol' allowClear ref={sexRef}>
-						<Option value='male'>Muškarac</Option>
-						<Option value='female'>Žena</Option>
+						<Option value='male'>Muški</Option>
+						<Option value='female'>Ženski</Option>
 					</Select>
 				</Form.Item>
 				<Form.Item

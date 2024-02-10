@@ -246,6 +246,7 @@ const Procedures: FC<ProceduresProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Created) {
 						message.error("Nije moguće spremiti novu proceduru!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while saving new patient procedure: ",
 							physioFileResponse
@@ -292,6 +293,7 @@ const Procedures: FC<ProceduresProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće izmjeniti proceduru!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while updating patient procedure: ",
 							physioFileResponse
@@ -338,6 +340,7 @@ const Procedures: FC<ProceduresProps> = ({
 				(deleteFileResponse: ApiResponse<NoReturnData>) => {
 					if (deleteFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće izbrisati proceduru!");
+						message.error(deleteFileResponse.message);
 						console.error(
 							"There was a error while deleting patient procedure: ",
 							deleteFileResponse

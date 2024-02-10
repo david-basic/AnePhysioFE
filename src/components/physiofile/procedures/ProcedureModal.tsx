@@ -132,6 +132,7 @@ const ProcedureModal: FC<ProcedureModalProps> = ({
 				(deleteFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (deleteFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće izbrisati proceduru!");
+						message.error(deleteFileResponse.message);
 						console.error(
 							"There was a error while deleting procedure: ",
 							deleteFileResponse
@@ -178,6 +179,7 @@ const ProcedureModal: FC<ProcedureModalProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Created) {
 						message.error("Nije moguće spremiti novu proceduru!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while saving new procedure: ",
 							physioFileResponse
@@ -229,6 +231,7 @@ const ProcedureModal: FC<ProcedureModalProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće izmjeniti proceduru!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while updating procedure: ",
 							physioFileResponse

@@ -240,6 +240,7 @@ const VasModal: FC<VasModalProps> = ({
 						if (
 							physioFileResponse.status !== HttpStatusCode.Created
 						) {
+							message.error(physioFileResponse.message);
 							console.error(
 								"There was a error creating physio test: ",
 								physioFileResponse
@@ -304,6 +305,7 @@ const VasModal: FC<VasModalProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Created) {
 						message.error("Nije moguće spremiti novi VAS!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while saving new VAS: ",
 							physioFileResponse
@@ -344,6 +346,7 @@ const VasModal: FC<VasModalProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće izmjeniti VAS!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while updating VAS: ",
 							physioFileResponse
@@ -384,6 +387,7 @@ const VasModal: FC<VasModalProps> = ({
 				(deleteFileResponse: ApiResponse<NoReturnData>) => {
 					if (deleteFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće izbrisati VAS!");
+						message.error(deleteFileResponse.message);
 						console.error(
 							"There was a error while deleting VAS: ",
 							deleteFileResponse
@@ -579,7 +583,9 @@ const VasModal: FC<VasModalProps> = ({
 										marks={sliderMarks}
 										step={null}
 										value={painLevelSliderValue}
-										disabled={physioFile.fileClosedBy !== null}
+										disabled={
+											physioFile.fileClosedBy !== null
+										}
 										onChange={setPainLevelSliderValue}
 										styles={{
 											track: {

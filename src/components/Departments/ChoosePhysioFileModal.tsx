@@ -1,9 +1,8 @@
-import { Button, Col, Modal, Row, Table, message } from "antd";
+import { Button, Modal, Row, Table, message } from "antd";
 import { Header } from "antd/es/layout/layout";
-import { Fragment, ReactNode, useEffect, useState, type FC } from "react";
+import { Fragment, useEffect, useState, type FC } from "react";
 import "dayjs/locale/hr";
-import dayjs, { Dayjs } from "dayjs";
-import croLocale from "antd/es/date-picker/locale/hr_HR";
+import dayjs from "dayjs";
 import Segment from "../physiofile/segments/Segment";
 import LoadingSpinner from "../LoadingSpinner";
 import { type PhysioFileVM } from "../../models/physiofile/PhysioFileVM";
@@ -17,11 +16,9 @@ import { ColumnsType } from "antd/es/table";
 import generateRandomNumber from "../../util/generateRandomBigInteger";
 import { useAppSelector } from "../../hooks/use_app_selector";
 import client_routes, { clientRoutesParams } from "../../config/client_routes";
-import CustomLink from "../CustomLink";
 import { HttpStatusCode } from "axios";
 import { ApiResponse } from "../../type";
 import api_routes from "../../config/api_routes";
-import { physioFileActions } from "../../store/physio-file-slice";
 
 type ChoosePhysioFileModalProps = {
 	showModal: boolean;
@@ -239,6 +236,7 @@ const ChoosePhysioFileModal: FC<ChoosePhysioFileModalProps> = ({
 						message.error(
 							"Nije moguće kreirati fizioterapeutski karton pacijenta!"
 						);
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while creating physio file: ",
 							physioFileResponse

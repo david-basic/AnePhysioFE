@@ -39,6 +39,7 @@
 .dateStyle {
     color: white;
     font-size: 20px;
+    font-weight: 300;
     line-height: 26px;
 }
 
@@ -49,4 +50,5 @@
     color: white;
     line-height: 26px;
     margin-bottom: 22px;
+    font-weight: 300;
   }

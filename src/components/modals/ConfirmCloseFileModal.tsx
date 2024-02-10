@@ -11,6 +11,7 @@ import { CloseFileRequestDto } from "../../dto/PhysioFile/CloseFileRequestDto";
 import { ApiResponse } from "../../type";
 import { HttpStatusCode } from "axios";
 import { physioFileActions } from "../../store/physio-file-slice";
+import { UpdatePhysioFileRequestDto } from "../../dto/PhysioFile/UpdatePhysioFileRequestDto";
 
 type ConfirmCloseFileModalProps = {
 	showCloseFileModal: boolean;
@@ -26,7 +27,25 @@ const ConfirmCloseFileModal: FC<ConfirmCloseFileModalProps> = ({
 	const currentTherapist = useAppSelector((state) => state.authReducer.user);
 
 	const handleModalOk = () => {
-		const updateDto: CloseFileRequestDto = {
+		const {
+			patientFunctionalDiagnoses,
+			assessment,
+			patientGoals,
+			patientPlans,
+			notes,
+			conclussion,
+		}: PhysioFileVM = physioFile;
+
+		const updatePhysioFileDto: UpdatePhysioFileRequestDto = {
+			patientFunctionalDiagnoses,
+			assessmentNotes: assessment.notes,
+			patientGoals,
+			patientPlans,
+			notes,
+			conclussion,
+		};
+
+		const closeFileDto: CloseFileRequestDto = {
 			therapistId: currentTherapist.id,
 		};
 
@@ -34,19 +53,20 @@ const ConfirmCloseFileModal: FC<ConfirmCloseFileModalProps> = ({
 			fetchWithTokenRefresh(
 				{
 					url:
-						api_routes.ROUTE_PHYSIO_FILE_CLOSE_FILE_BY_ID +
+						api_routes.ROUTE_PHYSIO_FILE_UPDATE_BY_ID +
 						`/${physioFile.id}`,
 					method: "PUT",
 					headers: { "Content-Type": "application/json" },
-					body: updateDto,
+					body: updatePhysioFileDto,
 				},
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Ok) {
 						message.error(
-							"Nije moguće zatvoriti fizioterapeutski karton!"
+							"Nije moguće spremiti fizioterapeutski karton!"
 						);
+						message.error(physioFileResponse.message);
 						console.error(
-							"There was a error while closing physio file: ",
+							"There was a error while saving physio file: ",
 							physioFileResponse
 						);
 					} else {
@@ -59,14 +79,67 @@ const ConfirmCloseFileModal: FC<ConfirmCloseFileModalProps> = ({
 							physioFileActions.setPhysioFileDataSaved(true)
 						);
 						message.success(
-							"Fizioterapeutski karton uspješno zatvoren!"
+							"Fizioterapeutski karton uspješno spremljen!"
 						);
+
+						try {
+							fetchWithTokenRefresh(
+								{
+									url:
+										api_routes.ROUTE_PHYSIO_FILE_CLOSE_FILE_BY_ID +
+										`/${physioFile.id}`,
+									method: "PUT",
+									headers: {
+										"Content-Type": "application/json",
+									},
+									body: closeFileDto,
+								},
+								(
+									physioFileResponse: ApiResponse<PhysioFileVM>
+								) => {
+									if (
+										physioFileResponse.status !==
+										HttpStatusCode.Ok
+									) {
+										message.error(
+											"Nije moguće zatvoriti fizioterapeutski karton!"
+										);
+										message.error(
+											physioFileResponse.message
+										);
+										console.error(
+											"There was a error while closing physio file: ",
+											physioFileResponse
+										);
+									} else {
+										dispatch(
+											physioFileActions.setCurrentPhysioFile(
+												physioFileResponse.data!
+											)
+										);
+										dispatch(
+											physioFileActions.setPhysioFileDataSaved(
+												true
+											)
+										);
+										message.success(
+											"Fizioterapeutski karton uspješno zatvoren!"
+										);
+									}
+								}
+							);
+						} catch (error) {
+							console.error("Error closing physio file:", error);
+							message.error(
+								"Neuspjelo zatvaranje fizioterapeutskog kartona!"
+							);
+						}
 					}
 				}
 			);
 		} catch (error) {
-			console.error("Error closing physio file:", error);
-			message.error("Neuspjelo zatvaranje fizioterapeutskog kartona!");
+			console.error("Error saving physio file:", error);
+			message.error("Neuspjelo spremanje fizioterapeutskog kartona!");
 		}
 
 		dispatch(modalsShowActions.setShowCloseFileModal(false));
@@ -77,7 +150,7 @@ const ConfirmCloseFileModal: FC<ConfirmCloseFileModalProps> = ({
 			centered
 			open={showCloseFileModal}
 			onOk={handleModalOk}
-			okText='Zaključaj karton'
+			okText='Spremi i Zaključi karton'
 			cancelText='Odustani'
 			className={modalStyles.modalsGeneral}
 			okButtonProps={{
@@ -87,11 +160,11 @@ const ConfirmCloseFileModal: FC<ConfirmCloseFileModalProps> = ({
 			onCancel={() =>
 				dispatch(modalsShowActions.setShowCloseFileModal(false))
 			}>
-			<h2>Potvrda zaključavanja</h2>
 			<h3>
-				Želite li zaključati karton?<br />Nakon zaključavanja više
-				neće biti moguće raditi izmjene na kartonu!<br />Sve ne spremljene
-				izmjene biti će izgubljene!
+				Želite li zaključiti karton?
+				<br />
+				Nakon zaključivanja više neće biti moguće raditi izmjene na
+				kartonu!
 			</h3>
 		</Modal>
 	);

@@ -303,6 +303,7 @@ const RassModal: FC<RassModalProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće izmjeniti RASS!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while updating patient RASS: ",
 							physioFileResponse
@@ -345,6 +346,7 @@ const RassModal: FC<RassModalProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće spremiti novi RASS!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while saving new patient RASS: ",
 							physioFileResponse
@@ -491,6 +493,7 @@ const RassModal: FC<RassModalProps> = ({
 				(deleteFileResponse: ApiResponse<NoReturnData>) => {
 					if (deleteFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće izbrisati RASS!");
+						message.error(deleteFileResponse.message);
 						console.error(
 							"There was a error while deleting patient RASS: ",
 							deleteFileResponse
