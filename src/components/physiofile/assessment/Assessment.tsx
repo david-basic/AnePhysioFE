@@ -4,13 +4,16 @@ import localStyles from "./Assessment.module.css";
 import TextArea from "antd/es/input/TextArea";
 import { physioFileActions } from "../../../store/physio-file-slice";
 import { useAppDispatch } from "../../../hooks/use_app_dispatch";
+import { PhysioFileVM } from "../../../models/physiofile/PhysioFileVM";
 
 type AssessmentProps = {
 	patientAssessment: AssessmentVM;
+	physioFile: PhysioFileVM;
 };
 
 const Assessment: FC<AssessmentProps> = ({
 	patientAssessment,
+	physioFile,
 }: AssessmentProps) => {
 	const dispatch = useAppDispatch();
 	const [assesmentNotes, setAssesmentNotes] = useState(
@@ -31,6 +34,7 @@ const Assessment: FC<AssessmentProps> = ({
 			id='assessmentNotes'
 			value={assesmentNotes}
 			autoSize={{ minRows: 4 }}
+			disabled={physioFile.fileClosedBy !== null}
 			onChange={handleChange}
 			onBlur={handleFocusLost}
 			placeholder='...'

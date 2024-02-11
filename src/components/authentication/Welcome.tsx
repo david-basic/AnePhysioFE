@@ -1,9 +1,12 @@
 import { type FC, useEffect } from "react";
-import styles from "./Welcome.module.css";
-import { Button } from "antd";
+import localStyles from "./Welcome.module.css";
+import { Button, Layout, Row, Space } from "antd";
 import { useNavigate } from "react-router-dom";
 import client_routes from "../../config/client_routes";
 import { useAppSelector } from "../../hooks/use_app_selector";
+import anephysioLogo from "../../assets/anephysio-01-blue.png";
+import { CopyrightOutlined } from "@ant-design/icons";
+import { Content, Footer } from "antd/es/layout/layout";
 
 const Welcome: FC = () => {
 	const navigate = useNavigate();
@@ -15,51 +18,48 @@ const Welcome: FC = () => {
 		}
 	}, [isLoggedIn, navigate]);
 
-	const navigateToRegister = () => {
-		navigate(client_routes.ROUTE_AUTH_REGISTER, { replace: true });
-	};
-	const navigateToLogin = () => {
-		navigate(client_routes.ROUTE_AUTH_LOGIN, { replace: true });
-	};
-
 	return (
-		<div className={`${styles.content} ${styles["centered-element"]}`}>
-			<ul className={`${styles.list}`}>
-				<li>
-					<h1>AnePhysio</h1>
-				</li>
-				<li className={styles["lighter-text"]}>
-					<p>Thank you for choosing our application</p>
-				</li>
-				<li>
-					<Button
-						className={styles["btn-rounded-dark"]}
-						type='text'
-						shape='round'
-						size='large'
-						onClick={navigateToRegister}>
-						Register
-					</Button>
-				</li>
-				<li>
-					<Button
-						className={styles["btn-rounded-light"]}
-						type='text'
-						shape='round'
-						size='large'
-						onClick={navigateToLogin}>
-						Log in
-					</Button>
-				</li>
-				<li className={styles["lighter-text"]}>
-					<p>
-						By accessing the application you accept Terms and
-						Conditions
-						<br /> and Privacy policy!
-					</p>
-				</li>
-			</ul>
-		</div>
+		<Layout className={localStyles.page}>
+			<Content className={localStyles.content}>
+				<Space
+					direction='vertical'
+					align='center'
+					className={localStyles.content}>
+					<Row
+						align={"middle"}
+						className={localStyles.logoAndTitleContainer}>
+						<img
+							src={anephysioLogo}
+							alt='app logo'
+							className={localStyles.logo}
+						/>
+						<h3 className={localStyles.title}>AnePhysio</h3>
+					</Row>
+					<Row>
+						<Button
+							className={localStyles.btnRoundedLight}
+							type='text'
+							shape='round'
+							size='large'
+							onClick={() =>
+								navigate(client_routes.ROUTE_AUTH_LOGIN)
+							}>
+							PRIJAVA
+						</Button>
+					</Row>
+				</Space>
+			</Content>
+			<Footer className={localStyles.footer}>
+				<Row
+					justify={"center"}
+					align={"bottom"}
+					className={localStyles.authorDescription}>
+					<span>
+						<CopyrightOutlined /> David Bašić
+					</span>
+				</Row>
+			</Footer>
+		</Layout>
 	);
 };
 

@@ -19,6 +19,9 @@ import dayjs from "dayjs";
 type RadarChartProps = {
 	cpax: CpaxTableType;
 	dateTime: CpaxDateTimeType;
+	secondCpaxDefined?: boolean;
+	secondCpax?: CpaxTableType;
+	secondCpaxDateTime?: CpaxDateTimeType;
 };
 
 Chart.register(
@@ -34,6 +37,9 @@ Chart.register(
 const RadarChart: FC<RadarChartProps> = ({
 	cpax,
 	dateTime,
+	secondCpaxDefined = false,
+	secondCpax,
+	secondCpaxDateTime,
 }: RadarChartProps) => {
 	const levelsColors: { [key: number]: string } = {
 		0: "rgb(231, 111, 111)",
@@ -44,21 +50,50 @@ const RadarChart: FC<RadarChartProps> = ({
 		5: "rgb(196, 190, 16)",
 	};
 
-	const data = Object.values(cpax).map((val) => val.aop.level);
+	const firstData = Object.values(cpax).map((val) => val.aop.level);
 
-	const cpaxDataSet: ChartDataset<"radar", number[]> = {
-		label: `CPAx za ${dayjs(dateTime.date).format("DD.MM.YYYY")}`,
-		data: data as number[],
+	const firstDataSet: ChartDataset<"radar", number[]> = {
+		label: `${dayjs(dateTime.date).format("DD.MM.YYYY")}`,
+		data: firstData as number[],
 		borderColor: "red",
 		backgroundColor: "rgba(255, 0, 0, 0.03)",
-		pointBackgroundColor: data.map((level) => levelsColors[level]),
+		pointBackgroundColor: firstData.map((level) => levelsColors[level]),
 		pointBorderColor: "rgba(255, 0, 0, 0.03)",
-		pointHoverBackgroundColor: data.map((level) => levelsColors[level]),
+		pointHoverBackgroundColor: firstData.map((level) => levelsColors[level]),
 		pointHoverBorderColor: "red",
 		pointRadius: 6,
 		hoverRadius: 8,
 		fill: true,
 	};
+
+	let secondDataSet: ChartDataset<"radar", number[]> | undefined =
+		undefined;
+
+	if (secondCpaxDefined) {
+		const secondData = Object.values(secondCpax!).map(
+			(val) => val.aop.level
+		);
+
+		secondDataSet = {
+			label: `${dayjs(secondCpaxDateTime!.date).format(
+				"DD.MM.YYYY"
+			)}`,
+			data: secondData as number[],
+			borderColor: "blue",
+			backgroundColor: "rgba(0, 0, 255, 0.03)",
+			pointBackgroundColor: secondData.map(
+				(level) => levelsColors[level]
+			),
+			pointBorderColor: "rgba(0, 0, 255, 0.03)",
+			pointHoverBackgroundColor: secondData.map(
+				(level) => levelsColors[level]
+			),
+			pointHoverBorderColor: "blue",
+			pointRadius: 6,
+			hoverRadius: 8,
+			fill: true,
+		};
+	}
 
 	const chartOptions: ChartOptions<"radar"> = {
 		elements: {
@@ -119,7 +154,9 @@ const RadarChart: FC<RadarChartProps> = ({
 
 	const chartData: ChartData<"radar", number[], unknown> = {
 		labels: Object.values(cpax).map((cp) => cp.aop.aspectName),
-		datasets: [cpaxDataSet],
+		datasets: secondCpaxDefined === true
+			? [firstDataSet, secondDataSet!]
+			: [firstDataSet],
 	};
 
 	return <Radar data={chartData} options={chartOptions} />;

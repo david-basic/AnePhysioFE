@@ -3,12 +3,15 @@ import { useAppDispatch } from "../../../hooks/use_app_dispatch";
 import { physioFileActions } from "../../../store/physio-file-slice";
 import TextArea from "antd/es/input/TextArea";
 import assessmentStyles from "../assessment/Assessment.module.css";
+import { PhysioFileVM } from "../../../models/physiofile/PhysioFileVM";
 
 type ConclussionProps = {
+	physioFile: PhysioFileVM;
 	conclussion: string;
 };
 
 const PhysioFinalAssessmentAndConclussion: FC<ConclussionProps> = ({
+	physioFile,
 	conclussion,
 }: ConclussionProps) => {
 	const dispatch = useAppDispatch();
@@ -26,6 +29,7 @@ const PhysioFinalAssessmentAndConclussion: FC<ConclussionProps> = ({
 	return (
 		<TextArea
 			id='physioFileConclussion'
+			disabled={physioFile.fileClosedBy !== null}
 			value={finalConclussion}
 			autoSize={{ minRows: 4 }}
 			onChange={handleChange}

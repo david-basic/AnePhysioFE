@@ -180,13 +180,19 @@ const VasModal: FC<VasModalProps> = ({
 				<Space size={"small"}>
 					<Button
 						type='primary'
-						disabled={tableIsBeingEdited}
+						disabled={
+							tableIsBeingEdited ||
+							physioFile.fileClosedBy !== null
+						}
 						onClick={(e) => handleEditChoice(e, record)}
 						icon={<PencilFill className={modalStyles.icon} />}
 					/>
 					<Button
 						type='primary'
-						disabled={tableIsBeingEdited}
+						disabled={
+							tableIsBeingEdited ||
+							physioFile.fileClosedBy !== null
+						}
 						danger
 						onClick={(e) => handleDeleteChoice(e, record)}
 						icon={<X className={modalStyles.icon} />}
@@ -234,13 +240,14 @@ const VasModal: FC<VasModalProps> = ({
 						if (
 							physioFileResponse.status !== HttpStatusCode.Created
 						) {
+							message.error(physioFileResponse.message);
 							console.error(
 								"There was a error creating physio test: ",
 								physioFileResponse
 							);
 						} else {
 							dispatch(
-								physioFileActions.setPhysioFile(
+								physioFileActions.setCurrentPhysioFile(
 									physioFileResponse.data!
 								)
 							);
@@ -298,6 +305,7 @@ const VasModal: FC<VasModalProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Created) {
 						message.error("Nije moguće spremiti novi VAS!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while saving new VAS: ",
 							physioFileResponse
@@ -306,7 +314,7 @@ const VasModal: FC<VasModalProps> = ({
 						addRecordToTable(painLevelSliderValue, chosenDate);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -338,6 +346,7 @@ const VasModal: FC<VasModalProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće izmjeniti VAS!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while updating VAS: ",
 							physioFileResponse
@@ -348,7 +357,7 @@ const VasModal: FC<VasModalProps> = ({
 						addRecordToTable(painLevelSliderValue, chosenDate);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -378,6 +387,7 @@ const VasModal: FC<VasModalProps> = ({
 				(deleteFileResponse: ApiResponse<NoReturnData>) => {
 					if (deleteFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće izbrisati VAS!");
+						message.error(deleteFileResponse.message);
 						console.error(
 							"There was a error while deleting VAS: ",
 							deleteFileResponse
@@ -504,7 +514,7 @@ const VasModal: FC<VasModalProps> = ({
 	};
 
 	const handleSavingDataBeforeExit = () => {
-		dispatch(physioFileActions.setPhysioFile(physioFile));
+		dispatch(physioFileActions.setCurrentPhysioFile(physioFile));
 		dispatch(physioFileActions.setVasModalDataSaved(true));
 	};
 
@@ -551,6 +561,7 @@ const VasModal: FC<VasModalProps> = ({
 							<Segment isContent>
 								<DatePicker
 									placeholder='Odaberi datum'
+									disabled={physioFile.fileClosedBy !== null}
 									format={croLocale.dateFormat}
 									locale={croLocale}
 									value={datePickerValue}
@@ -572,6 +583,9 @@ const VasModal: FC<VasModalProps> = ({
 										marks={sliderMarks}
 										step={null}
 										value={painLevelSliderValue}
+										disabled={
+											physioFile.fileClosedBy !== null
+										}
 										onChange={setPainLevelSliderValue}
 										styles={{
 											track: {
@@ -589,6 +603,7 @@ const VasModal: FC<VasModalProps> = ({
 								<hr style={{ width: "0px" }} />
 								<TextArea
 									id='vasNotes'
+									disabled={physioFile.fileClosedBy !== null}
 									value={vasNotes}
 									autoSize={{ minRows: 4 }}
 									onChange={onVasNotesChange}
@@ -601,39 +616,43 @@ const VasModal: FC<VasModalProps> = ({
 									} ${modalStyles.modalsTextArea}`}
 								/>
 								<hr style={{ width: "0px" }} />
-								<Tooltip
-									title='Datum, razina boli i zabilješka su obavezni parametri!'
-									color='#045fbd'
-									style={{
-										fontFamily: "Nunito, sans-serif",
-									}}>
-									<InfoCircleFill
-										className={modalStyles.infoIcon}
-									/>
-								</Tooltip>
-								<Button
-									type='primary'
-									shape='round'
-									className={modalStyles.modalsButtons}
-									icon={<SaveFilled />}
-									disabled={
-										isNullOrEmpty(chosenDate.date) ||
-										isNullOrEmpty(vasNotes)
-									}
-									onClick={handleSaveChoice}>
-									Spremi odabir
-								</Button>
-								{tableIsBeingEdited && (
+								<Row align={"middle"}>
+									<Tooltip
+										title='Datum, razina boli i zabilješka su obavezni parametri!'
+										color='#045fbd'
+										style={{
+											fontFamily: "Nunito, sans-serif",
+										}}>
+										<InfoCircleFill
+											className={modalStyles.infoIcon}
+										/>
+									</Tooltip>
 									<Button
 										type='primary'
 										shape='round'
-										danger
-										style={{ marginLeft: "4px" }}
 										className={modalStyles.modalsButtons}
-										onClick={handleStopEditing}>
-										Odustani
+										icon={<SaveFilled />}
+										disabled={
+											isNullOrEmpty(chosenDate.date) ||
+											isNullOrEmpty(vasNotes)
+										}
+										onClick={handleSaveChoice}>
+										Spremi odabir
 									</Button>
-								)}
+									{tableIsBeingEdited && (
+										<Button
+											type='primary'
+											shape='round'
+											danger
+											style={{ marginLeft: "4px" }}
+											className={
+												modalStyles.modalsButtons
+											}
+											onClick={handleStopEditing}>
+											Odustani
+										</Button>
+									)}
+								</Row>
 							</Segment>
 						</Col>
 						<Col span={12}>

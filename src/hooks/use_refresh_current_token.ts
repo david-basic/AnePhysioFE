@@ -23,61 +23,54 @@ const useRefreshCurrentToken = () => {
 	const sendRefreshTokenRequest = useCallback(async () => {
 		if (!isNullOrEmpty(refreshToken)) {
 			try {
-					const response = await fetch(
-						api_routes.ROUTE_AUTH_REFRESH_TOKEN,
-						{
-							method: "POST",
-							headers: {
-								"Content-Type": "application/json",
-							},
-							body: JSON.stringify({
-								refreshToken: refreshToken,
-							}),
-						}
+				const response = await fetch(
+					api_routes.ROUTE_AUTH_REFRESH_TOKEN,
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							refreshToken: refreshToken,
+						}),
+					}
+				);
+
+				const responseData: ApiResponse<LoginResponseData> =
+					await response.json();
+
+				if (responseData.status !== HttpStatusCode.Ok) {
+					localforage.clear();
+					sessionStorage.clear();
+					localStorage.clear();
+
+					dispatch(authActions.resetAllStateToDefaults());
+					dispatch(
+						deptLocalitiesActions.resetDepartmentLocaltiesToInitValues()
+					);
+					dispatch(physioFileActions.resetPhysioFileToInitValues());
+
+					dispatch(authActions.setTokenIsValid(false));
+
+					navigate(client_routes.ROUTE_AUTH, { replace: true });
+					message.warning(responseData.message);
+				} else {
+					dispatch(
+						authActions.setTokenType(responseData.data!.tokenType)
+					);
+					dispatch(
+						authActions.setAccessToken(
+							responseData.data!.accessToken
+						)
+					);
+					dispatch(
+						authActions.setRefreshToken(
+							responseData.data!.refreshToken
+						)
 					);
 
-					const responseData: ApiResponse<LoginResponseData> =
-						await response.json();
-
-					// console.log("NEEDS TO BE FIRST!"); //XXX remove before finishing
-
-					if (responseData.status !== HttpStatusCode.Ok) {
-						localforage.clear();
-						sessionStorage.clear();
-						localStorage.clear();
-
-						dispatch(authActions.resetAllStateToDefaults());
-						dispatch(
-							deptLocalitiesActions.resetDepartmentLocaltiesToInitValues()
-						);
-						dispatch(physioFileActions.resetPhysioFileToInitValues());
-
-						dispatch(authActions.setTokenIsValid(false));
-
-						navigate(client_routes.ROUTE_AUTH, { replace: true });
-						message.warning(
-							"Your session expired! Please sign in again."
-						);
-					} else {
-						dispatch(
-							authActions.setTokenType(
-								responseData.data!.tokenType
-							)
-						);
-						dispatch(
-							authActions.setAccessToken(
-								responseData.data!.accessToken
-							)
-						);
-						dispatch(
-							authActions.setRefreshToken(
-								responseData.data!.refreshToken
-							)
-						);
-
-						dispatch(authActions.setTokenIsValid(true));
-
-					}
+					dispatch(authActions.setTokenIsValid(true));
+				}
 			} catch (error: any) {
 				console.error("Error occured during fetching... ", error);
 			}

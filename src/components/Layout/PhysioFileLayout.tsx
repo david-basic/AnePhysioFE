@@ -8,8 +8,8 @@ import { physioFileActions } from "../../store/physio-file-slice";
 import client_routes, { sideBarKey } from "../../config/client_routes";
 import { ItemType, MenuItemType } from "antd/es/menu/hooks/useItems";
 import { PoweroffOutlined, HomeOutlined } from "@ant-design/icons";
-import { Heart, Hospital, Virus } from "react-bootstrap-icons";
-import { Layout, Menu, Modal } from "antd";
+import { Heart, Hospital, PersonPlus, Virus } from "react-bootstrap-icons";
+import { Layout, Menu, Modal, Tooltip } from "antd";
 import Sider from "antd/es/layout/Sider";
 import styles from "./PhysioFileLayout.module.css";
 import { modalsShowActions } from "../../store/modals-show-slice";
@@ -33,6 +33,7 @@ const PhysioFileLayout: FC<PhysioFileLayoutProps> = ({
 	const showLeaveModal = useAppSelector(
 		(state) => state.modalsShowReducer.showLeaveModal
 	);
+	const currentUser = useAppSelector((state) => state.authReducer.user);
 
 	const handleLogoutClick = () => {
 		localforage.clear();
@@ -70,7 +71,7 @@ const PhysioFileLayout: FC<PhysioFileLayoutProps> = ({
 							dispatch(modalsShowActions.setShowLeaveModal(true));
 						}
 					}}>
-					Home
+					Početna
 				</NavLink>
 			),
 		},
@@ -149,10 +150,37 @@ const PhysioFileLayout: FC<PhysioFileLayoutProps> = ({
 			),
 		},
 		{
+			key: sideBarKey.RegisterNewUser,
+			icon: <PersonPlus />,
+			disabled: currentUser.role !== "admin",
+			label:
+				currentUser.role === "admin" ? (
+					<NavLink
+						to={client_routes.ROUTE_AUTH_REGISTER}
+						onClick={(event) => {
+							if (!dataSaved) {
+								event.preventDefault();
+								setNavigateToRoute(
+									client_routes.ROUTE_AUTH_REGISTER
+								);
+								dispatch(
+									modalsShowActions.setShowLeaveModal(true)
+								);
+							}
+						}}>
+						Registracija
+					</NavLink>
+				) : (
+					<Tooltip title='Samo administrator može registrirati novog korisnika'>
+						<span>Registracija</span>
+					</Tooltip>
+				),
+		},
+		{
 			key: sideBarKey.LogOut,
 			icon: <PoweroffOutlined />,
 			onClick: handleShowModal,
-			label: <p>Log out</p>,
+			label: <p>Odjava</p>,
 		},
 	];
 
@@ -160,7 +188,7 @@ const PhysioFileLayout: FC<PhysioFileLayoutProps> = ({
 		<div className={styles.layoutcontainer}>
 			<Layout>
 				<Sider
-					width={"131.11px"}
+					width={"141.97px"}
 					className={styles.mainsidebar}
 					style={{ position: "fixed" }}>
 					<Menu theme='dark' mode='inline' items={sideBarItems} />

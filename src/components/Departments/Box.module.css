@@ -2,9 +2,21 @@
     list-style: none;
 }
 
-.card {
-    width: 300px;
-    margin-top: 16px;
-    padding: 16px;
-    height: fit-content;
+.cardHeader {
+    background-color: #004a8c;
+    height: 73px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    padding: 0px;
+}
+
+.cardTitle {
+    font-family: "Nunito", sans-serif;
+    color: white;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 39px;
+    margin-left: 24px;
 }

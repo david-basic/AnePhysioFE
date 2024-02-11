@@ -73,6 +73,7 @@ const FunctionalDiagnoses: FC<FunctionalDiagnosesProps> = ({
 				{allPFD.map((patientFuncDiag) => (
 					<Col key={generateRandomNumber(6, true)} span={10}>
 						<Checkbox
+							disabled={physioFile.fileClosedBy !== null}
 							className={parentStyles.texts}
 							style={{ fontWeight: 400 }}
 							value={patientFuncDiag.id}>
@@ -84,12 +85,17 @@ const FunctionalDiagnoses: FC<FunctionalDiagnosesProps> = ({
 					<span
 						className={parentStyles.textsAsLinks}
 						onClick={() =>
+							physioFile.fileClosedBy === null &&
 							dispatch(modalsShowActions.setShowFdModal(true))
 						}>
-						<PlusCircle
-							className={parentStyles.iconButtonsInText}
-						/>{" "}
-						Dodaj novu
+						{physioFile.fileClosedBy === null && (
+							<>
+								<PlusCircle
+									className={parentStyles.iconButtonsInText}
+								/>{" "}
+								Dodaj novu
+							</>
+						)}
 					</span>
 					<FdModal
 						showModal={showFdModal}

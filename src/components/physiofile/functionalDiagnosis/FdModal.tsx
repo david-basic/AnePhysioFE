@@ -169,6 +169,7 @@ const FdModal: FC<FdModalProps> = ({
 						message.error(
 							"Nije moguće spremiti novu funkcionalnu dijagnozu!"
 						);
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while saving new functional diagnosis: ",
 							physioFileResponse
@@ -188,7 +189,7 @@ const FdModal: FC<FdModalProps> = ({
 						);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -226,6 +227,7 @@ const FdModal: FC<FdModalProps> = ({
 						message.error(
 							"Nije moguće izmjeniti funkcionalnu dijagnozu!"
 						);
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while updating functional diagnosis: ",
 							physioFileResponse
@@ -243,7 +245,7 @@ const FdModal: FC<FdModalProps> = ({
 						addRecordToTable(newRecord);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -284,6 +286,7 @@ const FdModal: FC<FdModalProps> = ({
 						message.error(
 							"Nije moguće izbrisati funkcionalnu dijagnozu!"
 						);
+						message.error(deleteFileResponse.message);
 						console.error(
 							"There was a error while deleting functional diagnosis: ",
 							deleteFileResponse
@@ -297,7 +300,7 @@ const FdModal: FC<FdModalProps> = ({
 							physioFileActions.setPhysioFileDataSaved(false)
 						);
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								deleteFileResponse.data!
 							)
 						);

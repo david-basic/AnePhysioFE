@@ -115,7 +115,7 @@ const CpaxModal: FC<CpaxModalProps> = ({
 	);
 	const coughAOPs = aopList.filter((aop) => aop.aspectName === "Kašalj");
 	const movingWithinBedAOPs = aopList.filter(
-		(aop) => aop.aspectName === "Mobilnost u krevetu (npr. leđa - bok)"
+		(aop) => aop.aspectName === "Mobilnost u krevetu"
 	);
 	const supineToSittingAOPs = aopList.filter(
 		(aop) => aop.aspectName === "Posjedanje i sjedenje uz potporu"
@@ -127,9 +127,7 @@ const CpaxModal: FC<CpaxModalProps> = ({
 		(aop) => aop.aspectName === "Ravnoteža tijekom vertikalizacije"
 	);
 	const sitToStandAOPs = aopList.filter(
-		(aop) =>
-			aop.aspectName ===
-			"Vertikalizacija iz sjedećeg položaja (početna pozicija >= 90° fleksija kuka)"
+		(aop) => aop.aspectName === "Vertikalizacija iz sjedećeg položaja"
 	);
 	const transferringFromBedAOPs = aopList.filter(
 		(aop) => aop.aspectName === "Transfer iz kreveta na stolac"
@@ -417,13 +415,14 @@ const CpaxModal: FC<CpaxModalProps> = ({
 						if (
 							physioFileResponse.status !== HttpStatusCode.Created
 						) {
+							message.error(physioFileResponse.message);
 							console.error(
 								"There was a error creating physio test: ",
 								physioFileResponse
 							);
 						} else {
 							dispatch(
-								physioFileActions.setPhysioFile(
+								physioFileActions.setCurrentPhysioFile(
 									physioFileResponse.data!
 								)
 							);
@@ -460,7 +459,7 @@ const CpaxModal: FC<CpaxModalProps> = ({
 			key: "cpaxDateTime",
 			title: "Datum",
 			dataIndex: "dateTime",
-			width: 25,
+			width: 15,
 			sorter: (a, b) => {
 				const dateA = dayjs(`${a.dateTime.date} ${a.dateTime.time}`);
 				const dateB = dayjs(`${b.dateTime.date} ${b.dateTime.time}`);
@@ -484,7 +483,7 @@ const CpaxModal: FC<CpaxModalProps> = ({
 			key: "cpax",
 			title: "Ocjena",
 			dataIndex: "cpax",
-			width: 70,
+			width: 15,
 			render: (_, { cpax }) => (
 				<span>
 					{cpax.coughAOPandIndex.aop.level +
@@ -504,7 +503,7 @@ const CpaxModal: FC<CpaxModalProps> = ({
 		{
 			key: "actions",
 			title: "Akcije",
-			width: 25,
+			width: 20,
 			render: (_, record) => (
 				<Space size={"small"}>
 					<Button
@@ -515,13 +514,19 @@ const CpaxModal: FC<CpaxModalProps> = ({
 					/>
 					<Button
 						type='primary'
-						disabled={tableIsBeingEdited}
+						disabled={
+							tableIsBeingEdited ||
+							physioFile.fileClosedBy !== null
+						}
 						onClick={(e) => handleEditChoice(e, record)}
 						icon={<PencilFill className={modalStyles.icon} />}
 					/>
 					<Button
 						type='primary'
-						disabled={tableIsBeingEdited}
+						disabled={
+							tableIsBeingEdited ||
+							physioFile.fileClosedBy !== null
+						}
 						danger
 						onClick={(e) => handleDeleteChoice(e, record)}
 						icon={<X className={modalStyles.icon} />}
@@ -871,6 +876,7 @@ const CpaxModal: FC<CpaxModalProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Created) {
 						message.error("Nije moguće spremiti novi CPAx!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while saving new CPAx: ",
 							physioFileResponse
@@ -891,7 +897,7 @@ const CpaxModal: FC<CpaxModalProps> = ({
 						);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -925,13 +931,14 @@ const CpaxModal: FC<CpaxModalProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće izmjeniti CPAx!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while updating CPAx: ",
 							physioFileResponse
 						);
 					} else {
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -980,6 +987,7 @@ const CpaxModal: FC<CpaxModalProps> = ({
 				(deleteFileResponse: ApiResponse<NoReturnData>) => {
 					if (deleteFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće izbrisati CPAx!");
+						message.error(deleteFileResponse.message);
 						console.error(
 							"There was a error while deleting CPAx: ",
 							deleteFileResponse
@@ -1044,7 +1052,9 @@ const CpaxModal: FC<CpaxModalProps> = ({
 				transferringFromBedAop:
 					chosenTransferringFromBedAopAndIndex!.aop,
 				supineToSittingAop: chosenSupineToSittingAopAndIndex!.aop,
-				cpaxDateTime: `${chosenDateTime.date}T${chosenDateTime.time}`,
+				cpaxDateTime: dayjs(
+					`${chosenDateTime.date} ${chosenDateTime.time}`
+				).format("YYYY-MM-DDTHH:mm:ss"),
 			};
 
 			sendUpdateCpaxRequest(tableRecordBeingEdited!.id, updateDto);
@@ -1062,7 +1072,9 @@ const CpaxModal: FC<CpaxModalProps> = ({
 				transferringFromBedAop:
 					chosenTransferringFromBedAopAndIndex!.aop,
 				supineToSittingAop: chosenSupineToSittingAopAndIndex!.aop,
-				cpaxDateTime: `${chosenDateTime.date}T${chosenDateTime.time}`,
+				cpaxDateTime: dayjs(
+					`${chosenDateTime.date} ${chosenDateTime.time}`
+				).format("YYYY-MM-DDTHH:mm:ss"),
 			};
 
 			sendCreateCpaxRequest(createDto);
@@ -1230,7 +1242,7 @@ const CpaxModal: FC<CpaxModalProps> = ({
 	};
 
 	const handleSavingDataBeforeExit = () => {
-		dispatch(physioFileActions.setPhysioFile(physioFile));
+		dispatch(physioFileActions.setCurrentPhysioFile(physioFile));
 		dispatch(physioFileActions.setCpaxModalDataSaved(true));
 	};
 
@@ -1266,305 +1278,92 @@ const CpaxModal: FC<CpaxModalProps> = ({
 			<Segment>
 				{!physioTest && <LoadingSpinner />}
 				{physioFile && physioTest && (
-					<Row>
-						<Col span={6}>
-							<Segment isContent>
-								<DatePicker
-									placeholder='Odaberi datum'
-									format={croLocale.dateFormat}
-									locale={croLocale}
-									value={datePickerValue}
-									className={`${
-										isNullOrEmpty(chosenDateTime.date)
-											? modalStyles.notFilledHighlight
-											: ""
-									}`}
-									onChange={onDatePickerChange}
-								/>
-								<hr style={{ width: "0px" }} />
-								<ListGroup variant='flush'>
-									<h3 className={fileStyles.titles}>
-										{"Dišna funkcija"}
-									</h3>
-									{respiratoryAOPs.map((aop, index) => (
-										<Fragment key={index}>
-											<ListGroup.Item
-												as={"a"}
-												key={index}
-												action
-												aria-valuetext={aop.level.toString()}
-												className={
-													clickedRespiratoryAOPindex ===
-													index
-														? `${modalStyles.clickedRass}`
-														: `${modalStyles.rassLinks}`
-												}
-												onClick={(e) =>
-													handleRespiratoryAOPclick(
-														e,
-														index
-													)
-												}>
-												<Tooltip
-													title={aop.levelDescription}
-													key={index}
-													color='#045fbd'>
-													Level {aop.level}
-												</Tooltip>
-											</ListGroup.Item>
-											<hr
-												style={{
-													width: "0px",
-													margin: "0px",
-													padding: "0px",
-												}}
+					<>
+						<Row align={"top"}>
+							<Col span={12}>
+								<Segment
+									isContent
+									className={modalStyles.cpaxTableSegment}>
+									<Table
+										pagination={false}
+										dataSource={dataSavedToTable}
+										virtual
+										scroll={{ y: 400 }}
+										columns={columns}
+										className={modalStyles.cpaxTable}
+										size='small'
+									/>
+								</Segment>
+							</Col>
+							<Col span={12}>
+								<Segment isContent>
+									{!cpaxToDisplay && (
+										<div
+											className={
+												modalStyles.cpaxChartContainer
+											}>
+											<FileEarmarkExcel
+												width={60}
+												height={60}
 											/>
-										</Fragment>
-									))}
-									<hr style={{ width: "0px" }} />
-									<h3 className={fileStyles.titles}>
-										{"Kašalj"}
-									</h3>
-									{coughAOPs.map((aop, index) => (
-										<Fragment key={index}>
-											<ListGroup.Item
-												as={"a"}
-												key={index}
-												action
-												aria-valuetext={aop.level.toString()}
-												className={
-													clickedCoughAOPindex ===
-													index
-														? `${modalStyles.clickedRass}`
-														: `${modalStyles.rassLinks}`
+											<SegmentTitle label='Izaberite podatke za prikaz CPAx testa iz tablice klikom na povećalo' />
+										</div>
+									)}
+									{cpaxToDisplay && (
+										<div
+											className={
+												modalStyles.cpaxChartContainer
+											}>
+											<RadarChart
+												cpax={cpaxToDisplay}
+												dateTime={
+													cpaxDateTimeToDisplay!
 												}
-												onClick={(e) =>
-													handleCoughAOPclick(
-														e,
-														index
-													)
-												}>
-												<Tooltip
-													title={aop.levelDescription}
-													key={index}
-													color='#045fbd'>
-													Level {aop.level}
-												</Tooltip>
-											</ListGroup.Item>
-											<hr
-												style={{
-													width: "0px",
-													margin: "0px",
-													padding: "0px",
-												}}
 											/>
-										</Fragment>
-									))}
-									<hr style={{ width: "0px" }} />
-									<h3 className={fileStyles.titles}>
-										{
-											"Mobilnost u krevetu (npr. leđa - bok)"
-										}
-									</h3>
-									{movingWithinBedAOPs.map((aop, index) => (
-										<Fragment key={index}>
-											<ListGroup.Item
-												as={"a"}
-												key={index}
-												action
-												aria-valuetext={aop.level.toString()}
-												className={
-													clickedMovingWithinBedAOPindex ===
-													index
-														? `${modalStyles.clickedRass}`
-														: `${modalStyles.rassLinks}`
-												}
-												onClick={(e) =>
-													handleMovingWithinBedAOPClick(
-														e,
-														index
-													)
-												}>
-												<Tooltip
-													title={aop.levelDescription}
-													key={index}
-													color='#045fbd'>
-													Level {aop.level}
-												</Tooltip>
-											</ListGroup.Item>
-											<hr
-												style={{
-													width: "0px",
-													margin: "0px",
-													padding: "0px",
-												}}
+										</div>
+									)}
+								</Segment>
+							</Col>
+						</Row>
+						<Row>
+							<Col span={24}>
+								<Segment isContent>
+									<Row align={"middle"}>
+										<Tooltip
+											title='Datum te jedan level od svakog aspekta fizikalnosti su obavezni parametri!'
+											color='#045fbd'
+											style={{
+												fontFamily:
+													"Nunito, sans-serif",
+											}}>
+											<InfoCircleFill
+												className={modalStyles.infoIcon}
 											/>
-										</Fragment>
-									))}
+										</Tooltip>
+										<DatePicker
+											placeholder='Odaberi datum'
+											disabled={
+												physioFile.fileClosedBy !== null
+											}
+											format={croLocale.dateFormat}
+											locale={croLocale}
+											value={datePickerValue}
+											className={`${
+												isNullOrEmpty(
+													chosenDateTime.date
+												)
+													? modalStyles.notFilledHighlight
+													: ""
+											}`}
+											onChange={onDatePickerChange}
+										/>
+									</Row>
 									<hr style={{ width: "0px" }} />
-									<h3 className={fileStyles.titles}>
-										{"Posjedanje i sjedenje uz potporu"}
-									</h3>
-									{supineToSittingAOPs.map((aop, index) => (
-										<Fragment key={index}>
-											<ListGroup.Item
-												as={"a"}
-												key={index}
-												action
-												aria-valuetext={aop.level.toString()}
-												className={
-													clickedSupineToSittingAOPindex ===
-													index
-														? `${modalStyles.clickedRass}`
-														: `${modalStyles.rassLinks}`
-												}
-												onClick={(e) =>
-													handleSupineToSittingAOPClick(
-														e,
-														index
-													)
-												}>
-												<Tooltip
-													title={aop.levelDescription}
-													key={index}
-													color='#045fbd'>
-													Level {aop.level}
-												</Tooltip>
-											</ListGroup.Item>
-											<hr
-												style={{
-													width: "0px",
-													margin: "0px",
-													padding: "0px",
-												}}
-											/>
-										</Fragment>
-									))}
-									<hr style={{ width: "0px" }} />
-									<h3 className={fileStyles.titles}>
-										{"Dinamičko samostalno sjedenje"}
-									</h3>
-									{dynamicSittingAOPs.map((aop, index) => (
-										<Fragment key={index}>
-											<ListGroup.Item
-												as={"a"}
-												key={index}
-												action
-												aria-valuetext={aop.level.toString()}
-												className={
-													clickedDynamicSittingAOPindex ===
-													index
-														? `${modalStyles.clickedRass}`
-														: `${modalStyles.rassLinks}`
-												}
-												onClick={(e) =>
-													handleDynamicSittingAOPClick(
-														e,
-														index
-													)
-												}>
-												<Tooltip
-													title={aop.levelDescription}
-													key={index}
-													color='#045fbd'>
-													Level {aop.level}
-												</Tooltip>
-											</ListGroup.Item>
-											<hr
-												style={{
-													width: "0px",
-													margin: "0px",
-													padding: "0px",
-												}}
-											/>
-										</Fragment>
-									))}
-									<hr style={{ width: "0px" }} />
-									<h3 className={fileStyles.titles}>
-										{"Ravnoteža tijekom vertikalizacije"}
-									</h3>
-									{standingBalanceAOPs.map((aop, index) => (
-										<Fragment key={index}>
-											<ListGroup.Item
-												as={"a"}
-												key={index}
-												action
-												aria-valuetext={aop.level.toString()}
-												className={
-													clickedStandingBalanceAOPindex ===
-													index
-														? `${modalStyles.clickedRass}`
-														: `${modalStyles.rassLinks}`
-												}
-												onClick={(e) =>
-													handleStandingBalanceAOPClick(
-														e,
-														index
-													)
-												}>
-												<Tooltip
-													title={aop.levelDescription}
-													key={index}
-													color='#045fbd'>
-													Level {aop.level}
-												</Tooltip>
-											</ListGroup.Item>
-											<hr
-												style={{
-													width: "0px",
-													margin: "0px",
-													padding: "0px",
-												}}
-											/>
-										</Fragment>
-									))}
-									<hr style={{ width: "0px" }} />
-									<h3 className={fileStyles.titles}>
-										{
-											"Vertikalizacija iz sjedećeg položaja (početna pozicija >= 90° fleksija kuka)"
-										}
-									</h3>
-									{sitToStandAOPs.map((aop, index) => (
-										<Fragment key={index}>
-											<ListGroup.Item
-												as={"a"}
-												key={index}
-												action
-												aria-valuetext={aop.level.toString()}
-												className={
-													clickedSitToStandAOPindex ===
-													index
-														? `${modalStyles.clickedRass}`
-														: `${modalStyles.rassLinks}`
-												}
-												onClick={(e) =>
-													handleSitToStandAOPclick(
-														e,
-														index
-													)
-												}>
-												<Tooltip
-													title={aop.levelDescription}
-													key={index}
-													color='#045fbd'>
-													Level {aop.level}
-												</Tooltip>
-											</ListGroup.Item>
-											<hr
-												style={{
-													width: "0px",
-													margin: "0px",
-													padding: "0px",
-												}}
-											/>
-										</Fragment>
-									))}
-									<hr style={{ width: "0px" }} />
-									<h3 className={fileStyles.titles}>
-										{"Transfer iz kreveta na stolac"}
-									</h3>
-									{transferringFromBedAOPs.map(
-										(aop, index) => (
+									<ListGroup variant='flush'>
+										<h3 className={fileStyles.titles}>
+											{"Dišna funkcija"}
+										</h3>
+										{respiratoryAOPs.map((aop, index) => (
 											<Fragment key={index}>
 												<ListGroup.Item
 													as={"a"}
@@ -1572,25 +1371,21 @@ const CpaxModal: FC<CpaxModalProps> = ({
 													action
 													aria-valuetext={aop.level.toString()}
 													className={
-														clickedTransferringFromBedAOPindex ===
+														clickedRespiratoryAOPindex ===
 														index
 															? `${modalStyles.clickedRass}`
 															: `${modalStyles.rassLinks}`
 													}
 													onClick={(e) =>
-														handleTransferringFromBedAOPClick(
+														physioFile.fileClosedBy ===
+															null &&
+														handleRespiratoryAOPclick(
 															e,
 															index
 														)
 													}>
-													<Tooltip
-														title={
-															aop.levelDescription
-														}
-														key={index}
-														color='#045fbd'>
-														Level {aop.level}
-													</Tooltip>
+													Level {aop.level}:{" "}
+													{aop.levelDescription}
 												</ListGroup.Item>
 												<hr
 													style={{
@@ -1600,181 +1395,423 @@ const CpaxModal: FC<CpaxModalProps> = ({
 													}}
 												/>
 											</Fragment>
-										)
-									)}
-									<hr style={{ width: "0px" }} />
-									<h3 className={fileStyles.titles}>
-										{"Koračanje u mjestu"}
-									</h3>
-									{steppingAOPs.map((aop, index) => (
-										<Fragment key={index}>
-											<ListGroup.Item
-												as={"a"}
-												key={index}
-												action
-												aria-valuetext={aop.level.toString()}
-												className={
-													clickedSteppingAOPindex ===
-													index
-														? `${modalStyles.clickedRass}`
-														: `${modalStyles.rassLinks}`
-												}
-												onClick={(e) =>
-													handleSteppingAOPClick(
-														e,
-														index
-													)
-												}>
-												<Tooltip
-													title={aop.levelDescription}
+										))}
+										<hr style={{ width: "0px" }} />
+										<h3 className={fileStyles.titles}>
+											{"Kašalj"}
+										</h3>
+										{coughAOPs.map((aop, index) => (
+											<Fragment key={index}>
+												<ListGroup.Item
+													as={"a"}
 													key={index}
-													color='#045fbd'>
-													Level {aop.level}
-												</Tooltip>
-											</ListGroup.Item>
-											<hr
-												style={{
-													width: "0px",
-													margin: "0px",
-													padding: "0px",
-												}}
-											/>
-										</Fragment>
-									))}
-									<hr style={{ width: "0px" }} />
-									<h3 className={fileStyles.titles}>
-										{"Snaga stiska šake (dominantne ruke)"}
-									</h3>
-									{gripStrengthAOPs.map((aop, index) => (
-										<Fragment key={index}>
-											<ListGroup.Item
-												as={"a"}
-												key={index}
-												action
-												aria-valuetext={aop.level.toString()}
-												className={
-													clickedGripStrengthAOPindex ===
-													index
-														? `${modalStyles.clickedRass}`
-														: `${modalStyles.rassLinks}`
-												}
-												onClick={(e) =>
-													handleGripStrengthAOPClick(
-														e,
+													action
+													aria-valuetext={aop.level.toString()}
+													className={
+														clickedCoughAOPindex ===
 														index
-													)
-												}>
-												<Tooltip
-													title={aop.levelDescription}
+															? `${modalStyles.clickedRass}`
+															: `${modalStyles.rassLinks}`
+													}
+													onClick={(e) =>
+														physioFile.fileClosedBy ===
+															null &&
+														handleCoughAOPclick(
+															e,
+															index
+														)
+													}>
+													Level {aop.level}:{" "}
+													{aop.levelDescription}
+												</ListGroup.Item>
+												<hr
+													style={{
+														width: "0px",
+														margin: "0px",
+														padding: "0px",
+													}}
+												/>
+											</Fragment>
+										))}
+										<hr style={{ width: "0px" }} />
+										<h3 className={fileStyles.titles}>
+											{"Mobilnost u krevetu"}
+										</h3>
+										{movingWithinBedAOPs.map(
+											(aop, index) => (
+												<Fragment key={index}>
+													<ListGroup.Item
+														as={"a"}
+														key={index}
+														action
+														aria-valuetext={aop.level.toString()}
+														className={
+															clickedMovingWithinBedAOPindex ===
+															index
+																? `${modalStyles.clickedRass}`
+																: `${modalStyles.rassLinks}`
+														}
+														onClick={(e) =>
+															physioFile.fileClosedBy ===
+																null &&
+															handleMovingWithinBedAOPClick(
+																e,
+																index
+															)
+														}>
+														Level {aop.level}:{" "}
+														{aop.levelDescription}
+													</ListGroup.Item>
+													<hr
+														style={{
+															width: "0px",
+															margin: "0px",
+															padding: "0px",
+														}}
+													/>
+												</Fragment>
+											)
+										)}
+										<hr style={{ width: "0px" }} />
+										<h3 className={fileStyles.titles}>
+											{"Posjedanje i sjedenje uz potporu"}
+										</h3>
+										{supineToSittingAOPs.map(
+											(aop, index) => (
+												<Fragment key={index}>
+													<ListGroup.Item
+														as={"a"}
+														key={index}
+														action
+														aria-valuetext={aop.level.toString()}
+														className={
+															clickedSupineToSittingAOPindex ===
+															index
+																? `${modalStyles.clickedRass}`
+																: `${modalStyles.rassLinks}`
+														}
+														onClick={(e) =>
+															physioFile.fileClosedBy ===
+																null &&
+															handleSupineToSittingAOPClick(
+																e,
+																index
+															)
+														}>
+														Level {aop.level}:{" "}
+														{aop.levelDescription}
+													</ListGroup.Item>
+													<hr
+														style={{
+															width: "0px",
+															margin: "0px",
+															padding: "0px",
+														}}
+													/>
+												</Fragment>
+											)
+										)}
+										<hr style={{ width: "0px" }} />
+										<h3 className={fileStyles.titles}>
+											{"Dinamičko samostalno sjedenje"}
+										</h3>
+										{dynamicSittingAOPs.map(
+											(aop, index) => (
+												<Fragment key={index}>
+													<ListGroup.Item
+														as={"a"}
+														key={index}
+														action
+														aria-valuetext={aop.level.toString()}
+														className={
+															clickedDynamicSittingAOPindex ===
+															index
+																? `${modalStyles.clickedRass}`
+																: `${modalStyles.rassLinks}`
+														}
+														onClick={(e) =>
+															physioFile.fileClosedBy ===
+																null &&
+															handleDynamicSittingAOPClick(
+																e,
+																index
+															)
+														}>
+														Level {aop.level}:{" "}
+														{aop.levelDescription}
+													</ListGroup.Item>
+													<hr
+														style={{
+															width: "0px",
+															margin: "0px",
+															padding: "0px",
+														}}
+													/>
+												</Fragment>
+											)
+										)}
+										<hr style={{ width: "0px" }} />
+										<h3 className={fileStyles.titles}>
+											{
+												"Ravnoteža tijekom vertikalizacije"
+											}
+										</h3>
+										{standingBalanceAOPs.map(
+											(aop, index) => (
+												<Fragment key={index}>
+													<ListGroup.Item
+														as={"a"}
+														key={index}
+														action
+														aria-valuetext={aop.level.toString()}
+														className={
+															clickedStandingBalanceAOPindex ===
+															index
+																? `${modalStyles.clickedRass}`
+																: `${modalStyles.rassLinks}`
+														}
+														onClick={(e) =>
+															physioFile.fileClosedBy ===
+																null &&
+															handleStandingBalanceAOPClick(
+																e,
+																index
+															)
+														}>
+														Level {aop.level}:{" "}
+														{aop.levelDescription}
+													</ListGroup.Item>
+													<hr
+														style={{
+															width: "0px",
+															margin: "0px",
+															padding: "0px",
+														}}
+													/>
+												</Fragment>
+											)
+										)}
+										<hr style={{ width: "0px" }} />
+										<h3 className={fileStyles.titles}>
+											{
+												"Vertikalizacija iz sjedećeg položaja"
+											}
+										</h3>
+										{sitToStandAOPs.map((aop, index) => (
+											<Fragment key={index}>
+												<ListGroup.Item
+													as={"a"}
 													key={index}
-													color='#045fbd'>
-													Level {aop.level}
-												</Tooltip>
-											</ListGroup.Item>
-											<hr
-												style={{
-													width: "0px",
-													margin: "0px",
-													padding: "0px",
-												}}
+													action
+													aria-valuetext={aop.level.toString()}
+													className={
+														clickedSitToStandAOPindex ===
+														index
+															? `${modalStyles.clickedRass}`
+															: `${modalStyles.rassLinks}`
+													}
+													onClick={(e) =>
+														physioFile.fileClosedBy ===
+															null &&
+														handleSitToStandAOPclick(
+															e,
+															index
+														)
+													}>
+													Level {aop.level}:{" "}
+													{aop.levelDescription}
+												</ListGroup.Item>
+												<hr
+													style={{
+														width: "0px",
+														margin: "0px",
+														padding: "0px",
+													}}
+												/>
+											</Fragment>
+										))}
+										<hr style={{ width: "0px" }} />
+										<h3 className={fileStyles.titles}>
+											{"Transfer iz kreveta na stolac"}
+										</h3>
+										{transferringFromBedAOPs.map(
+											(aop, index) => (
+												<Fragment key={index}>
+													<ListGroup.Item
+														as={"a"}
+														key={index}
+														action
+														aria-valuetext={aop.level.toString()}
+														className={
+															clickedTransferringFromBedAOPindex ===
+															index
+																? `${modalStyles.clickedRass}`
+																: `${modalStyles.rassLinks}`
+														}
+														onClick={(e) =>
+															physioFile.fileClosedBy ===
+																null &&
+															handleTransferringFromBedAOPClick(
+																e,
+																index
+															)
+														}>
+														Level {aop.level}:{" "}
+														{aop.levelDescription}
+													</ListGroup.Item>
+													<hr
+														style={{
+															width: "0px",
+															margin: "0px",
+															padding: "0px",
+														}}
+													/>
+												</Fragment>
+											)
+										)}
+										<hr style={{ width: "0px" }} />
+										<h3 className={fileStyles.titles}>
+											{"Koračanje u mjestu"}
+										</h3>
+										{steppingAOPs.map((aop, index) => (
+											<Fragment key={index}>
+												<ListGroup.Item
+													as={"a"}
+													key={index}
+													action
+													aria-valuetext={aop.level.toString()}
+													className={
+														clickedSteppingAOPindex ===
+														index
+															? `${modalStyles.clickedRass}`
+															: `${modalStyles.rassLinks}`
+													}
+													onClick={(e) =>
+														physioFile.fileClosedBy ===
+															null &&
+														handleSteppingAOPClick(
+															e,
+															index
+														)
+													}>
+													Level {aop.level}:{" "}
+													{aop.levelDescription}
+												</ListGroup.Item>
+												<hr
+													style={{
+														width: "0px",
+														margin: "0px",
+														padding: "0px",
+													}}
+												/>
+											</Fragment>
+										))}
+										<hr style={{ width: "0px" }} />
+										<h3 className={fileStyles.titles}>
+											{
+												"Snaga stiska šake (dominantne ruke)"
+											}
+										</h3>
+										{gripStrengthAOPs.map((aop, index) => (
+											<Fragment key={index}>
+												<ListGroup.Item
+													as={"a"}
+													key={index}
+													action
+													aria-valuetext={aop.level.toString()}
+													className={
+														clickedGripStrengthAOPindex ===
+														index
+															? `${modalStyles.clickedRass}`
+															: `${modalStyles.rassLinks}`
+													}
+													onClick={(e) =>
+														physioFile.fileClosedBy ===
+															null &&
+														handleGripStrengthAOPClick(
+															e,
+															index
+														)
+													}>
+													Level {aop.level}:{" "}
+													{aop.levelDescription}
+												</ListGroup.Item>
+												<hr
+													style={{
+														width: "0px",
+														margin: "0px",
+														padding: "0px",
+													}}
+												/>
+											</Fragment>
+										))}
+									</ListGroup>
+									<hr style={{ width: "0px" }} />
+									<Row align={"middle"}>
+										<Tooltip
+											title='Datum te jedan level od svakog aspekta fizikalnosti su obavezni parametri!'
+											color='#045fbd'
+											style={{
+												fontFamily:
+													"Nunito, sans-serif",
+											}}>
+											<InfoCircleFill
+												className={modalStyles.infoIcon}
 											/>
-										</Fragment>
-									))}
-								</ListGroup>
-								<hr style={{ width: "0px" }} />
-								<Tooltip
-									title='Datum te jedan level od svakog aspekta fizikalnosti su obavezni parametri!'
-									color='#045fbd'
-									style={{
-										fontFamily: "Nunito, sans-serif",
-									}}>
-									<InfoCircleFill
-										className={modalStyles.infoIcon}
-									/>
-								</Tooltip>
-								<Button
-									type='primary'
-									shape='round'
-									className={modalStyles.modalsButtons}
-									icon={<SaveFilled />}
-									disabled={
-										isNullOrEmpty(chosenDateTime.date) ||
-										clickedRespiratoryAOPindex ===
-											undefined ||
-										clickedCoughAOPindex === undefined ||
-										clickedDynamicSittingAOPindex ===
-											undefined ||
-										clickedGripStrengthAOPindex ===
-											undefined ||
-										clickedMovingWithinBedAOPindex ===
-											undefined ||
-										clickedSitToStandAOPindex ===
-											undefined ||
-										clickedStandingBalanceAOPindex ===
-											undefined ||
-										clickedSteppingAOPindex === undefined ||
-										clickedTransferringFromBedAOPindex ===
-											undefined ||
-										clickedSupineToSittingAOPindex ===
-											undefined
-									}
-									onClick={handleSaveChoice}>
-									Spremi odabir
-								</Button>
-								{tableIsBeingEdited && (
-									<Button
-										type='primary'
-										shape='round'
-										danger
-										style={{ marginLeft: "4px" }}
-										className={modalStyles.modalsButtons}
-										onClick={handleStopEditing}>
-										Odustani
-									</Button>
-								)}
-							</Segment>
-						</Col>
-						<Col span={18}>
-							<Segment
-								isContent
-								className={modalStyles.tableSegment}>
-								<Table
-									pagination={false}
-									dataSource={dataSavedToTable}
-									virtual
-									scroll={{ y: 400 }}
-									columns={columns}
-									className={modalStyles.mmtTable}
-									size='small'
-								/>
-							</Segment>
-							<Segment isContent>
-								{!cpaxToDisplay && (
-									<div
-										className={
-											modalStyles.cpaxChartContainer
-										}>
-										<FileEarmarkExcel
-											width={60}
-											height={60}
-										/>
-										<SegmentTitle label='Izaberite podatke za prikaz CPAx testa iz tablice klikom na povećalo' />
-									</div>
-								)}
-								{cpaxToDisplay && (
-									<div
-										className={
-											modalStyles.cpaxChartContainer
-										}>
-										<RadarChart
-											cpax={cpaxToDisplay}
-											dateTime={cpaxDateTimeToDisplay!}
-										/>
-									</div>
-								)}
-							</Segment>
-						</Col>
-					</Row>
+										</Tooltip>
+										<Button
+											type='primary'
+											shape='round'
+											className={
+												modalStyles.modalsButtons
+											}
+											icon={<SaveFilled />}
+											disabled={
+												isNullOrEmpty(
+													chosenDateTime.date
+												) ||
+												clickedRespiratoryAOPindex ===
+													undefined ||
+												clickedCoughAOPindex ===
+													undefined ||
+												clickedDynamicSittingAOPindex ===
+													undefined ||
+												clickedGripStrengthAOPindex ===
+													undefined ||
+												clickedMovingWithinBedAOPindex ===
+													undefined ||
+												clickedSitToStandAOPindex ===
+													undefined ||
+												clickedStandingBalanceAOPindex ===
+													undefined ||
+												clickedSteppingAOPindex ===
+													undefined ||
+												clickedTransferringFromBedAOPindex ===
+													undefined ||
+												clickedSupineToSittingAOPindex ===
+													undefined
+											}
+											onClick={handleSaveChoice}>
+											Spremi odabir
+										</Button>
+										{tableIsBeingEdited && (
+											<Button
+												type='primary'
+												shape='round'
+												danger
+												style={{ marginLeft: "4px" }}
+												className={
+													modalStyles.modalsButtons
+												}
+												onClick={handleStopEditing}>
+												Odustani
+											</Button>
+										)}
+									</Row>
+								</Segment>
+							</Col>
+						</Row>
+					</>
 				)}
 			</Segment>
 		</Modal>

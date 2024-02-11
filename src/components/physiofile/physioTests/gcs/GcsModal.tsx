@@ -52,25 +52,25 @@ type GcsModalProps = {
 	gcsVerbalResponses: VerbalResponseVM[];
 };
 
-type GcsDateTimeType = {
+export type GcsDateTimeType = {
 	date: string;
 	time: string;
 };
 
-type EyeResponseAndIndex = {
+export type EyeResponseAndIndex = {
 	eyeResponse: EyeOpeningResponseVM;
 	index: number | undefined;
 };
-type MotorResponseAndIndex = {
+export type MotorResponseAndIndex = {
 	motorResponse: MotorResponseVM;
 	index: number | undefined;
 };
-type VerbalResponseAndIndex = {
+export type VerbalResponseAndIndex = {
 	verbalResponse: VerbalResponseVM;
 	index: number | undefined;
 };
 
-type GcsTableType = {
+export type GcsTableType = {
 	eyeResponseAndIndex: EyeResponseAndIndex;
 	motorResponseAndIndex: MotorResponseAndIndex;
 	verbalResponseAndIndex: VerbalResponseAndIndex;
@@ -214,13 +214,14 @@ const GcsModal: FC<GcsModalProps> = ({
 						if (
 							physioFileResponse.status !== HttpStatusCode.Created
 						) {
+							message.error(physioFileResponse.message);
 							console.error(
 								"There was a error creating physio test: ",
 								physioFileResponse
 							);
 						} else {
 							dispatch(
-								physioFileActions.setPhysioFile(
+								physioFileActions.setCurrentPhysioFile(
 									physioFileResponse.data!
 								)
 							);
@@ -288,7 +289,7 @@ const GcsModal: FC<GcsModalProps> = ({
 			width: 70,
 			render: (_, { gcs }) => (
 				<Tooltip
-					title={`E - ${gcs.eyeResponseAndIndex.eyeResponse.scale}V - ${gcs.verbalResponseAndIndex.verbalResponse.scale}M - ${gcs.motorResponseAndIndex.motorResponse.scale}`}>
+					title={`E - ${gcs.eyeResponseAndIndex.eyeResponse.scale}, V - ${gcs.verbalResponseAndIndex.verbalResponse.scale}, M - ${gcs.motorResponseAndIndex.motorResponse.scale}`}>
 					<span>
 						Ukupno:{" "}
 						{gcs.eyeResponseAndIndex.eyeResponse.score +
@@ -311,13 +312,19 @@ const GcsModal: FC<GcsModalProps> = ({
 				<Space size={"small"}>
 					<Button
 						type='primary'
-						disabled={tableIsBeingEdited}
+						disabled={
+							tableIsBeingEdited ||
+							physioFile.fileClosedBy !== null
+						}
 						onClick={(e) => handleEditChoice(e, record)}
 						icon={<PencilFill className={modalStyles.icon} />}
 					/>
 					<Button
 						type='primary'
-						disabled={tableIsBeingEdited}
+						disabled={
+							tableIsBeingEdited ||
+							physioFile.fileClosedBy !== null
+						}
 						danger
 						onClick={(e) => handleDeleteChoice(e, record)}
 						icon={<X className={modalStyles.icon} />}
@@ -339,6 +346,7 @@ const GcsModal: FC<GcsModalProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Created) {
 						message.error("Nije moguće spremiti novi GCS!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while saving new GCS: ",
 							physioFileResponse
@@ -352,7 +360,7 @@ const GcsModal: FC<GcsModalProps> = ({
 						);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -384,6 +392,7 @@ const GcsModal: FC<GcsModalProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće izmjeniti GCS!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while updating GCS: ",
 							physioFileResponse
@@ -399,7 +408,7 @@ const GcsModal: FC<GcsModalProps> = ({
 						);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -429,6 +438,7 @@ const GcsModal: FC<GcsModalProps> = ({
 				(deleteFileResponse: ApiResponse<NoReturnData>) => {
 					if (deleteFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće izbrisati GCS!");
+						message.error(deleteFileResponse.message);
 						console.error(
 							"There was a error while deleting GCS: ",
 							deleteFileResponse
@@ -624,7 +634,9 @@ const GcsModal: FC<GcsModalProps> = ({
 				eyeOpeningResponse: chosenEyeResponseAndIndex.chosenER!,
 				verbalResponse: chosenVerbalResponseAndIndex.chosenVR!,
 				motorResponse: chosenMotorResponseAndIndex.chosenMR!,
-				gcsDateTime: `${chosenDateTime.date}T${chosenDateTime.time}`,
+				gcsDateTime: dayjs(
+					`${chosenDateTime.date} ${chosenDateTime.time}`
+				).format("YYYY-MM-DDTHH:mm:ss"),
 			};
 
 			sendUpdateGcsRequest(tableRecordBeingEdited!.id, updateDto);
@@ -634,7 +646,9 @@ const GcsModal: FC<GcsModalProps> = ({
 				eyeOpeningResponse: chosenEyeResponseAndIndex.chosenER!,
 				verbalResponse: chosenVerbalResponseAndIndex.chosenVR!,
 				motorResponse: chosenMotorResponseAndIndex.chosenMR!,
-				gcsDateTime: `${chosenDateTime.date}T${chosenDateTime.time}`,
+				gcsDateTime: dayjs(
+					`${chosenDateTime.date} ${chosenDateTime.time}`
+				).format("YYYY-MM-DDTHH:mm:ss"),
 			};
 
 			sendCreateGcsRequest(createDto);
@@ -717,7 +731,7 @@ const GcsModal: FC<GcsModalProps> = ({
 	};
 
 	const handleSavingDataBeforeExit = () => {
-		dispatch(physioFileActions.setPhysioFile(physioFile));
+		dispatch(physioFileActions.setCurrentPhysioFile(physioFile));
 		dispatch(physioFileActions.setGcsModalDataSaved(true));
 	};
 
@@ -774,6 +788,7 @@ const GcsModal: FC<GcsModalProps> = ({
 							<Segment isContent>
 								<DatePicker
 									placeholder='Odaberi datum'
+									disabled={physioFile.fileClosedBy !== null}
 									format={croLocale.dateFormat}
 									locale={croLocale}
 									value={datePickerValue}
@@ -803,6 +818,8 @@ const GcsModal: FC<GcsModalProps> = ({
 														: `${modalStyles.rassLinks}`
 												}
 												onClick={(e) =>
+													physioFile.fileClosedBy ===
+														null &&
 													handleEyeResponseClick(
 														e,
 														index
@@ -841,6 +858,8 @@ const GcsModal: FC<GcsModalProps> = ({
 														: `${modalStyles.rassLinks}`
 												}
 												onClick={(e) =>
+													physioFile.fileClosedBy ===
+														null &&
 													handleVerbalResponseClick(
 														e,
 														index
@@ -877,6 +896,8 @@ const GcsModal: FC<GcsModalProps> = ({
 														: `${modalStyles.rassLinks}`
 												}
 												onClick={(e) =>
+													physioFile.fileClosedBy ===
+														null &&
 													handleMotorResponseClick(
 														e,
 														index
@@ -897,44 +918,50 @@ const GcsModal: FC<GcsModalProps> = ({
 									))}
 								</ListGroup>
 								<hr style={{ width: "0px" }} />
-								<Tooltip
-									title='Datum, ocjena za otvaranje očiju, verbalna ocjena i motorička ocjena su obavezni parametri!'
-									color='#045fbd'
-									style={{
-										fontFamily: "Nunito, sans-serif",
-									}}>
-									<InfoCircleFill
-										className={modalStyles.infoIcon}
-									/>
-								</Tooltip>
-								<Button
-									type='primary'
-									shape='round'
-									className={modalStyles.modalsButtons}
-									icon={<SaveFilled />}
-									disabled={
-										isNullOrEmpty(chosenDateTime.date) ||
-										chosenEyeResponseAndIndex.chosenER ===
-											undefined ||
-										chosenVerbalResponseAndIndex.chosenVR ===
-											undefined ||
-										chosenMotorResponseAndIndex.chosenMR ===
-											undefined
-									}
-									onClick={handleSaveChoice}>
-									Spremi odabir
-								</Button>
-								{tableIsBeingEdited && (
+								<Row align={"middle"}>
+									<Tooltip
+										title='Datum, ocjena za otvaranje očiju, verbalna ocjena i motorička ocjena su obavezni parametri!'
+										color='#045fbd'
+										style={{
+											fontFamily: "Nunito, sans-serif",
+										}}>
+										<InfoCircleFill
+											className={modalStyles.infoIcon}
+										/>
+									</Tooltip>
 									<Button
 										type='primary'
 										shape='round'
-										danger
-										style={{ marginLeft: "4px" }}
 										className={modalStyles.modalsButtons}
-										onClick={handleStopEditing}>
-										Odustani
+										icon={<SaveFilled />}
+										disabled={
+											isNullOrEmpty(
+												chosenDateTime.date
+											) ||
+											chosenEyeResponseAndIndex.chosenER ===
+												undefined ||
+											chosenVerbalResponseAndIndex.chosenVR ===
+												undefined ||
+											chosenMotorResponseAndIndex.chosenMR ===
+												undefined
+										}
+										onClick={handleSaveChoice}>
+										Spremi odabir
 									</Button>
-								)}
+									{tableIsBeingEdited && (
+										<Button
+											type='primary'
+											shape='round'
+											danger
+											style={{ marginLeft: "4px" }}
+											className={
+												modalStyles.modalsButtons
+											}
+											onClick={handleStopEditing}>
+											Odustani
+										</Button>
+									)}
+								</Row>
 							</Segment>
 						</Col>
 						<Col span={15}>
@@ -947,7 +974,7 @@ const GcsModal: FC<GcsModalProps> = ({
 									virtual
 									scroll={{ y: 400 }}
 									columns={columns}
-									className={modalStyles.mmtTable}
+									className={modalStyles.gcsTable}
 									size='small'
 								/>
 							</Segment>
