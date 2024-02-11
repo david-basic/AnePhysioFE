@@ -1,6 +1,11 @@
 import { type FC, useRef, useState } from "react";
-import styles from "./Register.module.css";
-import { LockOutlined, IdcardOutlined, UserOutlined } from "@ant-design/icons";
+import localStyles from "./Register.module.css";
+import {
+	LockOutlined,
+	IdcardOutlined,
+	UserOutlined,
+	CopyrightOutlined,
+} from "@ant-design/icons";
 import {
 	Button,
 	Checkbox,
@@ -9,6 +14,10 @@ import {
 	InputRef,
 	Select,
 	RefSelectProps,
+	Layout,
+	Space,
+	Row,
+	Flex,
 } from "antd";
 import { useNavigate } from "react-router-dom";
 import client_routes from "../../config/client_routes";
@@ -17,6 +26,7 @@ import { ApiRegisterResponse, RegisterRequestData } from "../../type";
 import useFetchApi from "../../hooks/use_fetch_api";
 import { HttpStatusCode } from "axios";
 import { Mortarboard } from "react-bootstrap-icons";
+import { Content, Footer } from "antd/es/layout/layout";
 
 const { Option } = Select;
 
@@ -76,198 +86,286 @@ const Register: FC = () => {
 	};
 
 	return (
-		<div className={`${styles.content} ${styles["centered-element"]}`}>
-			<Form
-				name='register'
-				initialValues={{ remember: false }}
-				className={styles["register-form"]}
-				onFinish={onFinish}>
-				<h1>Registracija</h1>
-				<p className={styles["lighter-text"]}>
-					Unesite podatke novog korisnika za nastavak
-				</p>
-				{registerErrorMessage !== "" && (
-					<p className={styles["error-text"]}>
-						{registerErrorMessage}
-					</p>
-				)}
-				{registerSuccessMessage !== "" && (
-					<p className={styles["success-text"]}>
-						{registerSuccessMessage}
-					</p>
-				)}
-				<Form.Item
-					name='firstname'
-					rules={[
-						{
-							required: true,
-							message: "Molimo vas unesite ime!",
-						},
-					]}>
-					<Input
-						suffix={<IdcardOutlined />}
-						placeholder='Ime'
-						ref={firstNameRef}
-					/>
-				</Form.Item>
-				<Form.Item
-					name='lastname'
-					rules={[
-						{
-							required: true,
-							message: "Molimo vas unesite prezime!",
-						},
-					]}>
-					<Input
-						suffix={<IdcardOutlined />}
-						placeholder='Prezime'
-						ref={lastNameRef}
-					/>
-				</Form.Item>
-				<Form.Item
-					name='title'
-					rules={[
-						{
-							required: true,
-							message: "Molimo vas unesite titulu!",
-						},
-					]}>
-					<Input
-						suffix={<Mortarboard />}
-						placeholder='Titula'
-						ref={titleRef}
-					/>
-				</Form.Item>
-				<Form.Item
-					name='sex'
-					rules={[
-						{ required: true, message: "Molimo odaberite spol!" },
-					]}>
-					<Select placeholder='Spol' allowClear ref={sexRef}>
-						<Option value='male'>Muški</Option>
-						<Option value='female'>Ženski</Option>
-					</Select>
-				</Form.Item>
-				<Form.Item
-					name='username'
-					rules={[
-						{
-							required: true,
-							message: "Molimo vas unesite korisničko ime!",
-						},
-						({ getFieldValue }) => ({
-							validator(_) {
-								if (getFieldValue("username").length >= 4) {
-									return Promise.resolve();
-								}
-								return Promise.reject(
-									new Error(
-										"Duljina korisničkog imena mora biti barem 5 znakova!"
-									)
-								);
-							},
-						}),
-					]}>
-					<Input
-						suffix={<UserOutlined />}
-						placeholder='Korisničko ime'
-						ref={usernameRef}
-					/>
-				</Form.Item>
-				<Form.Item
-					name='password'
-					hasFeedback
-					rules={[
-						{
-							required: true,
-							pattern: new RegExp(
-								"^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,255}$"
-							),
-							message:
-								"Zaporka se mora sastojati od barem 1 broja, 1 malog, velikog slova i 1 specijalnog znaka i ne smije sadržavati razmake!",
-						},
-					]}>
-					<Input
-						suffix={<LockOutlined />}
-						type='password'
-						placeholder='Zaporka'
-						ref={passwordRef}
-					/>
-				</Form.Item>
-				<Form.Item
-					name='confirmPassword'
-					dependencies={["password"]}
-					hasFeedback
-					rules={[
-						{
-							required: true,
-							message: "Molimo vas potvrdite zaporku!",
-						},
-						({ getFieldValue }) => ({
-							validator(_, value) {
-								if (
-									!value ||
-									getFieldValue("password") === value
-								) {
-									return Promise.resolve();
-								}
-								return Promise.reject(
-									new Error("Zaporke nisu jednake!")
-								);
-							},
-						}),
-					]}>
-					<Input.Password placeholder='Potvrda zaporke' />
-				</Form.Item>
-				<Form.Item>
-					<Form.Item
-						name='accept'
-						valuePropName='checked'
-						rules={[
-							{
-								required: true,
-								message: "",
-							},
-							() => ({
-								validator(_) {
-									if (
-										document.querySelector(
-											"#tos-checkbox:checked"
-										) !== null
-									) {
-										return Promise.resolve();
-									}
-									return Promise.reject(
-										new Error(
-											"Za nastavak potvrdite pravila korištenja i politiku privatnosti!"
-										)
-									);
-								},
-							}),
-						]}>
-						<Checkbox name='accept' id='tos-checkbox'>
-							Prihvaćam pravila korištenja i politiku privatnosti!
-						</Checkbox>
-					</Form.Item>
-				</Form.Item>
-				<Form.Item>
-					<Button
-						type='text'
-						shape='round'
-						size='large'
-						htmlType='submit'
-						className={styles["btn-rounded-dark"]}>
-						Registriraj korisnika
-					</Button>
-				</Form.Item>
-				{/* <p className={styles["lighter-text"]}>
-					Već ste registrirani?{" "}
-					<NavLink className={styles["link-text"]} to='/auth/login'>
-						Prijava.
-					</NavLink>
-				</p> */}
-			</Form>
-		</div>
+		<Layout className={localStyles.page}>
+			<Content className={localStyles.content}>
+				<Space
+					direction='vertical'
+					align='center'
+					className={localStyles.content}>
+					<Row align={"middle"} className={localStyles.title}>
+						<h3>Registracija</h3>
+					</Row>
+					<Row>
+						<Form
+							name='register'
+							initialValues={{ remember: false }}
+							className={localStyles.form}
+							onFinish={onFinish}>
+							<Flex vertical justify='center' align='center'>
+								<span className={localStyles.informationText}>
+									Unesite podatke novog korisnika za nastavak
+								</span>
+								{registerErrorMessage !== "" && (
+									<span className={localStyles.errorText}>
+										{registerErrorMessage}
+									</span>
+								)}
+								{registerSuccessMessage !== "" && (
+									<span className={localStyles.successText}>
+										{registerSuccessMessage}
+									</span>
+								)}
+							</Flex>
+							<Form.Item
+								name='firstname'
+								rules={[
+									{
+										required: true,
+										message: (
+											<span
+												className={
+													localStyles.fieldValidationError
+												}>
+												Unesite ime!
+											</span>
+										),
+									},
+								]}>
+								<Input
+									suffix={<IdcardOutlined />}
+									placeholder='Ime'
+									ref={firstNameRef}
+									className={localStyles.inputWidth}
+								/>
+							</Form.Item>
+							<Form.Item
+								name='lastname'
+								rules={[
+									{
+										required: true,
+										message: (
+											<span
+												className={
+													localStyles.fieldValidationError
+												}>
+												Unesite prezime!
+											</span>
+										),
+									},
+								]}>
+								<Input
+									suffix={<IdcardOutlined />}
+									placeholder='Prezime'
+									ref={lastNameRef}
+									className={localStyles.inputWidth}
+								/>
+							</Form.Item>
+							<Form.Item
+								name='title'
+								rules={[
+									{
+										required: true,
+										message: (
+											<span
+												className={
+													localStyles.fieldValidationError
+												}>
+												Unesite titulu!
+											</span>
+										),
+									},
+								]}>
+								<Input
+									suffix={<Mortarboard />}
+									placeholder='Titula'
+									ref={titleRef}
+									className={localStyles.inputWidth}
+								/>
+							</Form.Item>
+							<Form.Item
+								name='sex'
+								rules={[
+									{
+										required: true,
+										message: (
+											<span
+												className={
+													localStyles.fieldValidationError
+												}>
+												Odaberite spol!
+											</span>
+										),
+									},
+								]}>
+								<Select
+									placeholder='Spol'
+									allowClear
+									ref={sexRef}
+									className={localStyles.inputWidth}>
+									<Option value='male'>Muški</Option>
+									<Option value='female'>Ženski</Option>
+								</Select>
+							</Form.Item>
+							<Form.Item
+								name='username'
+								rules={[
+									{
+										required: true,
+										pattern: new RegExp(
+											"^[a-zA-Z0-9]{5,255}$"
+										),
+										message: (
+											<span
+												className={
+													localStyles.fieldValidationError
+												}>
+												Unesite korisničko ime duljine
+												barem 5 znakova!
+											</span>
+										),
+									},
+								]}
+								className={localStyles.usernameInput}>
+								<Input
+									suffix={<UserOutlined />}
+									placeholder='Korisničko ime'
+									ref={usernameRef}
+									className={localStyles.inputWidth}
+								/>
+							</Form.Item>
+							<Form.Item
+								name='password'
+								hasFeedback
+								rules={[
+									{
+										required: true,
+										pattern: new RegExp(
+											"^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,255}$"
+										),
+										message: (
+											<Row justify={"center"}>
+												<span>
+													Zaporka se mora sastojati od
+													barem 1 broja,
+												</span>
+												<span>
+													1 malog, 1 velikog slova, 1
+													specijalnog znaka
+												</span>
+												<span>
+													te ne smije sadržavati
+													razmake!
+												</span>
+											</Row>
+										),
+									},
+								]}
+								className={localStyles.passwordInput}>
+								<Input
+									suffix={<LockOutlined />}
+									type='password'
+									placeholder='Zaporka'
+									ref={passwordRef}
+									className={localStyles.inputWidth}
+								/>
+							</Form.Item>
+							<Form.Item
+								name='confirmPassword'
+								dependencies={["password"]}
+								hasFeedback
+								rules={[
+									{
+										required: true,
+										message: (
+											<span
+												className={
+													localStyles.fieldValidationError
+												}>
+												Molimo vas potvrdite zaporku!
+											</span>
+										),
+									},
+									({ getFieldValue }) => ({
+										validator(_, value) {
+											if (
+												!value ||
+												getFieldValue("password") ===
+													value
+											) {
+												return Promise.resolve();
+											}
+											return Promise.reject(
+												new Error(
+													"Zaporke nisu jednake!"
+												)
+											);
+										},
+									}),
+								]}>
+								<Input.Password
+									placeholder='Potvrda zaporke'
+									className={localStyles.inputWidth}
+								/>
+							</Form.Item>
+							<Form.Item
+								name='accept'
+								valuePropName='checked'
+								rules={[
+									{
+										required: true,
+										message: "",
+									},
+									() => ({
+										validator(_) {
+											if (
+												document.querySelector(
+													"#tos-checkbox:checked"
+												) !== null
+											) {
+												return Promise.resolve();
+											}
+											return Promise.reject(
+												new Error(
+													"Potvrdite pravila korištenja i politiku privatnosti!"
+												)
+											);
+										},
+									}),
+								]}
+								className={localStyles.checkbox}>
+								<Checkbox
+									name='acceptCheckbox'
+									id='tos-checkbox'
+									className={localStyles.inputWidth}>
+									Prihvaćam pravila korištenja i politiku
+									privatnosti!
+								</Checkbox>
+							</Form.Item>
+							<Form.Item>
+								<Button
+									type='text'
+									shape='round'
+									size='large'
+									htmlType='submit'
+									className={localStyles.btnRoundedLight}>
+									Registriraj korisnika
+								</Button>
+							</Form.Item>
+						</Form>
+					</Row>
+				</Space>
+			</Content>
+			<Footer className={localStyles.footer}>
+				<Row
+					justify={"center"}
+					align={"bottom"}
+					className={localStyles.authorDescription}>
+					<span>
+						<CopyrightOutlined /> David Bašić
+					</span>
+				</Row>
+			</Footer>
+		</Layout>
 	);
 };
 

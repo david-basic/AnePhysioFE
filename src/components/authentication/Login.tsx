@@ -1,16 +1,20 @@
 import { type FC, useEffect, useState } from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import styles from "./Login.module.css";
+import localStyles from "./Login.module.css";
 import { useNavigate } from "react-router-dom";
 import client_routes from "../../config/client_routes";
 import api_routes from "../../config/api_routes";
 import { authActions } from "../../store/auth-slice";
-import { Button, Form, Input } from "antd";
+import { Button, Flex, Form, Input, Layout, Row, Space, Tooltip } from "antd";
 import { useAppDispatch } from "../../hooks/use_app_dispatch";
 import { useAppSelector } from "../../hooks/use_app_selector";
 import { ApiResponse, LoginRequestData, LoginResponseData } from "../../type";
 import useFetchApi from "../../hooks/use_fetch_api";
 import { HttpStatusCode } from "axios";
+import { Content, Footer } from "antd/es/layout/layout";
+import { CopyrightOutlined } from "@ant-design/icons";
+import { ArrowLeft } from "react-bootstrap-icons";
+import anephysioLogo from "../../assets/anephysio-01-blue.png";
 
 const Login: FC = () => {
 	const [loginValid, setLoginValid] = useState(true);
@@ -84,66 +88,137 @@ const Login: FC = () => {
 	};
 
 	return (
-		<div className={`${styles.content} ${styles["centered-element"]}`}>
-			<Form
-				name='login'
-				className='login-form'
-				onFinish={onSubmit}
-				data-testid='loginForm'>
-				<h1>Prijava</h1>
-				<p className={styles["lighter-text"]}>
-					Upišite podatke za prijavu da bi nastavili
-				</p>
-				{!loginValid && (
-					<p className={styles["error-text"]}>{loginErrorMessage}</p>
-				)}
-				<Form.Item
-					name='username'
-					rules={[
-						{
-							required: true,
-							message: "Unesite korisničko ime!",
-						},
-					]}>
-					<Input
-						data-testid='usernameInput'
-						suffix={
-							<UserOutlined className='site-form-item-icon' />
-						}
-						placeholder='Korisničko ime'
-					/>
-				</Form.Item>
-				<Form.Item
-					name='password'
-					rules={[
-						{
-							required: true,
-							message: "Unesite zaporku!",
-						},
-					]}>
-					<Input
-						data-testid='passwordInput'
-						suffix={
-							<LockOutlined className='site-form-item-icon' />
-						}
-						type='password'
-						placeholder='Zaporka'
-					/>
-				</Form.Item>
-				<Form.Item>
-					<Button
-						type='text'
-						shape='round'
-						size='large'
-						htmlType='submit'
-						data-testid='loginButton'
-						className={styles["btn-rounded-dark"]}>
-						Prijava
-					</Button>
-				</Form.Item>
-			</Form>
-		</div>
+		<Layout className={localStyles.page}>
+			<Tooltip title='Return'>
+				<Button
+					type='text'
+					shape='circle'
+					icon={
+						<ArrowLeft
+							style={{ fontSize: "30px", marginTop: "5px" }}
+						/>
+					}
+					onClick={() => navigate(-1)}
+					style={{
+						position: "absolute",
+						top: "30px",
+						left: "30px",
+						width: "50px",
+						height: "50px",
+						zIndex: 1,
+					}}
+				/>
+			</Tooltip>
+			<span
+				style={{
+					position: "absolute",
+					top: "50px",
+					right: "100px",
+					width: "50px",
+					height: "50px",
+					zIndex: 1,
+				}}>
+				<img
+					src={anephysioLogo}
+					alt='app logo'
+					className={localStyles.logo}
+				/>
+			</span>
+			<Content className={localStyles.content}>
+				<Space
+					direction='vertical'
+					align='center'
+					className={localStyles.content}>
+					<Row align={"middle"} className={localStyles.title}>
+						<h3>Prijava</h3>
+					</Row>
+					<Row>
+						<Form
+							name='login'
+							onFinish={onSubmit}
+							data-testid='loginForm'
+							className={localStyles.form}>
+							<Flex vertical justify='center' align='center'>
+								<span className={localStyles.informationText}>
+									Upišite podatke za prijavu da bi nastavili
+								</span>
+								{!loginValid && (
+									<span className={localStyles.errorText}>
+										{loginErrorMessage}
+									</span>
+								)}
+							</Flex>
+							<Form.Item
+								name='username'
+								rules={[
+									{
+										required: true,
+										message: "Unesite korisničko ime!",
+									},
+								]}>
+								<Input
+									data-testid='usernameInput'
+									suffix={
+										<UserOutlined className='site-form-item-icon' />
+									}
+									placeholder='Korisničko ime'
+									className={localStyles.usernameInput}
+								/>
+							</Form.Item>
+							<Form.Item
+								name='password'
+								rules={[
+									{
+										required: true,
+										message: "Unesite zaporku!",
+									},
+								]}>
+								<Input
+									data-testid='passwordInput'
+									suffix={
+										<LockOutlined className='site-form-item-icon' />
+									}
+									type='password'
+									placeholder='Zaporka'
+									className={localStyles.passwordInput}
+								/>
+							</Form.Item>
+							<Form.Item>
+								<Button
+									type='text'
+									shape='round'
+									size='large'
+									htmlType='submit'
+									data-testid='loginButton'
+									className={localStyles.btnRoundedLight}>
+									PRIJAVI SE
+								</Button>
+							</Form.Item>
+						</Form>
+					</Row>
+				</Space>
+			</Content>
+			<Footer className={localStyles.footer}>
+				<Row
+					justify={"center"}
+					align={"bottom"}
+					className={localStyles.authorDescription}>
+					<span>
+						<CopyrightOutlined /> David Bašić
+					</span>
+				</Row>
+			</Footer>
+		</Layout>
 	);
 };
 
 export default Login;
+
+/*
+
+
+		<div className={`${styles.content} ${styles["centered-element"]}`}>
+			
+		</div>
+
+*/

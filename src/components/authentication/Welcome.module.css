@@ -1,50 +1,67 @@
-h1 {
-    font-size: 3rem;
+:root {
+    --font-family: "Nunito", sans-serif;
+    --page-background-color: #aad3ff;
+    --custom-dark-blue: #004a8c;
 }
 
-.lighter-text {
-    color: gray;
-}
-
-.list {
-    list-style-type: none;
+.page {
+    font-family: var(--font-family);
+    background-color: var(--page-background-color);
+    height: 100vh;
 }
 
 .content {
-    width: 450px;
-    text-align: center;
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 }
 
-.centered-element {
-    margin: 0;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.logo {
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    background-color: var(--page-background-color);
 }
 
-.btn-rounded-light {
-    margin-top: 12px;
-    width: 350px;
-    background-color: white;
-    color: black;
-    border-color: black;
+.title {
+    font-size: 60px;
+    line-height: 75px;
+    font-weight: 800;
+    color: var(--custom-dark-blue);
+    margin-left: 20px;
 }
 
-.btn-rounded-dark {
-    margin-top: 12px;
-    width: 350px;
-    background-color: black;
+.logoAndTitleContainer {
+    font-family: var(--font-family);
+}
+
+.btnRoundedLight {
     color: white;
-    border-color: black;
+    background-color: var(--custom-dark-blue);
+    border-color: var(--custom-dark-blue);
+    font-family: var(--font-family);
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 20px;
+    margin-top: 20px;
+    width: 250px;
 }
 
-.btn-rounded-light:active,
-.btn-rounded-dark:active {
+.btnRoundedLight:active {
     background-color: gray;
-    outline-color: black;
+    outline-color: var(--custom-dark-blue);
     color: whitesmoke;
+}
+
+.footer {
+    background-color: var(--page-background-color);
+}
+
+.authorDescription {
+    font-size: 20px;
+    line-height: 30px;
+    font-weight: 600;
+    font-family: var(--font-family);
+    color: var(--custom-dark-blue);
 }

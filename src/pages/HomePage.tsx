@@ -115,7 +115,7 @@ const HomePage: FC = () => {
 		<div className={localStyles.mainContainer}>
 			<img
 				src={anephysioLogo}
-				alt='test logo'
+				alt='app logo'
 				className={localStyles.logo}
 			/>
 			{currentUser.role === "admin" && (
