@@ -1,50 +1,121 @@
-h1 {
-	font-size: 2.5rem;
+:root {
+	--font-family: "Nunito", sans-serif;
+	--page-background-color: #aad3ff;
+	--custom-dark-blue: #004a8c;
 }
 
-.lighter-text {
-	color: gray;
-}
-
-.error-text{
-	color: lightcoral;
-}
-
-.success-text{
-	color: green;
-}
-
-.link-text {
-	color: black;
-	font-weight: bold;
-}
-.link-text:hover {
-	color: darkgray;
+.page {
+	font-family: var(--font-family);
+	background-color: var(--page-background-color);
+	height: 100vh;
 }
 
 .content {
-	width: 450px;
-	text-align: center;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-}
-.centered-element {
-	margin: 0;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+	flex-direction: column;
 }
 
-.btn-rounded-dark {
-	margin-top: 12px;
-	width: 350px;
-	background-color: black;
-	color: white;
-	border-color: black;
+.logo {
+	border-radius: 50%;
+	width: 150px;
+	height: 150px;
+	background-color: var(--page-background-color);
 }
 
-.register-form {
+.title {
+	font-size: 45px;
+	line-height: 55px;
+	font-weight: 800;
+	font-family: var(--font-family);
+	color: var(--custom-dark-blue);
+	height: fit-content;
+}
+
+.form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.inputWidth {
+	min-width: 350px;
+	border-color: var(--custom-dark-blue);
+}
+
+.passwordInput {
 	max-width: 350px;
+}
+
+.usernameInput {
+	max-width: 350px;
+}
+
+.checkbox {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.btnRoundedLight {
+	color: white;
+	background-color: var(--custom-dark-blue);
+	border-color: var(--custom-dark-blue);
+	font-family: var(--font-family);
+	font-size: 20px;
+	font-weight: 600;
+	line-height: 20px;
+	margin-top: 12px;
+	min-width: 350px;
+}
+
+.btnRoundedLight:active {
+	background-color: gray;
+	outline-color: var(--custom-dark-blue);
+	color: whitesmoke;
+}
+
+.footer {
+	background-color: var(--page-background-color);
+}
+
+.authorDescription {
+	font-size: 20px;
+	line-height: 30px;
+	font-weight: 600;
+	font-family: var(--font-family);
+	color: var(--custom-dark-blue);
+}
+
+.informationText {
+	color: var(--custom-dark-blue);
+	margin: 20px;
+	font-size: 16px;
+	line-height: 16px;
+	font-weight: bold;
+	font-family: var(--font-family);
+}
+
+.errorText {
+	color: red;
+	margin: 20px;
+	font-size: 16px;
+	line-height: 16px;
+	font-weight: bold;
+	font-family: var(--font-family);
+}
+
+.successText {
+	color: green;
+	margin: 20px;
+	font-size: 16px;
+	line-height: 16px;
+	font-weight: bold;
+	font-family: var(--font-family);
+}
+
+.fieldValidationError {
+	margin-left: 12px;
 }

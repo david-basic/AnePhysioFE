@@ -5,7 +5,7 @@ import { type UserVM } from "../models/UserVm";
 const authInitState: AuthInitState = {
 	isLoggedIn: false,
 	username: "",
-	user: {id: "", firstName: "", lastName: ""},
+	user: { id: "", firstName: "", lastName: "", title: "", role: "", sex: "" },
 	accessToken: "",
 	refreshToken: "",
 	tokenType: "Bearer",

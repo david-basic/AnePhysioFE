@@ -28,7 +28,11 @@ const MkbsAndOperations: FC<MkbsAndOperationsProps> = ({
 			}}
 			className={parentStyles.texts}>
 			{mkbs && mkbs.length > 1 ? (
-				mkbs.slice(1).map((pmkb, index) => <span key={index}>{pmkb.displayName}</span>)
+				mkbs
+					.slice(1)
+					.map((pmkb, index) => (
+						<span key={index}>{pmkb.displayName}</span>
+					))
 			) : (
 				<span>Nema definiranih komorbiditeta</span>
 			)}
@@ -43,7 +47,6 @@ const MkbsAndOperations: FC<MkbsAndOperationsProps> = ({
 						{op.procedureName}
 					</span>
 				))}
-			{!operations && <span>Nema definiranih operativnih postupaka</span>}
 		</Flex>
 	);
 };

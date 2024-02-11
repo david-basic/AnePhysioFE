@@ -1,0 +1,62 @@
+.row {
+    width: fit-content;
+}
+
+.rowEmpty {
+    width: fit-content;
+    cursor: not-allowed;
+}
+
+.icon {
+    width: 40px;
+    height: 40px;
+    vertical-align: middle;
+    color: #004a8c;
+    fill: #004a8c;
+}
+
+.customButton {
+    width: fit-content;
+    height: 45px;
+    margin-left: 44px;
+    margin-bottom: 15px;
+    background-color: transparent;
+    font-family: "Nunito", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    padding: 0px;
+}
+.customButton:hover {
+    color: #2f70aa;
+    opacity: 0.7;
+}
+
+.label {
+    margin-left: 20px;
+    color: #004a8c;
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 33px;
+}
+
+.bedEmptyIcon {
+    width: 40px;
+    height: 40px;
+    vertical-align: middle;
+    color: #004a8c;
+    fill: #004a8c;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.bedEmptyLabel {
+    margin-left: 20px;
+    color: #004a8c;
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 33px;
+    opacity: 0.5;
+    cursor: not-allowed;
+}

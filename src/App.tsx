@@ -1,23 +1,26 @@
 import "./App.css";
 import client_routes from "./config/client_routes";
 import WelcomePage from "./pages/authentication/WelcomePage";
-import { useRoutes } from "react-router-dom";
+import { useLocation, useRoutes } from "react-router-dom";
 import LoginPage from "./pages/authentication/LoginPage";
 import RegisterPage from "./pages/authentication/RegisterPage";
 import Protected from "./components/authentication/Protected";
-import HomePage from "./pages/HomePage";
 import MainLayout from "./components/layout/MainLayout";
-import { type FC } from "react";
+import { useRef, type FC } from "react";
 import { useAppSelector } from "./hooks/use_app_selector";
 import JilRijekaHomePage from "./pages/departments/JilRijekaHomePage";
 import CrcHomePage from "./pages/departments/CrcHomePage";
 import JilSusakHomePage from "./pages/departments/JilSusakHomePage";
 import KardioJilHomePage from "./pages/departments/KardioJilHomePage";
 import PatientPage from "./pages/physiofile/PatientPage";
-import PhysioFileLayout from "./components/layout/PhysioFileLayout";
+import PrintingPage from "./pages/printing/PrintingPage";
+import HomePage from "./pages/HomePage";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 const App: FC = () => {
 	const isLoggedIn = useAppSelector((state) => state.authReducer.isLoggedIn);
+	const location = useLocation();
+	const nodeRef = useRef(null);
 
 	const authWelcomeRoute = {
 		path: client_routes.ROUTE_AUTH,
@@ -29,16 +32,16 @@ const App: FC = () => {
 	};
 	const authRegisterRoute = {
 		path: client_routes.ROUTE_AUTH_REGISTER,
-		element: <RegisterPage />,
-	};
-	const homeRoute = {
-		path: client_routes.ROUTE_HOME,
 		element: (
 			<Protected
 				isLoggedIn={isLoggedIn}
-				children={<MainLayout children={<HomePage />} />}
+				children={<MainLayout children={<RegisterPage />} />}
 			/>
 		),
+	};
+	const homeRoute = {
+		path: client_routes.ROUTE_HOME,
+		element: <Protected isLoggedIn={isLoggedIn} children={<HomePage />} />,
 	};
 	const jilRijekaHomeRoute = {
 		path: client_routes.ROUTE_DEPT_JIL_RIJEKA,
@@ -77,12 +80,18 @@ const App: FC = () => {
 		),
 	};
 	const patientPageRoute = {
-		path: client_routes.ROUTE_PATIENTS_DETAILS,
+		path: client_routes.ROUTE_PHYSIO_FILE_BY_ID,
 		element: (
 			<Protected
 				isLoggedIn={isLoggedIn}
-				children={<PhysioFileLayout children={<PatientPage />} />}
+				children={<PatientPage />}
 			/>
+		),
+	};
+	const printingPageRoute = {
+		path: client_routes.ROUTE_PRINTING_PAGE,
+		element: (
+			<Protected isLoggedIn={isLoggedIn} children={<PrintingPage />} />
 		),
 	};
 
@@ -96,9 +105,20 @@ const App: FC = () => {
 		jilSusakHomeRoute,
 		kardioJilHomeRoute,
 		patientPageRoute,
+		printingPageRoute,
 	]);
 
-	return <>{routing}</>;
+	return (
+		<TransitionGroup>
+			<CSSTransition
+				nodeRef={nodeRef}
+				key={location.key}
+				classNames='fade'
+				timeout={300}>
+				<div ref={nodeRef}>{routing}</div>
+			</CSSTransition>
+		</TransitionGroup>
+	);
 };
 
 export default App;

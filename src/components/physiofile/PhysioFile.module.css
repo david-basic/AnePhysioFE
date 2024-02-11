@@ -45,6 +45,11 @@
     line-height: var(--text-line-height);
 }
 
+.textsAsLinks:disabled {
+    color: #a4ccf3;
+    cursor: none;
+}
+
 .textsAsLinks:hover {
     cursor: pointer;
     font-weight: var(--title-font-weight);

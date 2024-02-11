@@ -138,6 +138,7 @@ const PhysioPlans: FC<PhysioPlansProps> = ({
 						style={{ marginBottom: "8px" }}>
 						<Checkbox
 							className={`${fileStyles.texts} ${planStyles.checkbox}`}
+							disabled={physioFile.fileClosedBy !== null}
 							style={{ fontWeight: 400 }}
 							value={intubatedPatientPlan.id}>
 							{intubatedPatientPlan.type}
@@ -145,6 +146,7 @@ const PhysioPlans: FC<PhysioPlansProps> = ({
 						{allPatientPlans[0].selected && (
 							<TextArea
 								value={intubatedPatientPlanDescription}
+								disabled={physioFile.fileClosedBy !== null}
 								autoSize={{ minRows: 1, maxRows: 2 }}
 								onChange={handleChangeIntubatedDescription}
 								onBlur={handleLoseFocusIntubated}
@@ -158,6 +160,7 @@ const PhysioPlans: FC<PhysioPlansProps> = ({
 					<Row align='middle' className={planStyles.row}>
 						<Checkbox
 							className={`${fileStyles.texts} ${planStyles.checkbox}`}
+							disabled={physioFile.fileClosedBy !== null}
 							style={{ fontWeight: 400 }}
 							value={extubatedPatientPlan.id}>
 							{extubatedPatientPlan.type}
@@ -165,6 +168,7 @@ const PhysioPlans: FC<PhysioPlansProps> = ({
 						{allPatientPlans[1].selected && (
 							<TextArea
 								value={extubatedPatientPlanDescription}
+								disabled={physioFile.fileClosedBy !== null}
 								autoSize={{ minRows: 1, maxRows: 2 }}
 								onChange={handleChangeExtubatedDescription}
 								onBlur={handleLoseFocusExtubated}

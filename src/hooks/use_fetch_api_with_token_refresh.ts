@@ -28,9 +28,7 @@ const useFetcApihWithTokenRefresh = () => {
 
 				const updatedAccessToken = accessTokenRef.current;
 
-                // console.log("updatedAccessToken...", updatedAccessToken); //XXX remove
-				
-                if (!isNullOrEmpty(updatedAccessToken)) {
+				if (!isNullOrEmpty(updatedAccessToken)) {
 					const response = await fetchApi(
 						requestConfig,
 						manageResponseData,

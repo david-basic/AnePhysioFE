@@ -1,7 +1,6 @@
 import { useState, type FC } from "react";
 import { type BedVM } from "../../models/department/BedVM";
-import { Link } from "react-router-dom";
-import styles from "./Bed.module.css";
+import localStyles from "./Bed.module.css";
 import {
 	Col,
 	Descriptions,
@@ -11,6 +10,7 @@ import {
 	message,
 } from "antd";
 import { type ApiResponse } from "../../type";
+import dayjs from "dayjs";
 import { type PatientVM } from "../../models/patient/PatientVM";
 import api_routes from "../../config/api_routes";
 import { HttpStatusCode } from "axios";
@@ -18,17 +18,26 @@ import LoadingSpinner from "../LoadingSpinner";
 import constants from "../../config/constants";
 import client_routes, { clientRoutesParams } from "../../config/client_routes";
 import useFetcApihWithTokenRefresh from "../../hooks/use_fetch_api_with_token_refresh";
+import CustomBedButton from "./CustomBedButton";
+import { useAppSelector } from "../../hooks/use_app_selector";
+import ChoosePhysioFileModal from "./ChoosePhysioFileModal";
 
 type BedProps = {
-	bedNum: number;
+	departmentName: string;
 } & BedVM;
 
-const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
+const Bed: FC<BedProps> = ({ patient, departmentName }: BedProps) => {
 	const [showModal, setShowModal] = useState(false);
 	const [patientData, setPatientData] = useState<PatientVM>();
 	const [descriptionItems, setDescriptionItems] = useState<
 		DescriptionsProps["items"]
 	>([]);
+	const currentPatientPhysioFilesList = useAppSelector(
+		(state) => state.physioFileReducer.currentPatientPhysioFileList
+	);
+	const showChoosePhysioFileModal = useAppSelector(
+		(state) => state.modalsShowReducer.showChoosePhysioFileModal
+	);
 	const { fetchWithTokenRefresh: sendPatientDetailsRequest, isLoading } =
 		useFetcApihWithTokenRefresh();
 	const dateOptions: Intl.DateTimeFormatOptions = {
@@ -57,41 +66,41 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 					const items: DescriptionsProps["items"] = [
 						{
 							key: constants.DATE_OF_BIRTH,
-							label: constants.DATE_OF_BIRTH,
+							label: <b>{constants.DATE_OF_BIRTH}</b>,
 							children: new Date(
 								Date.parse(fetchedPatientData!.birthDate)
-							).toLocaleDateString("hr-HR", dateOptions).split(" ")
-							.join(""),
+							)
+								.toLocaleDateString("hr-HR", dateOptions)
+								.split(" ")
+								.join(""),
 						},
 						{
 							key: constants.PATIENT_AGE,
-							label: constants.PATIENT_AGE,
+							label: <b>{constants.PATIENT_AGE}</b>,
 							children: fetchedPatientData!.patientAge,
 						},
 						{
 							key: constants.SEX,
-							label: constants.SEX,
+							label: <b>{constants.SEX}</b>,
 							children: fetchedPatientData!.sex.displayName,
 						},
 						{
 							key: constants.ADMISSION_DATE,
-							label: constants.ADMISSION_DATE,
-							children: new Date(
-								Date.parse(
-									fetchedPatientData!.admissionDateTime
-								)
-							).toLocaleString("hr-HR", { timeZone: "CET" }),
+							label: <b>{constants.ADMISSION_DATE}</b>,
+							children: dayjs(
+								fetchedPatientData!.admissionDateTime
+							).format("DD.MM.YYYY HH:mm:ss"),
 						},
 						{
 							key: constants.PATIENT_ADDRESS,
 							span: 2,
-							label: constants.PATIENT_ADDRESS,
+							label: <b>{constants.PATIENT_ADDRESS}</b>,
 							children:
 								fetchedPatientData!.patientAddress.fullAddress,
 						},
 						{
 							key: constants.LEADING_DOCTOR,
-							label: constants.LEADING_DOCTOR,
+							label: <b>{constants.LEADING_DOCTOR}</b>,
 							children:
 								fetchedPatientData!.leadingDoctor
 									.fullNameAndTitles,
@@ -99,7 +108,7 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 						{
 							key: constants.LEADING_MKB,
 							span: 2,
-							label: constants.LEADING_MKB,
+							label: <b>{constants.LEADING_MKB}</b>,
 							children: (
 								<p>
 									{fetchedPatientData?.leadingMkb.displayName}
@@ -109,7 +118,7 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 						{
 							key: constants.PATIENT_MBKS,
 							span: 3,
-							label: constants.PATIENT_MBKS,
+							label: <b>{constants.PATIENT_MBKS}</b>,
 							children: (
 								<ul>
 									{fetchedPatientData!.patientMkbs.length >
@@ -119,7 +128,7 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 												<li
 													key={mkb.id}
 													className={
-														styles[
+														localStyles[
 															"remove-list-style"
 														]
 													}>
@@ -136,7 +145,7 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 						{
 							key: constants.OPERATIONS,
 							span: 3,
-							label: constants.OPERATIONS,
+							label: <b>{constants.OPERATIONS}</b>,
 							children: (
 								<ul>
 									{fetchedPatientData?.operations !== null &&
@@ -145,7 +154,7 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 												<li
 													key={op.id}
 													className={
-														styles[
+														localStyles[
 															"remove-list-style"
 														]
 													}>
@@ -181,19 +190,30 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 			<Col span={24}>
 				{patient !== null && (
 					<>
-						<Link
-							to={client_routes.ROUTE_PATIENTS_DETAILS.replace(
+						<CustomBedButton
+							to={client_routes.ROUTE_PHYSIO_FILE_BY_ID.replace(
 								clientRoutesParams.patientId,
 								patient!.id
 							)}
-							className={styles["occupied-bed-text"]}
-							onContextMenu={handleRightClick}>
-							{`Bed ${bedNum}: ${
+							patientId={patient!.id}
+							label={`${
 								patient!.firstName + " " + patient!.lastName
 							}`}
-						</Link>
+							bedIsEmpty={false}
+							icon={
+								<svg viewBox='0 0 640 512'>
+									<path d='M176 288C220.1 288 256 252.1 256 208S220.1 128 176 128S96 163.9 96 208S131.9 288 176 288zM544 128H304C295.2 128 288 135.2 288 144V320H64V48C64 39.16 56.84 32 48 32h-32C7.163 32 0 39.16 0 48v416C0 472.8 7.163 480 16 480h32C56.84 480 64 472.8 64 464V416h512v48c0 8.837 7.163 16 16 16h32c8.837 0 16-7.163 16-16V224C640 170.1 597 128 544 128z'></path>
+								</svg>
+							}
+							onContextMenu={handleRightClick}
+						/>
+						<ChoosePhysioFileModal
+							showModal={showChoosePhysioFileModal}
+							loadingData={isLoading}
+							physioFilesList={currentPatientPhysioFilesList}
+							departmentName={departmentName}
+						/>
 						<Modal
-							title={`${patient?.firstName} ${patient?.lastName} - ${patientData?.identificationNumber}`}
 							centered
 							width='auto'
 							open={showModal}
@@ -205,13 +225,25 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 							}}
 							onCancel={() => setShowModal(false)}>
 							{isLoading && <LoadingSpinner />}
-							{}
 							{!isLoading && (
 								<Descriptions
-									title='Informacije pacijenta'
+									title={`Informacije pacijent${
+										patientData?.sex.displayName.toLowerCase()[0] ===
+										"f"
+											? "ice"
+											: "a"
+									} ${patient?.firstName} ${
+										patient?.lastName
+									} - ${patientData?.identificationNumber}`}
 									bordered
 									column={3}
 									size='small'
+									style={{
+										backgroundColor: "#d5e9f3",
+										margin: "15px",
+										padding: "20px",
+										borderRadius: "8px",
+									}}
 									items={descriptionItems}
 								/>
 							)}
@@ -219,10 +251,16 @@ const Bed: FC<BedProps> = ({ bedNum, patient }: BedProps) => {
 					</>
 				)}
 				{patient === null && (
-					<p
-						className={
-							styles["free-bed-text"]
-						}>{`Bed ${bedNum}: empty bed`}</p>
+					<CustomBedButton
+						to='#'
+						label={""}
+						bedIsEmpty={true}
+						icon={
+							<svg viewBox='0 0 640 512'>
+								<path d='M176 288C220.1 288 256 252.1 256 208S220.1 128 176 128S96 163.9 96 208S131.9 288 176 288zM544 128H304C295.2 128 288 135.2 288 144V320H64V48C64 39.16 56.84 32 48 32h-32C7.163 32 0 39.16 0 48v416C0 472.8 7.163 480 16 480h32C56.84 480 64 472.8 64 464V416h512v48c0 8.837 7.163 16 16 16h32c8.837 0 16-7.163 16-16V224C640 170.1 597 128 544 128z'></path>
+							</svg>
+						}
+					/>
 				)}
 			</Col>
 		</Row>

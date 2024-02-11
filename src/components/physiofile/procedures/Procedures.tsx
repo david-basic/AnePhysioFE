@@ -210,13 +210,19 @@ const Procedures: FC<ProceduresProps> = ({
 				<Space size={"small"}>
 					<Button
 						type='primary'
-						disabled={tableIsBeingEdited}
+						disabled={
+							tableIsBeingEdited ||
+							physioFile.fileClosedBy !== null
+						}
 						onClick={(e) => handleEditChoice(e, record)}
 						icon={<PencilFill className={modalStyles.icon} />}
 					/>
 					<Button
 						type='primary'
-						disabled={tableIsBeingEdited}
+						disabled={
+							tableIsBeingEdited ||
+							physioFile.fileClosedBy !== null
+						}
 						danger
 						onClick={(e) => handleDeleteChoice(e, record)}
 						icon={<X className={modalStyles.icon} />}
@@ -240,6 +246,7 @@ const Procedures: FC<ProceduresProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Created) {
 						message.error("Nije moguće spremiti novu proceduru!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while saving new patient procedure: ",
 							physioFileResponse
@@ -252,7 +259,7 @@ const Procedures: FC<ProceduresProps> = ({
 						);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -286,6 +293,7 @@ const Procedures: FC<ProceduresProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće izmjeniti proceduru!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while updating patient procedure: ",
 							physioFileResponse
@@ -300,7 +308,7 @@ const Procedures: FC<ProceduresProps> = ({
 						);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -332,6 +340,7 @@ const Procedures: FC<ProceduresProps> = ({
 				(deleteFileResponse: ApiResponse<NoReturnData>) => {
 					if (deleteFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće izbrisati proceduru!");
+						message.error(deleteFileResponse.message);
 						console.error(
 							"There was a error while deleting patient procedure: ",
 							deleteFileResponse
@@ -450,6 +459,9 @@ const Procedures: FC<ProceduresProps> = ({
 		if (isNullOrEmpty(dateString)) {
 			setChosenDateTime({ date: "", time: "" });
 			setDatePickerValue(null);
+			setChangedPatientProcedureDescription("");
+			setChosenTherapistsIds([]);
+			setChosenProcedures([]);
 			return;
 		}
 
@@ -584,6 +596,7 @@ const Procedures: FC<ProceduresProps> = ({
 				style={{ marginBottom: "10px" }}>
 				<DatePicker
 					placeholder='Odaberi datum'
+					disabled={physioFile.fileClosedBy !== null}
 					format={croLocale.dateFormat}
 					locale={croLocale}
 					value={datePickerValue}
@@ -682,6 +695,7 @@ const Procedures: FC<ProceduresProps> = ({
 				<Button
 					type='primary'
 					icon={<PlusCircle />}
+					disabled={physioFile.fileClosedBy !== null}
 					onClick={() =>
 						dispatch(modalsShowActions.setShowProcedureModal(true))
 					}>

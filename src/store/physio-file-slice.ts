@@ -10,60 +10,81 @@ import { type AssessmentVM } from "../models/physiofile/assessment/AssessmentVM"
 import { type PatientRassVM } from "../models/physiofile/assessment/PatientRassVM";
 import { type FunctionalDiagnosisVM } from "../models/physiofile/functionalDiagnosis/FunctionalDiagnosisVM";
 import { UserVM } from "../models/UserVm";
+import { Point } from "../models/physiofile/assessment/Point";
 
-const fileInitState: PhysioFileVM = {
-	id: "",
-	fileOpenedBy: { id: "", firstName: "", lastName: "" },
-	patient: {
+const fileInitState: PhysioFileVM[] = [
+	{
 		id: "",
-		identificationNumber: 0,
-		firstName: "",
-		lastName: "",
-		birthDate: "",
-		sex: { id: "", name: "", displayName: "" },
-		leadingMkb: {
+		fileOpenedBy: {
 			id: "",
-			mkbCode: { id: "", code: "", displayName: "" },
-			patientId: "",
-			displayName: "",
+			firstName: "",
+			lastName: "",
+			title: "",
+			role: "",
+			sex: "",
 		},
-		patientMkbs: [],
-		operations: [],
-		admissionDateTime: "",
-		patientAddress: { id: "", fullAddress: "" },
-		leadingDoctor: { id: "", role: "", fullNameAndTitles: "" },
-		patientAge: 0,
+		patient: {
+			id: "",
+			identificationNumber: 0,
+			firstName: "",
+			lastName: "",
+			birthDate: "",
+			sex: { id: "", name: "", displayName: "" },
+			leadingMkb: {
+				id: "",
+				mkbCode: { id: "", code: "", displayName: "" },
+				patientId: "",
+				displayName: "",
+			},
+			patientMkbs: [],
+			operations: [],
+			admissionDateTime: "",
+			patientAddress: { id: "", fullAddress: "" },
+			leadingDoctor: { id: "", role: "", fullNameAndTitles: "" },
+			patientAge: 0,
+		},
+		patientFunctionalDiagnoses: [],
+		assessment: { id: "", patientRass: [], notes: "", pointsOfPain: [] },
+		fullRassList: [],
+		fullGoalsList: [],
+		patientGoals: [],
+		fullPlansList: [],
+		patientPlans: [],
+		notes: "",
+		fullProcedureList: [],
+		patientProcedures: [],
+		physioTest: {
+			id: "",
+			cpax: [],
+			gcs: [],
+			mmt: [],
+			vas: [],
+		},
+		allAspectsOfPhysicality: [],
+		allEyeOpeningResponses: [],
+		allMotorResponses: [],
+		allVerbalResponses: [],
+		mmtList: [],
+		conclussion: "",
+		fileClosedBy: {
+			id: "",
+			firstName: "",
+			lastName: "",
+			title: "",
+			role: "",
+			sex: "",
+		},
+		fileClosedAt: "",
+		allPhysiotherapists: [],
+		departmentId: "",
 	},
-	patientFunctionalDiagnoses: [],
-	assessment: { id: "", patientRass: [], notes: "" },
-	fullRassList: [],
-	fullGoalsList: [],
-	patientGoals: [],
-	fullPlansList: [],
-	patientPlans: [],
-	notes: "",
-	fullProcedureList: [],
-	patientProcedures: [],
-	physioTest: {
-		id: "",
-		cpax: [],
-		gcs: [],
-		mmt: [],
-		vas: [],
-	},
-	allAspectsOfPhysicality: [],
-	allEyeOpeningResponses: [],
-	allMotorResponses: [],
-	allVerbalResponses: [],
-	mmtList: [],
-	conclussion: "",
-	fileClosedBy: { id: "", firstName: "", lastName: "" },
-	allPhysiotherapists: [],
-};
+];
 
 const physioFileInitState: PhysioFileInitStateType = {
-	physioFile: fileInitState,
+	currentPhysioFile: fileInitState[0],
+	currentPatientPhysioFileList: fileInitState,
 	functionalDiagnosisList: [],
+	currentPatientId: "",
 	physioFileDataSaved: true,
 	rassModalDataSaved: true,
 	gcsModalDataSaved: true,
@@ -78,8 +99,17 @@ const physioFileSlice = createSlice({
 	name: "physio-file",
 	initialState: physioFileInitState,
 	reducers: {
-		setPhysioFile: (state, action: PayloadAction<PhysioFileVM>) => {
-			state.physioFile = action.payload;
+		setCurrentPhysioFile: (state, action: PayloadAction<PhysioFileVM>) => {
+			state.currentPhysioFile = action.payload;
+		},
+		setCurrentPatientPhysioFileList: (
+			state,
+			action: PayloadAction<PhysioFileVM[]>
+		) => {
+			state.currentPatientPhysioFileList = action.payload;
+		},
+		setCurrentPatientId: (state, action: PayloadAction<string>) => {
+			state.currentPatientId = action.payload;
 		},
 		setPhysioFileDataSaved: (state, action: PayloadAction<boolean>) => {
 			state.physioFileDataSaved = action.payload;
@@ -112,67 +142,76 @@ const physioFileSlice = createSlice({
 			state.functionalDiagnosisList = action.payload;
 		},
 		setPatient: (state, action: PayloadAction<PatientVM>) => {
-			state.physioFile.patient = action.payload;
+			state.currentPhysioFile.patient = action.payload;
 		},
 		setPatientFunctionalDiagnoses: (
 			state,
 			action: PayloadAction<PatientFunctionalDiagnosisVM[]>
 		) => {
-			state.physioFile.patientFunctionalDiagnoses = action.payload;
+			state.currentPhysioFile.patientFunctionalDiagnoses = action.payload;
 		},
 		setAssessment: (state, action: PayloadAction<AssessmentVM>) => {
-			state.physioFile.assessment = action.payload;
+			state.currentPhysioFile.assessment = action.payload;
 		},
 		setAssessmentNotes: (state, action: PayloadAction<string>) => {
-			state.physioFile.assessment.notes = action.payload;
+			state.currentPhysioFile.assessment.notes = action.payload;
+		},
+		setAssessmentPainPoints: (state, action: PayloadAction<Point[]>) => {
+			state.currentPhysioFile.assessment.pointsOfPain = action.payload;
 		},
 		setPatientRass: (state, action: PayloadAction<PatientRassVM[]>) => {
-			state.physioFile.assessment.patientRass = action.payload;
+			state.currentPhysioFile.assessment.patientRass = action.payload;
 		},
 		setPatientGoals: (state, action: PayloadAction<PatientGoalVM[]>) => {
-			state.physioFile.patientGoals = action.payload;
+			state.currentPhysioFile.patientGoals = action.payload;
 		},
 		setIntubatedPatientGoalDescription: (
 			state,
 			action: PayloadAction<string>
 		) => {
-			state.physioFile.patientGoals[0].description = action.payload;
+			state.currentPhysioFile.patientGoals[0].description =
+				action.payload;
 		},
 		setExtubatedPatientGoalDescription: (
 			state,
 			action: PayloadAction<string>
 		) => {
-			state.physioFile.patientGoals[1].description = action.payload;
+			state.currentPhysioFile.patientGoals[1].description =
+				action.payload;
 		},
 		setPatientPlans: (state, action: PayloadAction<PatientPlanVM[]>) => {
-			state.physioFile.patientPlans = action.payload;
+			state.currentPhysioFile.patientPlans = action.payload;
 		},
 		setIntubatedPatientPlanDescription: (
 			state,
 			action: PayloadAction<string>
 		) => {
-			state.physioFile.patientPlans[0].description = action.payload;
+			state.currentPhysioFile.patientPlans[0].description =
+				action.payload;
 		},
 		setExtubatedPatientPlanDescription: (
 			state,
 			action: PayloadAction<string>
 		) => {
-			state.physioFile.patientPlans[1].description = action.payload;
+			state.currentPhysioFile.patientPlans[1].description =
+				action.payload;
 		},
 		setNotes: (state, action: PayloadAction<string>) => {
-			state.physioFile.notes = action.payload;
+			state.currentPhysioFile.notes = action.payload;
 		},
 		setPhysioTest: (state, action: PayloadAction<PhysioTestVM>) => {
-			state.physioFile.physioTest = action.payload;
+			state.currentPhysioFile.physioTest = action.payload;
 		},
 		setConclussion: (state, action: PayloadAction<string>) => {
-			state.physioFile.conclussion = action.payload;
+			state.currentPhysioFile.conclussion = action.payload;
 		},
 		setFileClosedBy: (state, action: PayloadAction<UserVM>) => {
-			state.physioFile.fileClosedBy = action.payload;
+			state.currentPhysioFile.fileClosedBy = action.payload;
 		},
 		resetPhysioFileToInitValues: (state) => {
-			state.physioFile = fileInitState;
+			state.currentPhysioFile = fileInitState[0];
+			state.currentPatientPhysioFileList = fileInitState;
+			state.currentPatientId = "";
 			state.physioFileDataSaved = true;
 			state.rassModalDataSaved = true;
 			state.gcsModalDataSaved = true;

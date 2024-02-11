@@ -51,12 +51,12 @@ type MmtModalProps = {
 	mmtList: MmtVM[];
 };
 
-type MmtDateTimeType = {
+export type MmtDateTimeType = {
 	date: string;
 	time: string;
 };
 
-type GradeAndDescription = {
+export type MmtGradeAndDescription = {
 	grade: number;
 	description: string;
 };
@@ -65,7 +65,7 @@ type TableColumnDefinitionType = {
 	key: string;
 	id: string;
 	dateTime: MmtDateTimeType;
-	gradeAndDescription: GradeAndDescription;
+	gradeAndDescription: MmtGradeAndDescription;
 	note: string;
 	index: number;
 };
@@ -169,13 +169,19 @@ const MmtModal: FC<MmtModalProps> = ({
 				<Space size={"small"}>
 					<Button
 						type='primary'
-						disabled={tableIsBeingEdited}
+						disabled={
+							tableIsBeingEdited ||
+							physioFile.fileClosedBy !== null
+						}
 						onClick={(e) => handleEditChoice(e, record)}
 						icon={<PencilFill className={modalStyles.icon} />}
 					/>
 					<Button
 						type='primary'
-						disabled={tableIsBeingEdited}
+						disabled={
+							tableIsBeingEdited ||
+							physioFile.fileClosedBy !== null
+						}
 						danger
 						onClick={(e) => handleDeleteChoice(e, record)}
 						icon={<X className={modalStyles.icon} />}
@@ -225,13 +231,14 @@ const MmtModal: FC<MmtModalProps> = ({
 						if (
 							physioFileResponse.status !== HttpStatusCode.Created
 						) {
+							message.error(physioFileResponse.message);
 							console.error(
 								"There was a error creating physio test: ",
 								physioFileResponse
 							);
 						} else {
 							dispatch(
-								physioFileActions.setPhysioFile(
+								physioFileActions.setCurrentPhysioFile(
 									physioFileResponse.data!
 								)
 							);
@@ -298,6 +305,7 @@ const MmtModal: FC<MmtModalProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Created) {
 						message.error("Nije moguće spremiti novi MMT!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while saving new MMT: ",
 							physioFileResponse
@@ -306,7 +314,7 @@ const MmtModal: FC<MmtModalProps> = ({
 						addRecordToTable(chosenMmtGrade!, chosenDate);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -338,6 +346,7 @@ const MmtModal: FC<MmtModalProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće izmjeniti MMT!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while updating MMT: ",
 							physioFileResponse
@@ -348,7 +357,7 @@ const MmtModal: FC<MmtModalProps> = ({
 						addRecordToTable(chosenMmtGrade!, chosenDate);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -378,6 +387,7 @@ const MmtModal: FC<MmtModalProps> = ({
 				(deleteFileResponse: ApiResponse<NoReturnData>) => {
 					if (deleteFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće izbrisati MMT!");
+						message.error(deleteFileResponse.message);
 						console.error(
 							"There was a error while deleting MMT: ",
 							deleteFileResponse
@@ -456,7 +466,9 @@ const MmtModal: FC<MmtModalProps> = ({
 				physioTestId: physioTest!.id,
 				grade: foundMmt!.grade,
 				description: foundMmt!.description,
-				mmtDateTime: `${chosenDate.date}T${chosenDate.time}`,
+				mmtDateTime: dayjs(
+					`${chosenDate.date} ${chosenDate.time}`
+				).format("YYYY-MM-DDTHH:mm:ss"),
 				note: mmtNotes,
 			};
 
@@ -466,7 +478,9 @@ const MmtModal: FC<MmtModalProps> = ({
 				physioTestId: physioTest!.id,
 				grade: foundMmt!.grade,
 				description: foundMmt!.description,
-				mmtDateTime: `${chosenDate.date}T${chosenDate.time}`,
+				mmtDateTime: dayjs(
+					`${chosenDate.date} ${chosenDate.time}`
+				).format("YYYY-MM-DDTHH:mm:ss"),
 				note: mmtNotes,
 			};
 
@@ -536,7 +550,7 @@ const MmtModal: FC<MmtModalProps> = ({
 	};
 
 	const handleSavingDataBeforeExit = () => {
-		dispatch(physioFileActions.setPhysioFile(physioFile));
+		dispatch(physioFileActions.setCurrentPhysioFile(physioFile));
 		dispatch(physioFileActions.setMmtModalDataSaved(true));
 	};
 
@@ -584,6 +598,7 @@ const MmtModal: FC<MmtModalProps> = ({
 							<Segment isContent>
 								<DatePicker
 									placeholder='Odaberi datum'
+									disabled={physioFile.fileClosedBy !== null}
 									format={croLocale.dateFormat}
 									locale={croLocale}
 									value={datePickerValue}
@@ -595,7 +610,6 @@ const MmtModal: FC<MmtModalProps> = ({
 									onChange={onDatePickerChange}
 								/>
 								<hr style={{ width: "0px" }} />
-
 								<ListGroup variant='flush'>
 									{mmtList.map((mmt, index) => (
 										<Fragment key={index}>
@@ -610,6 +624,8 @@ const MmtModal: FC<MmtModalProps> = ({
 														: `${modalStyles.rassLinks}`
 												}
 												onClick={(e) =>
+													physioFile.fileClosedBy ===
+														null &&
 													handleMmtClick(e, index)
 												}>
 												<Tooltip
@@ -637,6 +653,7 @@ const MmtModal: FC<MmtModalProps> = ({
 								<hr style={{ width: "0px" }} />
 								<TextArea
 									id='mmtNotes'
+									disabled={physioFile.fileClosedBy !== null}
 									value={mmtNotes}
 									autoSize={{ minRows: 4 }}
 									onChange={onMmtNotesChange}
@@ -649,40 +666,44 @@ const MmtModal: FC<MmtModalProps> = ({
 									} ${modalStyles.modalsTextArea}`}
 								/>
 								<hr style={{ width: "0px" }} />
-								<Tooltip
-									title='Datum, ocjena i zabilješka su obavezni parametri!'
-									color='#045fbd'
-									style={{
-										fontFamily: "Nunito, sans-serif",
-									}}>
-									<InfoCircleFill
-										className={modalStyles.infoIcon}
-									/>
-								</Tooltip>
-								<Button
-									type='primary'
-									shape='round'
-									className={modalStyles.modalsButtons}
-									icon={<SaveFilled />}
-									disabled={
-										isNullOrEmpty(chosenDate.date) ||
-										isNullOrEmpty(mmtNotes) ||
-										chosenMmtGrade === undefined
-									}
-									onClick={handleSaveChoice}>
-									Spremi odabir
-								</Button>
-								{tableIsBeingEdited && (
+								<Row align={"middle"}>
+									<Tooltip
+										title='Datum, ocjena i zabilješka su obavezni parametri!'
+										color='#045fbd'
+										style={{
+											fontFamily: "Nunito, sans-serif",
+										}}>
+										<InfoCircleFill
+											className={modalStyles.infoIcon}
+										/>
+									</Tooltip>
 									<Button
 										type='primary'
 										shape='round'
-										danger
-										style={{ marginLeft: "4px" }}
 										className={modalStyles.modalsButtons}
-										onClick={handleStopEditing}>
-										Odustani
+										icon={<SaveFilled />}
+										disabled={
+											isNullOrEmpty(chosenDate.date) ||
+											isNullOrEmpty(mmtNotes) ||
+											chosenMmtGrade === undefined
+										}
+										onClick={handleSaveChoice}>
+										Spremi odabir
 									</Button>
-								)}
+									{tableIsBeingEdited && (
+										<Button
+											type='primary'
+											shape='round'
+											danger
+											style={{ marginLeft: "4px" }}
+											className={
+												modalStyles.modalsButtons
+											}
+											onClick={handleStopEditing}>
+											Odustani
+										</Button>
+									)}
+								</Row>
 							</Segment>
 						</Col>
 						<Col span={15}>

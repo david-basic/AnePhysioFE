@@ -1,5 +1,5 @@
 :root {
-    --main-sidebar-width: 131.11px;
+    /* --main-sidebar-width: 141.97px; */
     --file-header-height: 141px;
     --file-sider-width: 335px;
     --content-padding-top: 50px;
@@ -23,8 +23,10 @@
 .fileheader {
     flex: 0 0 auto;
     top: 0;
-    left: var(--main-sidebar-width);
-    width: calc(100% - var(--main-sidebar-width));
+    left: 0;
+    /* left: var(--main-sidebar-width); */
+    /* width: calc(100% - var(--main-sidebar-width)); */
+    width: 100%;
     height: var(--file-header-height);
     z-index: 100;
     padding: 0px 20px;
@@ -46,7 +48,7 @@
 .filecontent {
     flex: 1;
     margin-top: var(--file-header-height);
-    margin-left: var(--main-sidebar-width);
+    /* margin-left: var(--main-sidebar-width); */
     margin-right: var(--file-sider-width);
     overflow-y: auto;
     border-radius: 4px;
@@ -57,7 +59,7 @@
     flex-direction: column;
     gap: 9px;
     margin-top: 75px;
-}
+}   
 
 .saveButton {
     background-color: #286e34;
@@ -65,10 +67,18 @@
 .saveButton:hover {
     background-color: #4cd964;
 }
+.saveButton:disabled {
+    background-color: #628d68;
+    cursor: not-allowed;
+}
 
 .cancelButton {
     background-color: #811f1a;
 }
 .cancelButton:hover {
     background-color: #ff3b30;
+}
+.cancelButton:disabled {
+    background-color: #805856;
+    cursor: not-allowed;
 }

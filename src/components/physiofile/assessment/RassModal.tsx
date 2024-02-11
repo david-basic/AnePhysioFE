@@ -101,7 +101,7 @@ const RassModal: FC<RassModalProps> = ({
 		TableColumnDefinitionType[]
 	>([]);
 	const physioFile = useAppSelector(
-		(state) => state.physioFileReducer.physioFile
+		(state) => state.physioFileReducer.currentPhysioFile
 	);
 	const rassModalDataSaved = useAppSelector(
 		(state) => state.physioFileReducer.rassModalDataSaved
@@ -114,69 +114,44 @@ const RassModal: FC<RassModalProps> = ({
 	};
 
 	useEffect(() => {
-		patientRassTests
-			? patientRassTests.forEach((pr) => {
-					const prDateTime = dayjs(pr.rassDateTime).format(
-						"YYYY-MM-DD HH:mm:ss"
+		patientRassTests &&
+			patientRassTests.forEach((pr) => {
+				const prDateTime = dayjs(pr.rassDateTime).format(
+					"YYYY-MM-DD HH:mm:ss"
+				);
+
+				const dateTimeToBeStoredToTable: RassDateType = {
+					date: prDateTime.split(" ")[0],
+					time: prDateTime.split(" ")[1],
+				};
+
+				const rass: RassChosenScoreAndIndex = {
+					chosenScore: pr.score,
+					chosenScoreIndex: rassList.findIndex(
+						(r) => r.score === pr.score
+					),
+				};
+
+				setDataSavedToTable((prevState) => {
+					const newState = [...prevState];
+					const foundRass = rassList.find(
+						(r) => r.score === rass.chosenScore
 					);
-
-					const dateTimeToBeStoredToTable: RassDateType = {
-						date: prDateTime.split(" ")[0],
-						time: prDateTime.split(" ")[1],
-					};
-
-					const rass: RassChosenScoreAndIndex = {
-						chosenScore: pr.score,
-						chosenScoreIndex: rassList.findIndex(
-							(r) => r.score === pr.score
-						),
-					};
-
-					setDataSavedToTable((prevState) => {
-						const newState = [...prevState];
-						const foundRass = rassList.find(
-							(r) => r.score === rass.chosenScore
-						);
-						newState.push({
-							key: generateRandomNumber(9, true)!,
-							id: pr.id,
-							dateTime: dateTimeToBeStoredToTable,
-							scoreAndNoteAndIndex: {
-								additionalNotes: pr.additionalDescription,
-								scoreAndTerm: `${foundRass?.score}: ${foundRass?.term}`,
-								scoreDescription: pr.scoreDescription,
-								index: rass.chosenScoreIndex!,
-							},
-						});
-
-						return newState;
+					newState.push({
+						key: generateRandomNumber(9, true)!,
+						id: pr.id,
+						dateTime: dateTimeToBeStoredToTable,
+						scoreAndNoteAndIndex: {
+							additionalNotes: pr.additionalDescription,
+							scoreAndTerm: `${foundRass?.score}: ${foundRass?.term}`,
+							scoreDescription: pr.scoreDescription,
+							index: rass.chosenScoreIndex!,
+						},
 					});
-			  })
-			: fetchWithTokenRefresh(
-					{
-						url:
-							api_routes.ROUTE_ASSESSMENT_CREATE_NEW_BY_PHYSIO_FILE_ID +
-							`/${physioFile.id}`,
-						headers: { "Content-Type": "application/json" },
-					},
-					(physioFileResponse: ApiResponse<PhysioFileVM>) => {
-						if (physioFileResponse.status !== HttpStatusCode.Ok) {
-							console.error(
-								"There was a error creating assessment: ",
-								physioFileResponse
-							);
-						} else {
-							dispatch(
-								physioFileActions.setPhysioFile(
-									physioFileResponse.data!
-								)
-							);
-							dispatch(
-								physioFileActions.setRassModalDataSaved(false)
-							);
-						}
-					}
-			  );
+
+					return newState;
+				});
+			});
 
 		return () => {
 			setDataSavedToTable([]);
@@ -266,13 +241,19 @@ const RassModal: FC<RassModalProps> = ({
 				<Space size={"small"}>
 					<Button
 						type='primary'
-						disabled={tableIsBeingEdited}
+						disabled={
+							tableIsBeingEdited ||
+							physioFile.fileClosedBy !== null
+						}
 						onClick={(e) => handleEditChoice(e, record)}
 						icon={<PencilFill className={modalStyles.icon} />}
 					/>
 					<Button
 						type='primary'
-						disabled={tableIsBeingEdited}
+						disabled={
+							tableIsBeingEdited ||
+							physioFile.fileClosedBy !== null
+						}
 						danger
 						onClick={(e) => handleDeleteChoice(e, record)}
 						icon={<X className={modalStyles.icon} />}
@@ -322,6 +303,7 @@ const RassModal: FC<RassModalProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće izmjeniti RASS!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while updating patient RASS: ",
 							physioFileResponse
@@ -332,7 +314,7 @@ const RassModal: FC<RassModalProps> = ({
 						addRecordToTable(chosenRassScoreAndIndex, chosenDate);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -364,6 +346,7 @@ const RassModal: FC<RassModalProps> = ({
 				(physioFileResponse: ApiResponse<PhysioFileVM>) => {
 					if (physioFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće spremiti novi RASS!");
+						message.error(physioFileResponse.message);
 						console.error(
 							"There was a error while saving new patient RASS: ",
 							physioFileResponse
@@ -372,7 +355,7 @@ const RassModal: FC<RassModalProps> = ({
 						addRecordToTable(chosenRecord, chosenDate);
 
 						dispatch(
-							physioFileActions.setPhysioFile(
+							physioFileActions.setCurrentPhysioFile(
 								physioFileResponse.data!
 							)
 						);
@@ -407,7 +390,9 @@ const RassModal: FC<RassModalProps> = ({
 				score: foundRass!.score,
 				term: foundRass!.term,
 				scoreDescription: foundRass!.scoreDescription,
-				rassDateTime: `${chosenDate.date}T${chosenDate.time}`,
+				rassDateTime: dayjs(
+					`${chosenDate.date} ${chosenDate.time}`
+				).format("YYYY-MM-DDTHH:mm:ss"),
 				additionalDescription: additionalNotes,
 			};
 
@@ -418,7 +403,9 @@ const RassModal: FC<RassModalProps> = ({
 				score: foundRass!.score,
 				term: foundRass!.term,
 				scoreDescription: foundRass!.scoreDescription,
-				rassDateTime: `${chosenDate.date}T${chosenDate.time}`,
+				rassDateTime: dayjs(
+					`${chosenDate.date} ${chosenDate.time}`
+				).format("YYYY-MM-DDTHH:mm:ss"),
 				additionalDescription: additionalNotes,
 			};
 
@@ -506,6 +493,7 @@ const RassModal: FC<RassModalProps> = ({
 				(deleteFileResponse: ApiResponse<NoReturnData>) => {
 					if (deleteFileResponse.status !== HttpStatusCode.Ok) {
 						message.error("Nije moguće izbrisati RASS!");
+						message.error(deleteFileResponse.message);
 						console.error(
 							"There was a error while deleting patient RASS: ",
 							deleteFileResponse
@@ -589,7 +577,7 @@ const RassModal: FC<RassModalProps> = ({
 	};
 
 	const handleSavingDataBeforeExit = () => {
-		dispatch(physioFileActions.setPhysioFile(physioFile));
+		dispatch(physioFileActions.setCurrentPhysioFile(physioFile));
 		dispatch(physioFileActions.setRassModalDataSaved(true));
 	};
 
@@ -640,6 +628,7 @@ const RassModal: FC<RassModalProps> = ({
 							<Segment isContent>
 								<DatePicker
 									placeholder='Odaberi datum'
+									disabled={physioFile.fileClosedBy !== null}
 									format={croLocale.dateFormat}
 									locale={croLocale}
 									value={datePickerValue}
@@ -665,6 +654,8 @@ const RassModal: FC<RassModalProps> = ({
 														: `${modalStyles.rassLinks}`
 												}
 												onClick={(e) =>
+													physioFile.fileClosedBy ===
+														null &&
 													handleRassClick(e, index)
 												}>
 												<Tooltip
@@ -687,6 +678,7 @@ const RassModal: FC<RassModalProps> = ({
 								<hr style={{ width: "0px" }} />
 								<TextArea
 									id='rassAdditionalNotes'
+									disabled={physioFile.fileClosedBy !== null}
 									value={additionalNotes}
 									autoSize={{ minRows: 4 }}
 									onChange={handleAdditionalNotesChange}
@@ -695,41 +687,45 @@ const RassModal: FC<RassModalProps> = ({
 									className={modalStyles.modalsTextArea}
 								/>
 								<hr style={{ width: "0px" }} />
-								<Tooltip
-									title='Datum i ocjena su obavezni parametri!'
-									color='#045fbd'
-									style={{
-										fontFamily: "Nunito, sans-serif",
-									}}>
-									<InfoCircleFill
-										className={modalStyles.infoIcon}
-									/>
-								</Tooltip>
-								<Button
-									type='primary'
-									shape='round'
-									className={modalStyles.modalsButtons}
-									icon={<SaveFilled />}
-									disabled={
-										isNullOrEmpty(chosenDate.date) ||
-										isNullOrEmpty(
-											chosenRassScoreAndIndex.chosenScore
-										)
-									}
-									onClick={handleSaveChoice}>
-									Spremi odabir
-								</Button>
-								{tableIsBeingEdited && (
+								<Row align={"middle"}>
+									<Tooltip
+										title='Datum i ocjena su obavezni parametri!'
+										color='#045fbd'
+										style={{
+											fontFamily: "Nunito, sans-serif",
+										}}>
+										<InfoCircleFill
+											className={modalStyles.infoIcon}
+										/>
+									</Tooltip>
 									<Button
 										type='primary'
 										shape='round'
-										danger
-										style={{ marginLeft: "4px" }}
 										className={modalStyles.modalsButtons}
-										onClick={handleStopEditing}>
-										Odustani
+										icon={<SaveFilled />}
+										disabled={
+											isNullOrEmpty(chosenDate.date) ||
+											isNullOrEmpty(
+												chosenRassScoreAndIndex.chosenScore
+											)
+										}
+										onClick={handleSaveChoice}>
+										Spremi odabir
 									</Button>
-								)}
+									{tableIsBeingEdited && (
+										<Button
+											type='primary'
+											shape='round'
+											danger
+											style={{ marginLeft: "4px" }}
+											className={
+												modalStyles.modalsButtons
+											}
+											onClick={handleStopEditing}>
+											Odustani
+										</Button>
+									)}
+								</Row>
 							</Segment>
 						</Col>
 						<Col span={14}>

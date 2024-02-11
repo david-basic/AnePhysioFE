@@ -3,12 +3,17 @@ import { type FocusEvent, type FC, useState, ChangeEvent } from "react";
 import assessmentStyles from "../assessment/Assessment.module.css";
 import { useAppDispatch } from "../../../hooks/use_app_dispatch";
 import { physioFileActions } from "../../../store/physio-file-slice";
+import { PhysioFileVM } from "../../../models/physiofile/PhysioFileVM";
 
 type PhysioNotesProps = {
+	physioFile: PhysioFileVM;
 	notes: string;
 };
 
-const PhysioNotes: FC<PhysioNotesProps> = ({ notes }: PhysioNotesProps) => {
+const PhysioNotes: FC<PhysioNotesProps> = ({
+	physioFile,
+	notes,
+}: PhysioNotesProps) => {
 	const dispatch = useAppDispatch();
 	const [patientNotes, setPatientNotes] = useState(notes);
 
@@ -24,6 +29,7 @@ const PhysioNotes: FC<PhysioNotesProps> = ({ notes }: PhysioNotesProps) => {
 	return (
 		<TextArea
 			id='physioFileNotes'
+			disabled={physioFile.fileClosedBy !== null}
 			value={patientNotes}
 			autoSize={{ minRows: 4 }}
 			onChange={handleChange}

@@ -13,10 +13,11 @@ import { physioFileActions } from "../../store/physio-file-slice";
 import TestsButton from "../../components/physiofile/physioTests/TestsButton";
 import Sider from "antd/es/layout/Sider";
 import { Content, Header } from "antd/es/layout/layout";
-import styles from "../../components/layout/PhysioFileLayout.module.css";
+import fileStyles from "../../components/layout/PhysioFileLayout.module.css";
 import PatientDetails from "../../components/physiofile/patientDetails/PatientDetails";
 import {
 	CheckSquareFill,
+	DoorOpenFill,
 	PrinterFill,
 	XCircleFill,
 } from "react-bootstrap-icons";
@@ -30,16 +31,12 @@ import VasModal from "../../components/physiofile/physioTests/vas/VasModal";
 import MmtModal from "../../components/physiofile/physioTests/mmt/MmtModal";
 import GcsModal from "../../components/physiofile/physioTests/gcs/GcsModal";
 import CpaxModal from "../../components/physiofile/physioTests/cpax/CpaxModal";
+import CustomLink from "../../components/CustomLink";
+import client_routes, { clientRoutesParams } from "../../config/client_routes";
+import ConfirmCloseFileModal from "../../components/modals/ConfirmCloseFileModal";
 
 const PatientPage: FC = () => {
-	const patientId = getIdFromUrl(useLocation());
-
-	//TODO store patient data to a state that will be active only while the user is on the carton, before exit you will ask
-	// the user if they wish to exit before saving stored data, you will also keep a state called dataSaved which will be a boolean that will indicate saved state
-	// the dataSaved state will change once POST is sent to the server to true and then user wont be asked before exit
-	// instead of loadedOnce in session storage you will check for another state also called loadedOnce that will be persisted and only reset to false once
-	// user saves their work so that reloading of data does not remove the changes, you will also use refs for the form like you did on login form.
-
+	const physioFileId = getIdFromUrl(useLocation());
 	const { fetchWithTokenRefresh, isLoading } = useFetcApihWithTokenRefresh();
 	const [apiCallMade, setApiCallMade] = useState(false);
 	const isMounted = useRef(true);
@@ -53,9 +50,10 @@ const PatientPage: FC = () => {
 		showRassModal,
 		showSaveModal,
 		showVasModal,
+		showCloseFileModal,
 	} = useAppSelector((state) => state.modalsShowReducer);
-	const physioFile = useAppSelector(
-		(state) => state.physioFileReducer.physioFile
+	const currentPhysioFile = useAppSelector(
+		(state) => state.physioFileReducer.currentPhysioFile
 	);
 	const dataSaved = useAppSelector(
 		(state) => state.physioFileReducer.physioFileDataSaved
@@ -70,8 +68,8 @@ const PatientPage: FC = () => {
 				fetchWithTokenRefresh(
 					{
 						url:
-							api_routes.ROUTE_PHYSIO_FILE_GET_BY_PATIENT_ID +
-							`/${patientId}`,
+							api_routes.ROUTE_PHYSIO_FILE_GET_BY_ID +
+							`/${physioFileId}`,
 						headers: { "Content-Type": "application/json" },
 					},
 					(physioFileResponse: ApiResponse<PhysioFileVM>) => {
@@ -80,13 +78,14 @@ const PatientPage: FC = () => {
 							message.error(
 								"Nije moguće dohvatiti fizioterapeutski karton!"
 							);
+							message.error(physioFileResponse.message);
 							console.error(
 								"There was a error fetching physio file: ",
 								physioFileResponse
 							);
 						} else {
 							dispatch(
-								physioFileActions.setPhysioFile(
+								physioFileActions.setCurrentPhysioFile(
 									physioFileResponse.data!
 								)
 							);
@@ -101,6 +100,12 @@ const PatientPage: FC = () => {
 
 							message.success(
 								"Fizioterapeutski karton dohvaćen!"
+							);
+
+							dispatch(
+								modalsShowActions.setShowChoosePhysioFileModal(
+									false
+								)
 							);
 						}
 
@@ -126,25 +131,25 @@ const PatientPage: FC = () => {
 				isMounted.current = false;
 			}
 		};
-	}, [apiCallMade, dispatch, fetchWithTokenRefresh, navigate, patientId]);
+	}, [apiCallMade, dispatch, fetchWithTokenRefresh, navigate, physioFileId]);
 
 	return (
 		<>
 			<Header
 				style={{
-					backgroundColor: "#5ac8fa",
+					backgroundColor: "#023f81",
 					position: "fixed",
 				}}
-				className={styles.fileheader}>
-				<PatientDetails patientData={physioFile.patient} />
+				className={fileStyles.fileheader}>
+				<PatientDetails patientData={currentPhysioFile.patient} />
 			</Header>
 			<Layout>
 				<Layout>
 					<Content
-						className={styles.filecontent}
+						className={fileStyles.filecontent}
 						style={{ backgroundColor: "#d1f2ff" }}>
 						<PhysioFile
-							physioFile={physioFile}
+							physioFile={currentPhysioFile}
 							fdList={fdList}
 							isLoading={isLoading}
 						/>
@@ -156,7 +161,7 @@ const PatientPage: FC = () => {
 						backgroundColor: "#1d82ea",
 						position: "fixed",
 					}}
-					className={styles.filesidebar}>
+					className={fileStyles.filesidebar}>
 					<Flex
 						vertical={true}
 						align='center'
@@ -165,7 +170,7 @@ const PatientPage: FC = () => {
 						}}>
 						<div
 							style={{ height: "100%" }}
-							className={styles.testButtons}>
+							className={fileStyles.testButtons}>
 							<TestsButton
 								label='RASS'
 								onClick={() =>
@@ -177,16 +182,17 @@ const PatientPage: FC = () => {
 							<RassModal
 								showModal={showRassModal}
 								patientRassTests={
-									physioFile.assessment.patientRass
-										? physioFile.assessment.patientRass
+									currentPhysioFile.assessment.patientRass
+										? currentPhysioFile.assessment
+												.patientRass
 										: null
 								}
 								assessment={
-									physioFile.assessment
-										? physioFile.assessment
+									currentPhysioFile.assessment
+										? currentPhysioFile.assessment
 										: null
 								}
-								rassList={physioFile.fullRassList}
+								rassList={currentPhysioFile.fullRassList}
 							/>
 							<TestsButton
 								label='GCS'
@@ -198,18 +204,20 @@ const PatientPage: FC = () => {
 							/>
 							<GcsModal
 								showModal={showGcsModal}
-								physioFile={physioFile}
+								physioFile={currentPhysioFile}
 								physioTest={
-									physioFile.physioTest
-										? physioFile.physioTest
+									currentPhysioFile.physioTest
+										? currentPhysioFile.physioTest
 										: null
 								}
 								gcsEyeResponses={
-									physioFile.allEyeOpeningResponses
+									currentPhysioFile.allEyeOpeningResponses
 								}
-								gcsMotorResponses={physioFile.allMotorResponses}
+								gcsMotorResponses={
+									currentPhysioFile.allMotorResponses
+								}
 								gcsVerbalResponses={
-									physioFile.allVerbalResponses
+									currentPhysioFile.allVerbalResponses
 								}
 							/>
 							<TestsButton
@@ -222,15 +230,15 @@ const PatientPage: FC = () => {
 							/>
 							<VasModal
 								showModal={showVasModal}
-								physioFile={physioFile}
+								physioFile={currentPhysioFile}
 								physioTest={
-									physioFile.physioTest
-										? physioFile.physioTest
+									currentPhysioFile.physioTest
+										? currentPhysioFile.physioTest
 										: null
 								}
 								vasTests={
-									physioFile.physioTest
-										? physioFile.physioTest.vas
+									currentPhysioFile.physioTest
+										? currentPhysioFile.physioTest.vas
 										: null
 								}
 							/>
@@ -244,18 +252,18 @@ const PatientPage: FC = () => {
 							/>
 							<MmtModal
 								showModal={showMmtModal}
-								physioFile={physioFile}
+								physioFile={currentPhysioFile}
 								physioTest={
-									physioFile.physioTest
-										? physioFile.physioTest
+									currentPhysioFile.physioTest
+										? currentPhysioFile.physioTest
 										: null
 								}
 								patientMmtTests={
-									physioFile.physioTest
-										? physioFile.physioTest.mmt
+									currentPhysioFile.physioTest
+										? currentPhysioFile.physioTest.mmt
 										: null
 								}
-								mmtList={physioFile.mmtList}
+								mmtList={currentPhysioFile.mmtList}
 							/>
 							<TestsButton
 								label='CPAx'
@@ -267,37 +275,64 @@ const PatientPage: FC = () => {
 							/>
 							<CpaxModal
 								showModal={showCpaxModal}
-								physioFile={physioFile}
+								physioFile={currentPhysioFile}
 								physioTest={
-									physioFile.physioTest
-										? physioFile.physioTest
+									currentPhysioFile.physioTest
+										? currentPhysioFile.physioTest
 										: null
 								}
 								patientCpaxTests={
-									physioFile.physioTest
-										? physioFile.physioTest.cpax
+									currentPhysioFile.physioTest
+										? currentPhysioFile.physioTest.cpax
 										: null
 								}
-								aopList={physioFile.allAspectsOfPhysicality}
+								aopList={
+									currentPhysioFile.allAspectsOfPhysicality
+								}
 							/>
 							<div
 								style={{ height: "auto" }}
-								className={styles.testButtons}>
-								<TestsButton
+								className={fileStyles.testButtons}>
+								<CustomLink
+									to={client_routes.ROUTE_PRINTING_PAGE.replace(
+										clientRoutesParams.patientId,
+										physioFileId
+									)}
+									askForConfirmation
+									confirmationText='Jeste li sigurni? Sve nespremljene promjene se neće moći ispisati!'
 									icon={<PrinterFill />}
 									label='Ispis'
 								/>
 								<TestsButton
 									icon={<CheckSquareFill />}
 									label='Zaključi'
+									className={fileStyles.cancelButton}
+									disabled={
+										currentPhysioFile.fileClosedBy !== null
+									}
+									onClick={() =>
+										dispatch(
+											modalsShowActions.setShowCloseFileModal(
+												true
+											)
+										)
+									}
+								/>
+								<ConfirmCloseFileModal
+									physioFile={currentPhysioFile}
+									showCloseFileModal={showCloseFileModal}
 								/>
 								<div
 									style={{ height: "auto" }}
-									className={styles.testButtons}>
+									className={fileStyles.testButtons}>
 									<TestsButton
-										className={styles.saveButton}
+										className={fileStyles.saveButton}
 										icon={<SaveFilled />}
 										label='Spremi'
+										disabled={
+											currentPhysioFile.fileClosedBy !==
+											null
+										}
 										onClick={() =>
 											!dataSaved &&
 											dispatch(
@@ -308,12 +343,25 @@ const PatientPage: FC = () => {
 										}
 									/>
 									<ConfirmSavePhysioFileModal
+										physioFile={currentPhysioFile}
 										showSaveModal={showSaveModal}
 									/>
 									<TestsButton
-										className={styles.cancelButton}
-										icon={<XCircleFill />}
-										label='Odustani'
+										className={fileStyles.cancelButton}
+										icon={
+											currentPhysioFile.fileClosedBy ===
+											null ? (
+												<XCircleFill />
+											) : (
+												<DoorOpenFill />
+											)
+										}
+										label={`${
+											currentPhysioFile.fileClosedBy ===
+											null
+												? "Odustani"
+												: "Izlaz"
+										}`}
 										onClick={() =>
 											!dataSaved
 												? dispatch(

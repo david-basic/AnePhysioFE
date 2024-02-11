@@ -1,0 +1,54 @@
+.stacking {
+    display: flex;
+    flex-direction: column;
+    margin: 0px;
+}
+
+.mbstyle {
+    color: white;
+    font-size: 20px;
+    font-weight: 300;
+    font-family: "Nunito", sans-serif;
+    line-height: 20px;
+    margin-top: 22px;
+  }
+
+.icon {
+    width: 40px;
+    height: 40px;
+    color: white;
+    fill: white;
+}
+
+.nameAgeStyle {
+    font-size: 24px;
+    font-family: "Nunito", sans-serif;
+    line-height: 24px;
+    color: white;
+    margin-top: 10px;
+}
+
+.iconAndTextContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 5px;
+}
+
+.dateStyle {
+    color: white;
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 26px;
+}
+
+.address {
+    margin-top: 5px;
+    font-size: 20px;
+    font-family: "Nunito", sans-serif;
+    color: white;
+    line-height: 26px;
+    margin-bottom: 22px;
+    font-weight: 300;
+  }
