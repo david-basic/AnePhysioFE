@@ -18,6 +18,7 @@ import {
 	Space,
 	Row,
 	Flex,
+	message,
 } from "antd";
 import { useNavigate } from "react-router-dom";
 import client_routes from "../../config/client_routes";
@@ -68,6 +69,7 @@ const Register: FC = () => {
 				setRegisterErrorMessage("");
 				setRegisterSuccessMessage(registerResponseData.message);
 				navigate(client_routes.ROUTE_AUTH_REGISTER, { replace: true });
+				message.success(registerResponseData.message);
 			}
 		};
 
