@@ -1288,7 +1288,7 @@ const CpaxModal: FC<CpaxModalProps> = ({
 										pagination={false}
 										dataSource={dataSavedToTable}
 										virtual
-										scroll={{ y: 400 }}
+										scroll={{ y: 400, x: undefined }}
 										columns={columns}
 										className={modalStyles.cpaxTable}
 										size='small'
