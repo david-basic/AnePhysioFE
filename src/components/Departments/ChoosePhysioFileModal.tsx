@@ -304,7 +304,10 @@ const ChoosePhysioFileModal: FC<ChoosePhysioFileModalProps> = ({
 						/>
 						{physioFilesList.filter(
 							(pf) => pf.fileClosedBy !== null
-						).length > 0 && (
+						).length ===
+							physioFilesList.filter(
+								(pf) => pf.fileOpenedBy !== null
+							).length && (
 							<Row
 								justify={"center"}
 								align={"middle"}
