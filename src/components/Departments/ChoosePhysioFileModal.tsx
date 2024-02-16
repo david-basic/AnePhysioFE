@@ -102,7 +102,7 @@ const ChoosePhysioFileModal: FC<ChoosePhysioFileModalProps> = ({
 						admissionDateTime: fetchedAdmissionDateTime,
 						dischargeDateTime: fetchedDischargeDateTime,
 						physioFileAndDepartmentName: {
-							departmentName: `Fizioterapijski karton - ${departmentName}`,
+							departmentName: `Fizioterapeutski karton - ${departmentName}`,
 							physioFile: pf,
 						},
 						protocolId: generateRandomNumber(4)!,
