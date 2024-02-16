@@ -76,8 +76,9 @@ const PrintingPage: FC = () => {
 								type='text'
 								style={{
 									margin: "20px 10px 10px",
-									width: "40px",
-									height: "40px",
+									width: "50px",
+									height: "50px",
+									color: "white",
 								}}
 								icon={<ArrowLeftOutlined />}
 								onClick={() => navigate(-1)}
