@@ -174,7 +174,7 @@ const ChoosePhysioFileModal: FC<ChoosePhysioFileModalProps> = ({
 						: 0;
 				}
 
-				return -1; //TODO check if maybe has to be 1 or 0 -> want to have it last if it is undefined
+				return -1;
 			},
 			render: (_, { dischargeDateTime }) => (
 				<span>
